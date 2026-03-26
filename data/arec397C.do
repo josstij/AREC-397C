@@ -24,7 +24,7 @@
 ******************************************************************
 
 * set $pack to 0 to skip package installation
-	global 			pack 	0
+	global 			pack 	1
 		
 * Specify Stata version in use
     global          stataVersion 19.5

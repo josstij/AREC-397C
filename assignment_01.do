@@ -34,5 +34,5 @@
 **# 1 - Basic Scatter Plots
 **********************************************************************
 	
-*	use				"$data/eth_allrounds_final"
+	import excel		using "$data/Sport Beverage-Spring26-BothDays_raw_RECODE_clean1.xlsx", describe
 	

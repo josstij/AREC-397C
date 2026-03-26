@@ -28,4 +28,311 @@
 . 
 {txt}end of do-file
 
+{com}. do "C:\Users\tijer\OneDrive - University of Arizona\AREC 397C\AREC-397C\assignment_01.do"
+{txt}
+{com}. * course: AREC 397C
+. * assignment: 1
+. * created on: 26 mar 2026
+. * created by: jmt
+. * edited on: 26 mar 2026
+. * edited by: jmt
+. * Stata v.19.5
+. 
+. * does
+.         
+.         
+. * needs
+.         * all
+.         
+.         clear                           all
+{res}{txt}
+{com}.         
+.         cap log                 close
+{smcl}
+{com}{sf}{ul off}{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/assignment_01.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}26 Mar 2026, 10:44:25
+{txt}
+{com}. **********************************************************************
+. **# 0 - Describing Relationships
+. **********************************************************************
+.         
+. **## 0.1 - objectives
+.         
+.         * Create a scatter plot of two variables
+.         * Write code to manipulate how the plot looks
+.         * Describe the relationship between two variables
+.         * Represent condition distributions and conditional means
+.         * Fit a line to data
+.         * Evaluate the relationship between two variables
+.         
+.         
+. **********************************************************************
+. **# 1 - Basic Scatter Plots
+. **********************************************************************
+.         
+.         use                             "$data/Sport Beverage-Spring26-BothDays_raw_RECODE_clean1.xlsx"
+{err}{p 0 4 2}
+file {bf:{err}C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/data/Sport Beverage-Spring26-BothDays_raw_RECODE_clean1.xlsx}
+not Stata format
+{p_end}
+{txt}{search r(610), local:r(610);}
+
+end of do-file
+
+{search r(610), local:r(610);}
+
+{com}. do "C:\Users\tijer\AppData\Local\Temp\STD998_000000.tmp"
+{txt}
+{com}. * course: AREC 397C
+. * created on: 26 mar 2026
+. * created by: jmt
+. * edited on: 26 mar 2026
+. * edited by: jmt
+. * Stata v.19.5
+. 
+. 
+. * does 
+.         * establishes identical development environment for users
+.         * sets globals that define absolute paths
+.         * loads any user written packages needed for analysis
+.         * runs all assignment do-files
+. 
+. * assumes
+.         * access to all data and code
+. 
+. * TO DO:
+.         * ALL
+.         
+.         
+. ******************************************************************
+. **# 0 - setup
+. ******************************************************************
+. 
+. * set $pack to 0 to skip package installation
+.         global                  pack    1
+{txt}
+{com}.                 
+. * Specify Stata version in use
+.     global          stataVersion 19.5
+{txt}
+{com}.     version         $stataVersion
+{txt}
+{com}.         
+.         
+. ******************************************************************
+. **## 0.1 - Create user specific paths
+. ******************************************************************
+. 
+. * Define root folder globals
+.         * Define root folder globals
+.         if `"`c(username)'"' == "tijer" {c -(}
+.                 global  code    "C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/code"
+.                 global  data    "C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/data"
+.                 global  logs    "C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs"
+.         {c )-}
+{txt}
+{com}.         
+.         
+. ******************************************************************
+. **# 1 - run assignment files
+. ******************************************************************
+. *       do              "$code/week1/assignment_01.do"
+. 
+. 
+. 
+{txt}end of do-file
+
+{com}. do "C:\Users\tijer\OneDrive - University of Arizona\AREC 397C\AREC-397C\assignment_01.do"
+{txt}
+{com}. * course: AREC 397C
+. * assignment: 1
+. * created on: 26 mar 2026
+. * created by: jmt
+. * edited on: 26 mar 2026
+. * edited by: jmt
+. * Stata v.19.5
+. 
+. * does
+.         
+.         
+. * needs
+.         * all
+.         
+.         clear                           all
+{res}{txt}
+{com}.         
+.         cap log                 close
+{smcl}
+{com}{sf}{ul off}{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/assignment_01.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}26 Mar 2026, 10:44:59
+{txt}
+{com}. **********************************************************************
+. **# 0 - Describing Relationships
+. **********************************************************************
+.         
+. **## 0.1 - objectives
+.         
+.         * Create a scatter plot of two variables
+.         * Write code to manipulate how the plot looks
+.         * Describe the relationship between two variables
+.         * Represent condition distributions and conditional means
+.         * Fit a line to data
+.         * Evaluate the relationship between two variables
+.         
+.         
+. **********************************************************************
+. **# 1 - Basic Scatter Plots
+. **********************************************************************
+.         
+.         use                             "$data/Sport Beverage-Spring26-BothDays_raw_RECODE_clean1.xlsx"
+{err}{p 0 4 2}
+file {bf:{err}C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/data/Sport Beverage-Spring26-BothDays_raw_RECODE_clean1.xlsx}
+not Stata format
+{p_end}
+{txt}{search r(610), local:r(610);}
+
+end of do-file
+
+{search r(610), local:r(610);}
+
+{com}. do "C:\Users\tijer\AppData\Local\Temp\STD998_000001.tmp"
+{txt}
+{com}. * course: AREC 397C
+. * created on: 26 mar 2026
+. * created by: jmt
+. * edited on: 26 mar 2026
+. * edited by: jmt
+. * Stata v.19.5
+. 
+. 
+. * does 
+.         * establishes identical development environment for users
+.         * sets globals that define absolute paths
+.         * loads any user written packages needed for analysis
+.         * runs all assignment do-files
+. 
+. * assumes
+.         * access to all data and code
+. 
+. * TO DO:
+.         * ALL
+.         
+.         
+. ******************************************************************
+. **# 0 - setup
+. ******************************************************************
+. 
+. * set $pack to 0 to skip package installation
+.         global                  pack    1
+{txt}
+{com}.                 
+. * Specify Stata version in use
+.     global          stataVersion 19.5
+{txt}
+{com}.     version         $stataVersion
+{txt}
+{com}.         
+.         
+. ******************************************************************
+. **## 0.1 - Create user specific paths
+. ******************************************************************
+. 
+. * Define root folder globals
+.         * Define root folder globals
+.         if `"`c(username)'"' == "tijer" {c -(}
+.                 global  code    "C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/code"
+.                 global  data    "C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/data"
+.                 global  logs    "C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs"
+.         {c )-}
+{txt}
+{com}.         
+.         
+. ******************************************************************
+. **# 1 - run assignment files
+. ******************************************************************
+. *       do              "$code/week1/assignment_01.do"
+. 
+. 
+. 
+{txt}end of do-file
+
+{com}. do "C:\Users\tijer\AppData\Local\Temp\STD998_000002.tmp"
+{txt}
+{com}. * set $pack to 0 to skip package installation
+.         global                  pack    1
+{txt}
+{com}.                 
+. * Specify Stata version in use
+. 
+{txt}end of do-file
+
+{com}. help xlsx
+
+. help xlsx
+
+. do "C:\Users\tijer\AppData\Local\Temp\STD998_000003.tmp"
+{txt}
+{com}. * course: AREC 397C
+. * assignment: 1
+. * created on: 26 mar 2026
+. * created by: jmt
+. * edited on: 26 mar 2026
+. * edited by: jmt
+. * Stata v.19.5
+. 
+. * does
+.         
+.         
+. * needs
+.         * all
+.         
+.         clear                           all
+{res}{txt}
+{com}.         
+.         cap log                 close
+{smcl}
+{com}{sf}{ul off}{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/assignment_01.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}26 Mar 2026, 10:46:50
+{txt}
+{com}. **********************************************************************
+. **# 0 - Describing Relationships
+. **********************************************************************
+.         
+. **## 0.1 - objectives
+.         
+.         * Create a scatter plot of two variables
+.         * Write code to manipulate how the plot looks
+.         * Describe the relationship between two variables
+.         * Represent condition distributions and conditional means
+.         * Fit a line to data
+.         * Evaluate the relationship between two variables
+.         
+.         
+. **********************************************************************
+. **# 1 - Basic Scatter Plots
+. **********************************************************************
+.         
+.         import excel            using "$data/Sport Beverage-Spring26-BothDays_raw_RECODE_clean1.xlsx", describe
+{res}{txt}
+  {it:     Sheet} {c |} {it:Range}
+  {hline 11}{c +}{hline 11}
+         raw {c |} A1:GC172
+  raw_clean1 {c |} A1:GC151
+
+{com}.         
+. 
+{txt}end of do-file
+
 {com}. 
