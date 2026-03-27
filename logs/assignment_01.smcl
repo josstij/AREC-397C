@@ -336,3 +336,42 @@ end of do-file
 {txt}end of do-file
 
 {com}. exit, clear
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:\Users\ual-laptop\Desktop\GitHub Folder\AREC-397C\logs/assignment_01.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}27 Mar 2026, 11:58:58
+{txt}
+{com}. **********************************************************************
+. **# 0 - Describing Relationships
+. **********************************************************************
+.         
+. **## 0.1 - objectives
+.         
+.         * Create a scatter plot of two variables
+.         * Write code to manipulate how the plot looks
+.         * Describe the relationship between two variables
+.         * Represent condition distributions and conditional means
+.         * Fit a line to data
+.         * Evaluate the relationship between two variables
+.         
+.         
+. **********************************************************************
+. **# 1 - Basic Scatter Plots
+. **********************************************************************
+.         
+.         import excel            using "$data/Sport Beverage-Spring26-BothDays_raw_RECODE_clean1.xlsx", describe
+{res}{txt}
+  {it:     Sheet} {c |} {it:Range}
+  {hline 11}{c +}{hline 11}
+         raw {c |} A1:GC172
+  raw_clean1 {c |} A1:GC151
+
+{com}.         
+.         
+.         
+. 
+{txt}end of do-file
+
+{com}. exit, clear
