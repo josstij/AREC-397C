@@ -59,6 +59,7 @@
 		global	code	"C:\Users\timleavy\Desktop\GitHub Folder\AREC-397C\data"
 		global	data	"C:\Users\timleavy\Desktop\GitHub Folder\AREC-397C\data"
 		global 	logs	"C:\Users\timleavy\Desktop\GitHub Folder\AREC-397C\logs"
-	}
+	
+
 
 
