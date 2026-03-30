@@ -34,7 +34,8 @@
 **# 1 - Basic Scatter Plots
 **********************************************************************
 	
-	import excel		using "$data/Sport Beverage-Spring26-BothDays_raw_RECODE_clean1.xlsx", describe
+	import delimited		using "$data/spors_bev_data_use_me.csv"
+	describe
 	
 	
 	
