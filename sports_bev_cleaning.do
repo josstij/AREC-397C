@@ -15,9 +15,9 @@
 	clear				all
 	
 	cap log 		close
-	log using		"$logs/assignment_01", append	
+	log using		"$logs/assignment_tijerina", append	
 **********************************************************************
-**# 0 - Describing Relationships
+**# 0 - Describing Sports Beverage Statistics
 **********************************************************************
 	
 **## 0.1 - objectives
@@ -31,7 +31,7 @@
 	
 	
 **********************************************************************
-**# 1 - Basic Scatter Plots
+**# 1 - 
 **********************************************************************
 	
 	import delimited		using "$data/spors_bev_data_use_me.csv"
