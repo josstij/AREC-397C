@@ -15,7 +15,7 @@
 	clear				all
 	
 	cap log 		close
-	log using		"$logs/assignment_01", append	
+	log using		"$logs/assignment_leavy", append	
 **********************************************************************
 **# 0 - Describing Relationships
 **********************************************************************
