@@ -4179,4 +4179,4 @@ end of do-file
 
 {search r(109), local:r(109);}
 
-{com}. 
+{com}. exit, clear
