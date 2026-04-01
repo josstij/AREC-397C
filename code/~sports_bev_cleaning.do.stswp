@@ -123,10 +123,10 @@ magnesium can influence choices differently depending on gender and activity lev
 * product 584 = HAS MAGNESIUM
 
 	gen			d1_mag_overall_like = sensory_584_overall if day1
-	gen 		d1_mag_flavor_like = sensory_584_flavor  if day1
-	gen 		d1_mag_lemon_like = sensory_584_lemon   if day1
-	gen 		d1_mag_sweet_like = sensory_584_sweet   if day1
-	gen 		d1_mag_refresh = refresh_584         if day1
+	gen 		d1_mag_flavor_like = sensory_584_flavor if day1
+	gen 		d1_mag_lemon_like = sensory_584_lemon if day1
+	gen 		d1_mag_sweet_like = sensory_584_sweet if day1
+	gen 		d1_mag_refresh = refresh_584 if day1
 
 	label var 	d1_mag_overall_like "Day 1 product 584 overall liking"
 	label var 	d1_mag_flavor_like  "Day 1 product 584 overall flavor liking"
@@ -146,6 +146,7 @@ magnesium can influence choices differently depending on gender and activity lev
 	label var 	d1_nomag_lemon_like   "Day 1 product 793 lemon-lime flavor liking"
 	label var 	d1_nomag_sweet_like   "Day 1 product 793 sweetness liking"
 	label var 	d1_nomag_refresh      "Day 1 product 793 refreshing sensation"
+	
 * Compare each Day 1 participants rating for the MAGNESIUM drink (584)
 * to the NON-MAGNESIUM drink (793)
 * POSTIVIE values mean participants liked the magnesium MORE
@@ -171,7 +172,7 @@ magnesium can influence choices differently depending on gender and activity lev
 	gen			wtp_baseline = wtp_1
 	label var 	wtp_baseline "Baseline WTP for new generic sports beverage"
 
-* Taste-first branch: product-specific WTP before magnesium info
+* Taste-first branch: product-specific WTP BEFORE magnesium info
 	gen			d1_mag_wtp_taste_noinfo   = wtp_2b_584 if day1
 	gen 		d1_nomag_wtp_taste_noinfo = wtp_2b_793 if day1
 
@@ -181,7 +182,7 @@ magnesium can influence choices differently depending on gender and activity lev
 	gen 		d1_diff_wtp_taste_noinfo = d1_mag_wtp_taste_noinfo - d1_nomag_wtp_taste_noinfo if day1
 	label var 	d1_diff_wtp_taste_noinfo "Day 1: 584 minus 793 WTP after taste, before info"
 
-* Unified informed WTP: takes whichever informed WTP exists for each respondent
+* Setting up the INFORMED branch and then calculating the WTP difference 584-793
 	gen 		d1_mag_wtp_info = .
 	replace 	d1_mag_wtp_info = wtp_2a_info_584 if !missing(wtp_2a_info_584)
 	replace 	d1_mag_wtp_info = wtp_3b_info_584 if missing(d1_mag_wtp_info) & !missing(wtp_3b_info_584)
@@ -511,22 +512,348 @@ d1_magbenefit_mean
 *********
 NULL HYPOTHESIS
 Our null hypothesis is
-that males and females respond the same way and magnesium does not increase willingness to pay beyond flavor and sweetness
+that males and females respond the same way and magnesium does not increase 
+willingness to pay beyond flavor and sweetness
 *********
 ALT HYPOTHESIS
-Magnesium increases willingness to pay more for females than males, or for participants who exercise more, showing that functional benefits like
+Magnesium increases willingness to pay more for females than males, or for 
+participants who exercise more, showing that functional benefits like
 magnesium can influence choices differently depending on gender and activity level.
 */
 
+*** Outcome for this hypothesis should be the variable that captures the
+* magnesium related WTP shift.
+
+* I think use d1_diff_wtp would be a useful variable for this one
+* this will show the difference between WTP for lab minus competitor
+
+* need to inspect these variables
+* GENDER
+* EXERCISE
+* WTP DIFF
+
+* start with gender
+
+	tab			gender, missing
+
+* exercise
+	
+	tab			exercise, missing
+	
+	codebook			gender
+	codebook			exercise
+	
+* gender coding from the data
+* 1 = Male
+* 2 = Female
+* 3 = Non-binary
+* 4 = Prefer to self-identify
+
+	label			define gender_lbl 1 "Male" ///
+                    2 "Female" ///
+                    3 "Non-binary" ///
+                    4 "Prefer to self-identify"
+
+	label 			values gender gender_lbl
+	label var		gender "Gender identity"
+
+********************************************************************************
+**# Inspect gender in the full cleaned sample and in Day 1
+********************************************************************************
+
+	tab			gender, missing
+	tab 		gender if day1, missing
+
+* Main Hypothesis 2 outcome and key sensory controls by gender
+
+	tabstat			d1_diff_wtp_info ///
+					d1_diff_flavor_like ///
+					d1_diff_sweet_like ///
+					if day1, ///
+					by(gender) ///
+					stat(n mean sd min max) ///
+					columns(statistics)
+
+* label the outcome statistics
+
+	label var			d1_diff_wtp_info      "Informed WTP difference (lab - competitor)"
+	label var 			d1_diff_flavor_like   "Flavor liking difference (lab - competitor)"
+	label var 			d1_diff_sweet_like    "Sweetness liking difference (lab - competitor)"
+	
+* render teh summary stats table
+
+	tabstat			d1_diff_wtp_info ///
+					d1_diff_flavor_like ///
+					d1_diff_sweet_like ///
+					if day1, ///
+					stat(n mean sd min max) ///
+					columns(statistics)
+					
+* OK. Brinigng them all together for a clean summary table for hyp 2
+
+* Outcome labels
+	label var			d1_diff_wtp_info      "Informed WTP difference (lab - competitor)"
+	label var			d1_diff_flavor_like   "Flavor liking difference (lab - competitor)"
+	label var			d1_diff_sweet_like    "Sweetness liking difference (lab - competitor)"
+
+* Gender labels
+	label			define gender_lbl 1 "Male" ///
+                    2 "Female" ///
+                    3 "Non-binary" ///
+                    4 "Prefer to self-identify", replace
+	label			values gender gender_lbl
+	label var 		gender "Gender identity"
+
+********************************************************************************
+**# Render a clean descriptive table by gender
+********************************************************************************
+
+	preserve
+
+	keep if 		day1
+	keep			gender d1_diff_wtp_info d1_diff_flavor_like d1_diff_sweet_like
+
+	gen 			obs_id = _n
+
+	rename 			d1_diff_wtp_info      h2_outcome1
+	rename 			d1_diff_flavor_like   h2_outcome2
+	rename 			d1_diff_sweet_like    h2_outcome3
+
+	reshape 		long h2_outcome, i(obs_id gender) j(h2_measure)
+
+	label 			define h2_measure_lbl ///
+					1 "Informed WTP difference (lab - competitor)" ///
+					2 "Flavor liking difference (lab - competitor)" ///
+					3 "Sweetness liking difference (lab - competitor)", replace
+
+	label 			values h2_measure h2_measure_lbl
+	label var 		h2_measure "Outcome"
+	label var 		h2_outcome "Value"
+
+	table			(h2_measure) (gender), ///
+					statistic(count h2_outcome) ///
+					statistic(mean h2_outcome) ///
+					statistic(sd h2_outcome) ///
+					statistic(min h2_outcome) ///
+					statistic(max h2_outcome) ///
+					nototal
+
+**# Hypothesis 2 ALT
+**## Alt Hyp
+/*ALT HYPOTHESIS
+Magnesium increases willingness to pay more for females than males, or for 
+participants who exercise more, showing that functional benefits like
+magnesium can influence choices differently depending on gender and activity level.
+*/
+
+* need to take a label exercise vars
+
+* exercise coding from Qualtrics:
+* 1 = 0 days
+* 2 = 1 to 2 days
+* 3 = 3 to 4 days
+* 4 = 5 or more days
+
+	restore
+	tab			exercise, missing
+
+
+	label			define exercise_lbl 1 "0 days" ///
+                    2 "1 to 2 days" ///
+                    3 "3 to 4 days" ///
+                    4 "5 or more days", replace
+	label 			values exercise exercise_lbl
+	label var 		exercise "Days per week with at least 30 minutes of exercise"
+
+* outcome labels for this table
+	label var			d1_diff_wtp_info    "Informed WTP difference (lab - competitor)"
+	label var 			d1_info_useful      "Magnesium information was useful"
+	label var 			d1_magbenefit_mean  "Mean magnesium-benefit importance"
 
 
 
+	tabstat			d1_diff_wtp_info ///
+					d1_info_useful ///
+					d1_magbenefit_mean ///
+					if day1, ///
+					by(exercise) ///
+					stat(n mean sd min max)
+					
+* ok now I need to figure out how to bring gender into this. This is just 
+* a summary of exercise itself
+* There should be both gender and exercise being examined in this table. 
+*"For Females who exercise [this amount] their willingness to pay was 
+* [this amount after information]
+
+	preserve
+
+	keep if			day1 & !missing(d1_diff_wtp_taste_noinfo)
+	keep 			gender exercise d1_diff_wtp_taste_noinfo d1_diff_wtp_info
+
+	gen 			obs_id = _n
+
+	rename 			d1_diff_wtp_taste_noinfo h2_wtp1
+	rename 			d1_diff_wtp_info h2_wtp2
+
+	reshape 		long h2_wtp, i(obs_id gender exercise) j(h2_stage)
+
+	label 			define h2_stage_lbl ///
+					1 "Pre-info relative WTP (lab - competitor)" ///
+					2 "Post-info relative WTP (lab - competitor)", replace
+	label 			values h2_stage h2_stage_lbl
+
+	table 			(h2_stage exercise) (gender), ///
+					statistic(count h2_wtp) ///
+					statistic(mean h2_wtp) ///
+					statistic(sd h2_wtp) ///
+					statistic(min h2_wtp) ///
+					statistic(max h2_wtp) ///
+					nototal
+					
+********************************************************************************
+**# Making the graphs
+********************************************************************************
+
+* I think what I'm going to do is just make one for each of these tables.
+*** the first two should be super easy. I'm thinking bar charts.
+
+*** the second two might be a little more dificult.
+*** My guess would be a scatter plot for each would be best
+
+
+**## Graph 1 / Table 1
+                                                	
+/*
+
+Table 1A. Descriptive Statistics
+---------------------------------------------------------------------------------------------------------
+                                                    N         Mean           SD          Min          Max
+---------------------------------------------------------------------------------------------------------
+Lab beverage flavor liking                         70         6.51         1.71         1.00         9.00
+Competitor flavor liking                           70         7.10         1.76         1.00         9.00
+Flavor liking difference (lab - competit           70        -0.59         2.38        -7.00         5.00
+Lab beverage sweetness liking                      70         6.41         1.71         1.00         9.00
+Competitor sweetness liking                        70         6.90         1.68         1.00         9.00
+Sweetness liking difference (lab - compe           70        -0.49         2.33        -6.00         5.00
+Lab beverage WTP before magnesium info             34         2.62         0.76         0.75         4.50
+Competitor WTP before magnesium info               34         2.76         0.81         1.25         4.50
+WTP difference before info (lab - compet           34        -0.14         0.84        -2.50         1.25
+---------------------------------------------------------------------------------------------------------
+*/
+
+**** Probably just need to graph the means and not worry about the other stuff
+
+********************************************************************************
+**# Figure 1. Taste ratings and pre-information WTP
+********************************************************************************
+
+	input 			str20 outcome lab competitor
+					"Flavor liking"    6.51 7.10
+					"Sweetness liking" 6.41 6.90
+					end
+
+	graph 			bar lab competitor, ///
+					over(outcome, label(angle(0))) ///
+					blabel(bar) ///
+					legend(order(1 "Lab beverage" 2 "Competitor") rows(1) position(6)) ///
+					ytitle("Mean rating") ///
+					title("Panel A. Mean flavor and sweetness ratings") ///
+					graphregion(color(white)) ///
+					plotregion(color(white)) ///
+					name(g_taste, replace)
+
+	clear
+	input 			str20 outcome lab competitor
+					"Pre-info WTP" 2.62 2.76
+					end
+
+	graph 			bar lab competitor, ///
+					over(outcome, label(angle(0))) ///
+					blabel(bar) ///
+					legend(order(1 "Lab beverage" 2 "Competitor") rows(1) position(6)) ///
+					ytitle("Mean willingness to pay ($)") ///
+					title("Panel B. Mean WTP before magnesium information") ///
+					graphregion(color(white)) ///
+					plotregion(color(white)) ///
+					name(g_wtp, replace)
+
+	graph 			combine g_taste g_wtp, ///
+					col(1) ///
+					imargin(2 2 2 2) ///
+					title("Figure 1. Taste ratings and pre-information willingness to pay") ///
+					graphregion(color(white))
+
+	restore
 
 
 
+	preserve
+	clear
 
+********************************************************************************
+**# Figure 2. Responses to magnesium information
+********************************************************************************
+* Need to make a 3 panel bar chart and then combine them
+* Bring in the input that i need specifically for this one first
+* Panel A: post-information WTP
+	input 			str20 outcome lab competitor
+					"Post-info WTP" 2.93 2.43
+	end
 
+	graph 			bar lab competitor, ///
+					over(outcome, label(angle(0))) ///
+					blabel(bar) ///
+					legend(order(1 "Lab beverage" 2 "Competitor") rows(1) position(6)) ///
+					ytitle("Mean willingness to pay ($)") ///
+					title("Panel A. WTP after magnesium information") ///
+					graphregion(color(white)) ///
+					plotregion(color(white)) ///
+					name(g_info_wtp, replace)
 
+* Panel B: information reactions
+* bring in the data i need just for this one 
+	clear
+	input			str25 outcome mean
+					"Information was new"    3.06
+					"Information was useful" 3.83
+	end
 
+	graph 			bar mean, ///
+					over(outcome, label(angle(0))) ///
+					blabel(bar) ///
+					legend(off) ///
+					ytitle("Mean rating (1 to 5)") ///
+					title("Panel B. Reaction to magnesium information") ///
+					graphregion(color(white)) ///
+					plotregion(color(white)) ///
+					name(g_info_react, replace)
+	
+* bring in the data that i need for this one
+* Panel C: magnesium benefit importance
+	clear
+	input 			str30 outcome mean
+					"Muscle recovery"      71.63
+					"Cramp reduction"      72.87
+					"Blood sugar support"  70.15
+					"Bone health"          63.82
+					"Sleep/relaxation"     74.36
+	end	
 
+	graph 			bar mean, ///
+					over(outcome, label(angle(35) labsize(small))) ///
+					blabel(bar) ///
+					legend(off) ///
+					ytitle("Mean importance (0 to 100)") ///
+					title("Panel C. Importance of magnesium benefits") ///
+					graphregion(color(white)) ///
+					plotregion(color(white)) ///
+					name(g_info_benefits, replace)
+* combine them
 
+	graph 			combine g_info_wtp g_info_react g_info_benefits, ///
+					col(1) ///
+					imargin(2 2 2 2) ///
+					title("Figure 2. Responses to magnesium information") ///
+    graphregion(color(white))
+
+restore
