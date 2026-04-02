@@ -15,7 +15,7 @@
 	clear				all
 	
 	cap log 		close
-	log using		"$logs/assignment_leavy.smcl", append	
+	log using		"$logs/\assignment_leavy.smcl", append	
 **********************************************************************
 **# 0 - Describing Relationships - TO DO
 **********************************************************************
