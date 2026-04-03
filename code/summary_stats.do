@@ -850,21 +850,21 @@ for each
 
 * wtp_3a_356
 	capture destring	wtp_3a_356, replace
-	label var			wtp_3a_356 "WTP for 356 after information first then tasting"
+	label var			wtp_3a_356 "WTP for 356 after information first, then tasting"
 	summ				wtp_3a_356, detail
 
 * sure_3a_356
-	label var			sure_3a_356 "Certainty in WTP for 356 after information first then tasting"
+	label var			sure_3a_356 "Certainty in WTP for 356 after information first, then tasting"
 	label values		sure_3a_356 sure3_lbl
 	tab					sure_3a_356, missing
 
 * wtp_3a_831
 	capture destring	wtp_3a_831, replace
-	label var			wtp_3a_831 "WTP for 831 after information first then tasting"
+	label var			wtp_3a_831 "WTP for 831 after information first, then tasting"
 	summ				wtp_3a_831, detail
 
 * sure_3a_831
-	label var			sure_3a_831 "Certainty in WTP for 831 after information first then tasting"
+	label var			sure_3a_831 "Certainty in WTP for 831 after information first, then tasting"
 	label values		sure_3a_831 sure3_lbl
 	tab					sure_3a_831, missing
 
@@ -1050,33 +1050,56 @@ important but not exclusively dominant drivers of choice.
 * wtp_3a_793
 
 
-capture confirm variable Sure_2b_793
-if !_rc rename Sure_2b_793 sure_2b_793
+********************************************************************************
+**# Hypothesis 1 Summary Table, esttab version
+********************************************************************************
+* This is strictly a summary of the raw observed Day 1 variables tied to Hyp 1
+* No derived choice vars or proxy vars yet
 
-local h1_sumvars ///
-    wtp_2b_584 wtp_2b_793 wtp_3b_info_584 wtp_3b_info_793 ///
-    wtp_2a_info_584 wtp_2a_info_793 wtp_3a_584 wtp_3a_793 ///
-    sure_2b_584 sure_2b_793 sure_3b_info_584 sure_3b_info_793 ///
-    sure_2a_info_584 sure_2a_info_793 sure_3a_584 sure_3a_793 ///
-    sensory_584_flavor sensory_793_flavor sensory_584_sweet sensory_793_sweet ///
-    pref_sugar pref_flavor pref_sweet ///
-    after_info_3b_d1_new after_info_3b_d1_useful ///
-    after_info_2a_d1_new after_info_2a_d1_useful
+	local h1_sumvars ///
+		wtp_2b_584 ///
+		wtp_2b_793 ///
+		wtp_3b_info_584 ///
+		wtp_3b_info_793 ///
+		wtp_2a_info_584 ///
+		wtp_2a_info_793 ///
+		wtp_3a_584 ///
+		wtp_3a_793 ///
+		sure_2b_584 ///
+		sure_2b_793 ///
+		sure_3b_info_584 ///
+		sure_3b_info_793 ///
+		sure_2a_info_584 ///
+		sure_2a_info_793 ///
+		sure_3a_584 ///
+		sure_3a_793 ///
+		sensory_584_flavor ///
+		sensory_793_flavor ///
+		sensory_584_sweet ///
+		sensory_793_sweet ///
+		pref_sugar ///
+		pref_flavor ///
+		pref_sweet ///
+		after_info_3b_d1_new ///
+		after_info_3b_d1_useful ///
+		after_info_2a_d1_new ///
+		after_info_2a_d1_useful
 
-dtable `h1_sumvars' if day == 1, ///
-    continuous(, statistics(mean sd min max))
+	eststo clear
+	estpost tabstat `h1_sumvars' if day == 1, ///
+		statistics(n mean sd min max) ///
+		columns(statistics)
 
-collect label levels result ///
-    mean "Mean" ///
-    sd   "SD" ///
-    min  "Min" ///
-    max  "Max", modify
-
-collect layout (var) (result[mean sd min max])
-
-collect preview
-
-
+	esttab using "$code/h1_summary_stats_table_edit.tex", replace ///
+		booktabs ///
+		label ///
+		nonumber ///
+		noobs ///
+		nomtitle ///
+		cells("count(fmt(0)) mean(fmt(3)) sd(fmt(3)) min(fmt(3)) max(fmt(3))") ///
+		collabels("N" "Mean" "SD" "Min" "Max") ///
+		title("Hypothesis 1 Summary Statistics") ///
+		addnotes("Day 1 raw observed variables tied to Hypothesis 1.")
 
 
 
