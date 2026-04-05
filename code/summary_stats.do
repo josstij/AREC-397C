@@ -74,7 +74,6 @@ for each
 * gender
 * randomizer
 * 5 point importance scale
-* 5 point agreement scale
 * 3 point certainty scale
 * 5 point agreement scale
 * flavors
@@ -92,14 +91,15 @@ for each
 	label define		day_lbl 1 "Day 1" 2 "Day 2", replace
 	label define		yesno_lbl 0 "No" 1 "Yes", replace
 
- 
+* this is how the paths were chosen. need this for determining taste-first /
+* info first 
 	label define		randomizer_lbl ///
 						1 "Randomizer 1" ///
 						2 "Randomizer 2" ///
 						3 "Randomizer 3" ///
 						4 "Randomizer 4", replace
 
-
+* 5 point importance scale
 	label define		imp5_lbl ///
 						1 "Not at all important" ///
 						2 "Slightly important" ///
@@ -107,20 +107,20 @@ for each
 						4 "Very important" ///
 						5 "Extremely important", replace
 
-
+* 3 point certainty scale
 	label define		sure3_lbl ///
 						1 "Low certainty" ///
 						2 "Moderate certainty" ///
 						3 "High certainty", replace
 	
-
+* 5 point agreement scale
 	label define		agree5_lbl ///
 						1 "Strongly disagree" ///
 						2 "Disagree" ///
 						3 "Neither agree nor disagree" ///
 						4 "Agree" ///
 						5 "Strongly agree", replace
-
+* flavors
 	label define		flavor2_lbl ///
 						1 "Blueberry" ///
 						2 "Berry blend" ///
@@ -131,7 +131,7 @@ for each
 						7 "Pineapple" ///
 						8 "None of them" ///
 						9 "Other", replace
-
+* 9 point hedonic scale
 	label define		hedonic9_lbl ///
 						1 "Dislike extremely" ///
 						2 "Dislike very much" ///
@@ -143,7 +143,7 @@ for each
 						8 "Like very much" ///
 						9 "Like extremely", replace
 
-
+* 5 point refreshing scale
 	label define		refresh5_lbl ///
 						1 "Not at all refreshing" ///
 						2 "Slightly refreshing" ///
@@ -151,7 +151,7 @@ for each
 						4 "Very refreshing" ///
 						5 "Extremely refreshing", replace
 
-
+* 0 to 4 intake frequency scale
 	label define		intake5_lbl ///
 						0 "Never" ///
 						1 "Rarely" ///
@@ -227,7 +227,7 @@ for each
 * wtp_1
 	capture destring	wtp_1, replace
 	label var			wtp_1 "Baseline willingness to pay"
-	sum				wtp_1, detail
+	sum					wtp_1, detail
 
 * sure_1
 	label var			sure_1 "Certainty in baseline WTP"
@@ -478,7 +478,7 @@ for each
 * wtp_2b_584: taste-first
 	capture destring	wtp_2b_584, replace
 	label var			wtp_2b_584 "WTP for 584, tasting first"
-	sum				wtp_2b_584, detail
+	sum					wtp_2b_584, detail
 
 * sure_2b_584
 	label var			sure_2b_584 "Certainty in WTP for 584, tasting first"
@@ -488,7 +488,7 @@ for each
 * wtp_2b_793
 	capture destring	wtp_2b_793, replace
 	label var			wtp_2b_793 "WTP for 793, tasting first"
-	sum				wtp_2b_793, detail
+	sum					wtp_2b_793, detail
 
 * Sure_2b_793
 	label var			sure_2b_793 "Certainty in WTP for 793, tasting first"
@@ -631,9 +631,9 @@ for each
 	sum					mag_benefit_2a_d1_sleep, detail
 
 
-************************************************************
+********************************************************************************
 **## Day 1 Mag Intake
-************************************************************
+********************************************************************************
 
 * mag_intake_d1_magsupp
 	label var			mag_intake_d1_magsupp "Magnesium supplement intake"
@@ -1109,7 +1109,7 @@ important but not exclusively dominant drivers of choice.
 **# Hyp 2
 ********************************************************************
 
-***Hyp 1:
+***Hyp 2:
 /* NULL HYPOTHESIS
 Our null hypothesis is that males and females respond the same way and magnesium 
 does not increase willingness to pay beyond flavor and sweetness. ly depending on gender and activity level.
@@ -1220,52 +1220,52 @@ Maybe this would be best as just one table instead of one for each hypothesis
 	tab					con_situation_7, missing
 
 
-local h_sumvars ///
-			wtp_2b_584 ///
-			wtp_2b_793 ///
-			wtp_3b_info_584 ///
-			wtp_3b_info_793 ///
-			wtp_2a_info_584 ///
-			wtp_2a_info_793 ///
-			wtp_3a_584 ///
-			wtp_3a_793 ///
-			sure_2b_584 ///
-			sure_2b_793 ///
-			sure_3b_info_584 ///
-			sure_3b_info_793 ///
-			sure_2a_info_584 ///
-			sure_2a_info_793 ///
-			sure_3a_584 ///
-			sure_3a_793 ///
-			sensory_584_flavor ///
-			sensory_793_flavor ///
-			sensory_584_sweet ///
-			sensory_793_sweet ///
-			pref_sugar ///
-			pref_flavor ///
-			pref_sweet ///
-			pref_ingred ///
-			after_info_3b_d1_new ///
-			after_info_3b_d1_useful ///
-			after_info_2a_d1_new ///
-			after_info_2a_d1_useful ///
-			exercise /// 
-			con_situation_1 ///
-			con_situation_2 ///
-			con_situation_3 ///
-			con_situation_4 ///
-			con_situation_5 ///
-			con_situation_6 ///
-			con_situation_7 /// 
-			flavor_pref1_1 ///
-			flavor_pref1_2 ///
-			flavor_pref1_3 ///
-			flavor_pref1_4 ///
-			flavor_pref1_5 ///
-			flavor_pref1_6 ///
-			flavor_pref1_7 ///
-			flavor_pref1_8 ///
-			flavor_pref1_9
+	local			h_sumvars ///
+						wtp_2b_584 ///
+						wtp_2b_793 ///
+						wtp_3b_info_584 ///
+						wtp_3b_info_793 ///
+						wtp_2a_info_584 ///
+						wtp_2a_info_793 ///
+						wtp_3a_584 ///
+						wtp_3a_793 ///
+						sure_2b_584 ///
+						sure_2b_793 ///
+						sure_3b_info_584 ///
+						sure_3b_info_793 ///
+						sure_2a_info_584 ///
+						sure_2a_info_793 ///
+						sure_3a_584 ///
+						sure_3a_793 ///
+						sensory_584_flavor ///
+						sensory_793_flavor ///
+						sensory_584_sweet ///
+						sensory_793_sweet ///
+						pref_sugar ///
+						pref_flavor ///
+						pref_sweet ///
+						pref_ingred ///
+						after_info_3b_d1_new ///
+						after_info_3b_d1_useful ///
+						after_info_2a_d1_new ///
+						after_info_2a_d1_useful ///
+						exercise /// 
+						con_situation_1 ///
+						con_situation_2 ///
+						con_situation_3 ///
+						con_situation_4 ///
+						con_situation_5 ///
+						con_situation_6 ///
+						con_situation_7 /// 
+						flavor_pref1_1 ///
+						flavor_pref1_2 ///
+						flavor_pref1_3 ///
+						flavor_pref1_4 ///
+						flavor_pref1_5 ///
+						flavor_pref1_6 ///
+						flavor_pref1_7 ///
+						flavor_pref1_8 ///
+						flavor_pref1_9
 			
 * this is the full set of summary statistics for both H1 and H2
 * This is the table we will present. It should have EVERYTHING we need in it
@@ -1420,29 +1420,32 @@ local h_sumvars ///
 * looks like it worked.
 
 * make the graph
+* grouped flavor liking low, med, high on x axis
+* mean wtp by those categories
+* mean wtp on y axis
 
 	graph bar			(mean) wtp_3b_info_584, ///
-						over(ingred_grp, label(angle(25) labsize(small))) ///
-						over(flavor584_grp, label(labsize(small))) ///
-						asyvars ///
-						title("584 WTP After Magnesium Information") ///
-						subtitle("By flavor liking and ingredient importance") ///
-						ytitle("Mean willingness to pay") ///
-						ylabel(0(.5)5) ///
-						blabel(bar, format(%4.2f)) ///
-						bar(1, color("217 240 163")) ///
-						bar(2, color("120 198 121")) ///
-						bar(3, color("65 171 93")) ///
-						legend(order( ///
+							over(ingred_grp, label(angle(25) labsize(small))) ///
+							over(flavor584_grp, label(labsize(small))) ///
+							asyvars ///
+							title("584 WTP After Magnesium Information") ///
+							subtitle("By flavor liking and ingredient importance") ///
+							ytitle("Mean willingness to pay") ///
+							ylabel(0(.5)5) ///
+							blabel(bar, format(%4.2f)) ///
+							bar(1, color("217 240 163")) ///
+							bar(2, color("120 198 121")) ///
+							bar(3, color("65 171 93")) ///
+							legend(order( ///
 							1 "Low ingredient importance" ///
 							2 "Medium ingredient importance" ///
 							3 "High ingredient importance") ///
 							rows(1) ///
 							position(6) ///
 							region(color(white))) ///
-						plotregion(color(white)) ///
-						graphregion(color(white)) ///
-						name(h1_graph3_584_func_vs_taste, replace)
+							plotregion(color(white)) ///
+							graphregion(color(white)) ///
+							name(h1_graph3_584_func_vs_taste, replace)
 						
 						
 * it looks like I'm missing a bar for low ingredienet importance at the medium 
@@ -1451,3 +1454,104 @@ local h_sumvars ///
 	*tab			flavor584_grp ingred_grp, missing
 * checks out, no data for that bar
 
+
+********************************************************************************
+**# Graphs H2
+********************************************************************************
+
+***Hyp 2:
+/* NULL HYPOTHESIS
+Our null hypothesis is that males and females respond the same way and magnesium 
+does not increase willingness to pay beyond flavor and sweetness. ly depending on gender and activity level.
+
+ALT HYPOTHESIS
+The alternative hypothesis is that magnesium increases willingness to pay more 
+for females than males, or for participants who exercise more, showing that 
+functional benefits like magnesium can influence choices different
+*/
+* basically we're asking does the magnesium value look difernt depending 
+* on gender and depending on activty level.
+* do poeple respond the sa
+
+
+* I think what we should do is group gender by exercise amount (similar to ingred 
+* importance). I'll need to make a low, med, high exercise 
+* then I think we should group the exercise level with gender
+* then we can look at the mean willingness to pay for the magnesium bev
+* after information to see if men or women have a higher wtp
+
+* in the survey the responses are 0 days, 1-2 days, 2-4 days, and 5 or more days
+* the corresponding code i 1, 2, 3, 4 respectively
+
+* capture exercise levels and gen them as groups the exercise_grp variables
+
+	capture destring	exercise, replace
+	gen					exercise_grp = exercise
+
+	label var			exercise_grp "Exercise activity level"
+
+	label define		exercise_grp_lbl ///
+							1 "Very Low Activity" ///
+							2 "Low Activity" ///
+							3 "Moderate Activity" ///
+							4 "Frequent Activity", replace
+
+	label values		exercise_grp exercise_grp_lbl
+	tab					exercise_grp, missing
+	
+* looks really good and promising
+
+* now we need to see the exercise group by gender
+
+	tab			exercise_grp gender, missing
+	
+* that looks great! 
+
+* ok on to the bar graph
+* exercise group by gender on the x
+* wtp on the y
+
+	graph			bar (mean) ///
+						wtp_2b_584 ///
+						wtp_3b_info_584 ///
+						if day == 1, ///
+						over(gender, label(labsize(small))) ///
+						over(exercise_grp, label(labsize(small))) ///
+						asyvars ///
+						cw ///
+						title("584 WTP Before and After Magnesium Information") ///
+						subtitle("Grouped by exercise activity level and gender") ///
+						ytitle("Mean willingness to pay") ///
+						ylabel(0(.5)5) ///
+						bar(1, color("66 146 198")) ///
+						bar(2, color("65 171 93")) ///
+						legend(order( ///
+						1 "Before magnesium information" ///
+						2 "After magnesium information") ///
+						rows(1) ///
+						position(6) ///
+						region(color(white))) ///
+						plotregion(color(white)) ///
+						graphregion(color(white)) ///
+						name(h2_graph1_584_gender_exercise, replace)
+						
+* next i think we should actually look at who values functional beverage more
+* sine we've already grouped by exercise and gender we just need to add in ingredient
+* what I'm going to do is put exercise group by gender on the x
+* and mean ingredient importance on the y 
+* should be pretty uch the same operations as the previous graph
+* are there missing values in pref_ingred...?
+	graph			bar (mean) ///
+						pref_ingred ///
+						if !missing(pref_ingred), ///
+						over(gender, label(labsize(small))) ///
+						over(exercise_grp, label(labsize(small))) ///
+						title("Importance of Functional Ingredients") ///
+						subtitle("Grouped by exercise activity level and gender") ///
+						ytitle("Mean importance") ///
+						ylabel(1(1)5) ///
+						bar(1, color("234 112 20")) ///
+						plotregion(color(white)) ///
+						graphregion(color(white)) ///
+						legend(off)
+					
