@@ -495,7 +495,6 @@ for each
 	label var			sure_2b_584 "Certainty in WTP for 584, tasting first"
 	label values		sure_2b_584 sure3_lbl
 	tab					sure_2b_584, missing
-	
 * taste first
 * wtp_2b_793
 	capture destring	wtp_2b_793, replace
@@ -506,7 +505,6 @@ for each
 	label var			sure_2b_793 "Certainty in WTP for 793, tasting first"
 	label values		sure_2b_793 sure3_lbl
 	tab					sure_2b_793, missing
-
 
 * wtp_3b_info_584
 	capture destring	wtp_3b_info_584, replace
