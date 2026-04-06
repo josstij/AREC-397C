@@ -15,7 +15,7 @@
 	clear				all
 	
 	cap log 		close
-	log using		"$logs/\assignment_leavy.smcl", append	
+	log using		"$logs/assignment_leavy.smcl", append	
 ************************************************************ Import the data
 * import data from CSV
 
@@ -1220,7 +1220,7 @@ Maybe this would be best as just one table instead of one for each hypothesis
 	tab					con_situation_7, missing
 
 
-	local			h_sumvars ///
+/*	local			h_sumvars ///
 						wtp_2b_584 ///
 						wtp_2b_793 ///
 						wtp_3b_info_584 ///
@@ -1265,25 +1265,59 @@ Maybe this would be best as just one table instead of one for each hypothesis
 						flavor_pref1_6 ///
 						flavor_pref1_7 ///
 						flavor_pref1_8 ///
-						flavor_pref1_9
-			
-* this is the full set of summary statistics for both H1 and H2
-* This is the table we will present. It should have EVERYTHING we need in it
-* no sense in having two tables.
+						flavor_pref1_9*/
 
+
+* I'm going to rerun the table with few stats. It's just too big and messy
+* will leave this one above ^^^^ but comment it out
+* i'm going to pull what specificially applies to mine and Dagi's hyps
+* still considering leaving flavors on there just because it may be useful * info						
+
+local			h_sumvars ///
+						wtp_2b_584 ///
+						wtp_2b_793 ///
+						wtp_3b_info_584 ///
+						wtp_3b_info_793 ///
+						wtp_2a_info_584 ///
+						wtp_2a_info_793 ///
+						wtp_3a_584 ///
+						wtp_3a_793 ///
+						sensory_584_flavor ///
+						sensory_793_flavor ///
+						pref_ingred ///
+						exercise /// 
+						con_situation_1 ///
+						con_situation_2 ///
+						con_situation_3 ///
+						flavor_pref1_1 ///
+						flavor_pref1_2 ///
+						flavor_pref1_3 ///
+						flavor_pref1_4 ///
+						flavor_pref1_5 ///
+						flavor_pref1_6 ///
+						flavor_pref1_7 ///
+						flavor_pref1_8 ///
+						flavor_pref1_9
+
+	estpost			sum `h_sumvars'
+	ereturn			list
+* this is the abbriviated table. I think this is what we should present.
+* I'm having a lot of trouble exporting this correctly to latex.
+* I can't seem to get it centered.
+
+/*
 	eststo clear
 	estpost 			tabstat `h_sumvars' if day == 1, ///
 							statistics(n mean sd min max) ///
 							columns(statistics)
-
-	esttab using			"$code/Summary_Stats.tex", replace ///
-								cells("count mean sd min max") ///
-								noobs nonumber nomtitle ///
-								label booktabs fragment ///
-	prehead("\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}l*{5}{r}} \toprule & Count & Mean & SD & Min & Max \\ \midrule") ///
-    postfoot("\bottomrule \end{tabular*}")
+							
+	esttab			using "$code/Summary_Stats", replace ///			
+					cells("count mean sd min max") ///
+					noobs nonumber nomtitle ///
+					title("Summary Statistics") ///
+					label
 	
-	
+*/	
 ********************************************************************************
 **# Graphs H1
 ********************************************************************************

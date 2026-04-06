@@ -1,0 +1,29 @@
+Summary Statistics
+-------------------------------------------------------------------------------------
+                            count         mean           sd          min          max
+-------------------------------------------------------------------------------------
+WTP for 584, tasti~t           33     2.636364     .7656975          .75          4.5
+WTP for 793, tasti~t           33     2.780303     .8095079         1.25          4.5
+WTP for 584 after ~t           33     2.818182     .8107499            0          4.5
+WTP for 793 after ~t           33     2.484848     .8793183            0          4.5
+WTP for 584, infor~t           36     3.041667     .6020797            2         4.75
+WTP for 793, infor~t           36     2.395833     .8267298            0            4
+WTP for 584 after ~i           36     2.729167     .8092655            0            4
+WTP for 793 inform~t           36     2.902778     .6499389            2          4.5
+584 flavor liking              69     6.492754     1.711752            1            9
+793 flavor liking              69     7.144928     1.734387            1            9
+Importance of func~i           69     3.652174     1.068618            1            5
+Days per week of 3~e           69      2.84058     .8681147            1            4
+Before exercise                69      .173913     .3818115            0            1
+During exercise                69     .3478261     .4797698            0            1
+After exercise                 69     .5652174     .4993602            0            1
+Selected Blueberry             69     .4202899     .4972216            0            1
+Selected Berry blend           69     .4492754     .5010645            0            1
+Selected Fruit Punch           69     .5072464     .5036102            0            1
+Selected Grape                 69     .2753623     .4499692            0            1
+Selected Lemon Lime            69     .6521739     .4797698            0            1
+Selected Orange                69     .4347826     .4993602            0            1
+Selected Pineapple             69     .4057971     .4946431            0            1
+Selected None of t~m           69            0            0            0            0
+Selected Other fla~r           69     .1594203     .3687494            0            1
+-------------------------------------------------------------------------------------
