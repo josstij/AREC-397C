@@ -1281,7 +1281,7 @@ Maybe this would be best as just one table instead of one for each hypothesis
 						flavor_pref1_9*/
 
 
-* I'm going to rerun the table with few stats. It's just too big and messy
+* I'm going to rerun the table with fewer stats. It's just too big and messy
 * will leave this one above ^^^^ but comment it out
 * i'm going to pull what specificially applies to mine and Dagi's hyps
 * still considering leaving flavors on there just because it may be useful * info						
@@ -1317,6 +1317,7 @@ local			h_sumvars ///
 * this is the abbriviated table. I think this is what we should present.
 * I'm having a lot of trouble exporting this correctly to latex.
 * I can't seem to get it centered.
+* I'm giving up on this table and goign with text in the doc
 
 /*
 	eststo clear
