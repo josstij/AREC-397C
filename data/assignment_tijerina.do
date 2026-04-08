@@ -97,11 +97,67 @@
 							
 	label variable			${final_wtp_var} "Ultimate WTP decision in survey flow"
 							
+**## 2.5 - product identifiers and treatment variables
+* identify which product was evaluated
+	gen						product_id = .
+		***143 missing values generated
+		
+	replace 				product_id = 584 if product_id == . & ///
+							(wtp_2b_584 != . | wtp_2a_info_584 != . | ///
+							wtp_3b_info_584 != . | wtp_3a_584 != .)
+
+	replace 				product_id = 793 if product_id == . & ///
+							(wtp_2b_793 != . | wtp_2a_info_793 != . | ///
+							wtp_3b_info_793 != . | wtp_3a_793 != .)
 							
-							
-							
-							
-							
+	replace 				product_id = 356 if product_id == . & ///
+							(wtp_2b_356 != . | wtp_2a_info_356 != . | ///
+							wtp_3b_info_356 != . | wtp_3a_356 != .)
+
+	replace 				product_id = 831 if product_id == . & ///
+							(wtp_2b_831 != . | wtp_2a_info_831 != . | ///
+							wtp_3b_info_831 != . | wtp_3a_831 != .)
+
+	label var 				product_id "Product Tasted"
+
+	label 					define product_labels ///
+								584 "UA Lemon-Lime" ///
+								793 "Gatorade Lemon-Lime" ///
+								356 "Blueberry" ///
+								831 "Pineapple"
+
+	label 					values product_id product_labels
+
+**## 2.6 - Product characteristics
+* dummy for novel flavors (Blueberry or Pineapple)
+	gen 					is_novel_flavor = (product_id == 356 | product_id == 831)
+
+	label var 				is_novel_flavor ///
+							"Tasted Novel Flavor (Blueberry/Pineapple, 1=Yes)"
+
+
+**********************************************************************
+**## 2.7 - Magnesium information treatment
+**********************************************************************
+
+* indicator for whether WTP was recorded after mag info
+	gen mag_info_provided = 0
+
+	replace mag_info_provided = 1 if wtp_post_maginfo != .
+
+	label var mag_info_provided ///
+		"Magnesium Info Provided for this WTP (1=Yes)"
+
+	label define mag_info_status ///
+		0 "No Mag Info (Post-Blind Taste)" ///
+		1 "Mag Info Provided (Post-Info)"
+
+	label values mag_info_provided mag_info_status
+
+	
+	
+	
+	
 							
 							
 							
