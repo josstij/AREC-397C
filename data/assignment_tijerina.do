@@ -2,7 +2,7 @@
 * assignment: 1
 * created on: 7 april 2026
 * created by: jmt
-* edited on: 7 april 2026
+* edited on: 8 april 2026
 * edited by: jmt
 * Stata v.19.5
 
@@ -75,24 +75,36 @@
 	
 	label var 				wtp_post_blindtaste ///
 							"WTP after blind tasting (pre-mag info)"
-* Create a single WTP_post_maginfo variable
-* This will pick up WTP values from any 'post-mag-info' stage.
-* The survey shows both `wtp_2a_info_XYZ` and `wtp_3b_info_XYZ` (and `wtp_3a_XYZ`) as being *after* mag info has been presented.
-* We must choose ONE consistent source for 'post-mag-info WTP' per product per person if they encountered multiple.
-* `wtp_3a_XYZ` questions appear to be the most direct 'informed' WTP.
-* Let's take `wtp_3a_XYZ` as the primary post-maginfo WTP, as they explicitly call out mag content.
-gen wtp_post_maginfo = .
-foreach var in wtp_3a_584 wtp_3a_793 wtp_3a_356 wtp_3a_831 {
+							
+**## 2.3 - Create WTP after magnesium information
+	gen 					wtp_post_maginfo = .
+	
+	foreach var 			in wtp_3a_584 wtp_3a_793 wtp_3a_356 wtp_3a_831 {
     replace wtp_post_maginfo = `var' if wtp_post_maginfo == . & `var' != .
 }
-label var wtp_post_maginfo "WTP after tasting & mag info provided for specific product"
-* Create a global 'final_wtp' (the latest WTP captured whether informed or not)
-* This requires checking the survey flow for each person.
-* If `wtp_post_maginfo` is available, that's the final WTP based on explicit magnesium info.
-* Otherwise, `wtp_post_blindtaste` would be the final WTP for those who didn't get that specific mag info stage.
-global final_wtp_var "final_wtp"
-gen ${final_wtp_var} = wtp_post_maginfo
-replace ${final_wtp_var} = wtp_post_blindtaste if ${final_wtp_var} == . & wtp_post_blindtaste != .
+
+	label var 				wtp_post_maginfo ///
+				"WTP after tasting & mag info provided for specific product"
+				
+**## 2.4 - Create final WTP variable
+	global 					final_wtp_var "final_wtp"
+	
+	gen 					${final_wtp_var} = wtp_post_maginfo
+	
+	replace 				${final_wtp_var} = wtp_post_blindtaste ///
+							if ${final_wtp_var} == . & wtp_post_blindtaste != .
+		*** 72 changes made
+							
+	label variable			${final_wtp_var} "Ultimate WTP decision in survey flow"
+							
+							
+							
+							
+							
+							
+							
+							
+							
 label var ${final_wtp_var} "Ultimate WTP decision in survey flow"
 * -- Product Identifiers --
 * Reconstruct 'product_id' based on which WTP variables are not missing.
