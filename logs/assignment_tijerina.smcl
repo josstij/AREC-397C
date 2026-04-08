@@ -1116,4 +1116,18 @@ Sorted by:
 {com}. 
 {txt}end of do-file
 
-{com}. 
+{com}. do "C:\Users\tijer\OneDrive - University of Arizona\AREC 397C\AREC-397C\code\arec397C_do.do"
+{err}{p 0 4 2}
+file {bf:{err}C:\Users\tijer\OneDrive - University of Arizona\AREC 397C\AREC-397C\code\arec397C_do.do}
+not found
+{p_end}
+{txt}{search r(601), local:r(601);}
+
+{com}. do "C:\Users\tijer\OneDrive - University of Arizona\AREC 397C\AREC-397C\code\arec397C_do.do"
+{err}{p 0 4 2}
+file {bf:{err}C:\Users\tijer\OneDrive - University of Arizona\AREC 397C\AREC-397C\code\arec397C_do.do}
+not found
+{p_end}
+{txt}{search r(601), local:r(601);}
+
+{com}. exit, clear
