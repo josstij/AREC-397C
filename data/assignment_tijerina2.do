@@ -68,6 +68,8 @@
 * keep day 1 only
 	keep if 				day == 2
 	*** 73 observations deleted
+	
+	summarize					wtp_*
 	lidjoidoimoied
 * keep only the variables needed
 	keep 					wtp_2b_584 wtp_3b_info_584 ///
