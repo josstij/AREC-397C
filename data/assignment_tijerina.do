@@ -63,6 +63,210 @@
 	describe				wtp_*
 	*** all WTP variables are aready numeric (float)
 
+* keep day 1 only
+	keep if 				day == 1
+	*** 73 observations deleted
+	
+* keep only the variables needed
+	keep 					wtp_2b_584 wtp_3b_info_584 ///
+							wtp_2b_793 wtp_3b_info_793 ///
+							after_info_3b_d1_useful preknow_5_magn ///
+							age gender income exercise con_freq
+	
+**## 2.2 - create main WTP info
+	* average WTP (after tasting and after info) 
+	gen 					wtp_after_taste = (wtp_2b_584 + wtp_2b_793)/2
+	gen 					wtp_after_info  = (wtp_3b_info_584 + wtp_3b_info_793)/2
+
+	* Deviation from market price ($2.50)
+	gen 					dev_584_taste = wtp_2b_584 - 2.5
+	gen 					dev_584_info  = wtp_3b_info_584 - 2.5
+
+	gen 					dev_793_taste = wtp_2b_793 - 2.5
+	gen 					dev_793_info  = wtp_3b_info_793 - 2.5
+
+	* Average deviation
+	gen 					dev_avg_taste = wtp_after_taste - 2.5
+	gen 					dev_avg_info  = wtp_after_info - 2.5
+
+**********************************************************************
+**# 3 - Descriptive statistics table
+**********************************************************************
+	summarize 				wtp_2b_584 wtp_3b_info_584 ///
+							wtp_2b_793 wtp_3b_info_793 ///
+							after_info_3b_d1_useful preknow_5_magn ///
+							age exercise con_freq
+	
+/*
+
+   
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+  wtp_2b_584 |         34    2.617647     .761864        .75        4.5
+wtp_3b_i~584 |         34    2.808824    .8002339          0        4.5
+  wtp_2b_793 |         34    2.757353    .8083028       1.25        4.5
+wtp_3b_i~793 |         34    2.470588    .8698761          0        4.5
+after_info~l |         34    3.764706    1.207522          1          5
+-------------+---------------------------------------------------------
+preknow_5_~n |         70    3.571429    .9258201          1          5
+         age |         70    25.67143    10.90801       18.5         55
+    exercise |         70    2.814286    .8894365          1          4
+    con_freq |         70    2.071429    1.171168          0          5
+
+*/
+
+	tabstat 				wtp_2b_584 wtp_3b_info_584 ///
+							wtp_2b_793 wtp_3b_info_793 ///
+							wtp_after_taste wtp_after_info ///
+							dev_avg_taste dev_avg_info ///
+							age exercise con_freq, ///
+							stats(mean sd se min max n) columns(statistics)
+
+/*
+
+************se wont work
+					
+*/
+
+
+**********************************************************************
+**# 4 - Create key variables
+**********************************************************************
+	gen 					diff_584 = wtp_3b_info_584 - wtp_2b_584
+	gen 					diff_793 = wtp_3b_info_793 - wtp_2b_793
+
+	
+**********************************************************************
+**# 5 - Get means for charts
+**********************************************************************
+	summarize				wtp_2b_584 wtp_3b_info_584
+	
+/*
+   Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+  wtp_2b_584 |         34    2.617647     .761864        .75        4.5
+wtp_3b_i~584 |         34    2.808824    .8002339          0        4.5
+*/
+
+	summarize 				wtp_2b_793 wtp_3b_info_793
+	
+/*
+	  Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+  wtp_2b_793 |         34    2.757353    .8083028       1.25        4.5
+wtp_3b_i~793 |         34    2.470588    .8698761          0        4.5
+*/
+
+	summarize 				diff_584 diff_793
+	
+/*
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+    diff_584 |         34    .1911765    .4729774         -1       1.25
+    diff_793 |         34   -.2867647    .6517237       -2.5        .75
+
+*/
+
+
+**********************************************************************
+**# 6 - Paired t-tests
+**********************************************************************
+	ttest					wtp_3b_info_584 == wtp_2b_584
+
+/*
+Paired t test
+------------------------------------------------------------------------------
+Variable |     Obs        Mean    Std. err.   Std. dev.   [95% conf. interval]
+---------+--------------------------------------------------------------------
+wtp_3b~4 |      34    2.808824     .137239    .8002339    2.529609    3.088038
+wtp_2b~4 |      34    2.617647    .1306586     .761864     2.35182    2.883474
+---------+--------------------------------------------------------------------
+    diff |      34    .1911765     .081115    .4729774    .0261468    .3562061
+------------------------------------------------------------------------------
+     mean(diff) = mean(wtp_3b_info_584 - wtp_2b_584)              t =   2.3569
+ H0: mean(diff) = 0                              Degrees of freedom =       33
+
+ Ha: mean(diff) < 0           Ha: mean(diff) != 0           Ha: mean(diff) > 0
+ Pr(T < t) = 0.9877         Pr(|T| > |t|) = 0.0245          Pr(T > t) = 0.0123
+	*** Product 584: WTP increased significantly (p = 0.0245)
+ 
+*/
+
+	ttest 					wtp_3b_info_793 == wtp_2b_793
+
+/*
+Paired t test
+------------------------------------------------------------------------------
+Variable |     Obs        Mean    Std. err.   Std. dev.   [95% conf. interval]
+---------+--------------------------------------------------------------------
+wtp_3b~3 |      34    2.470588    .1491825    .8698761    2.167074    2.774102
+wtp_2b~3 |      34    2.757353    .1386228    .8083028    2.475323    3.039383
+---------+--------------------------------------------------------------------
+    diff |      34   -.2867647    .1117697    .6517237   -.5141618   -.0593676
+------------------------------------------------------------------------------
+     mean(diff) = mean(wtp_3b_info_793 - wtp_2b_793)              t =  -2.5657
+ H0: mean(diff) = 0                              Degrees of freedom =       33
+
+ Ha: mean(diff) < 0           Ha: mean(diff) != 0           Ha: mean(diff) > 0
+ Pr(T < t) = 0.0075         Pr(|T| > |t|) = 0.0150          Pr(T > t) = 0.9925
+
+*/
+	*** product 793: WTP decreased significantly (p = 0.0150)
+
+
+**********************************************************************
+**# 7 - Figures
+**********************************************************************
+**## 7.1 - Figure 1: WTP before vs after magnesium info
+	graph 				bar (mean) wtp_2b_584 wtp_3b_info_584 ///
+						wtp_2b_793 wtp_3b_info_793, ///
+						title("Figure 1: WTP Before vs After Magnesium Information") ///
+						ytitle("Willingness to Pay ($)")
+
+**## 7.2 - Figure 2: Deviation from baseline price ($2.50)
+	graph 				bar (mean) dev_584_taste dev_584_info ///
+						dev_793_taste dev_793_info, ///
+						title("Figure 2: Deviation from $2.50 Baseline Price") ///
+						ytitle("Deviation ($)")
+
+**## 7.3 - Figure 3: WTP by gender
+	graph 				bar (mean) wtp_after_info, over(gender) ///
+						title("Figure 3: WTP After Info by Gender") ///
+						ytitle("WTP ($)")
+
+**## 7.4 - Figure 4: WTP by exercise level
+	graph 				bar (mean) wtp_after_info, over(exercise) ///
+						title("Figure 4: WTP by Exercise Frequency") ///
+						ytitle("WTP ($)")
+
+**## 7.5 - Figure 5: WTP by age group
+	gen 				age_group = .
+	replace 			age_group = 1 if age < 25
+	replace 			age_group = 2 if age >= 25 & age < 40
+	replace 			age_group = 3 if age >= 40
+
+	label 				define agegrp 1 "Under 25" 2 "25-39" 3 "40+"
+	label 				values age_group agegrp
+
+	graph 				bar (mean) wtp_after_info, over(age_group) ///
+						title("Figure 5: WTP by Age Group") ///
+						ytitle("WTP ($)")
+	
+
+**********************************************************************
+**# 8 - close log
+**********************************************************************
+log close
+
+
+
+
+
+
+
+
+	djlkwdlkm
 **## 2.2 - Create WTP after blind tasting (pre-mag info)
 	gen 					wtp_post_blindtaste = .
 	*** 143 missing values generated
