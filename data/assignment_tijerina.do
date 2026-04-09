@@ -15,7 +15,7 @@
 	clear				all
 	
 	cap log 		close
-	log using		"$logs/\assignment_tijerina.smcl", append	
+	log using		"$logs/assignment_tijerina.smcl", append	
 	set 			scheme s2color
 	graph set 		window fontface "Arial"
 **********************************************************************
@@ -70,7 +70,7 @@
 	*** 73 observations deleted
 	
 * keep only the variables needed
-	keep 					wtp_2b_584 wtp_3b_info_584 ///
+	keep 					wtp_1 wtp_2b_584 wtp_3b_info_584 ///
 							wtp_2b_793 wtp_3b_info_793 ///
 							after_info_3b_d1_useful preknow_5_magn ///
 							age gender income exercise con_freq
@@ -117,15 +117,17 @@ preknow_5_~n |         70    3.571429    .9258201          1          5
 
 */
 
-	tabstat 				wtp_2b_584 wtp_3b_info_584 ///
-							wtp_2b_793 wtp_3b_info_793 ///
-							wtp_after_taste wtp_after_info ///
-							dev_avg_taste dev_avg_info ///
-							age exercise con_freq, ///
-							stats(mean sd min max n) columns(statistics)
+	tabstat wtp_2b_584 wtp_3b_info_584 ///
+        wtp_2b_793 wtp_3b_info_793 ///
+        wtp_after_taste wtp_after_info ///
+        dev_avg_taste dev_avg_info ///
+        after_info_3b_d1_useful preknow_5_magn ///
+        age exercise con_freq, ///
+        stats(mean sd min max n) columns(statistics)
 
 /*
 
+  
     Variable |      Mean        SD       Min       Max         N
 -------------+--------------------------------------------------
   wtp_2b_584 |  2.617647   .761864       .75       4.5        34
@@ -136,6 +138,8 @@ wtp_after_~e |    2.6875  .6651854     1.625       4.5        34
 wtp_after_~o |  2.639706  .6431197         1         4        34
 dev_avg_ta~e |     .1875  .6651854     -.875         2        34
 dev_avg_info |  .1397059  .6431197      -1.5       1.5        34
+after_info~l |  3.764706  1.207522         1         5        34
+preknow_5_~n |  3.571429  .9258201         1         5        70
          age |  25.67143  10.90801      18.5        55        70
     exercise |  2.814286  .8894365         1         4        70
     con_freq |  2.071429  1.171168         0         5        70
@@ -178,10 +182,10 @@ wtp_3b_info_793 SE = .14918253
 **********************************************************************
 	gen 					diff_584 = wtp_3b_info_584 - wtp_2b_584
 	gen 					diff_793 = wtp_3b_info_793 - wtp_2b_793
-
+	*** Here is the change in willingness to pay caused by magnesium information
 	
 **********************************************************************
-**# 5 - Get means for charts
+**# 5 - Summary checks for figure construction
 **********************************************************************
 	summarize				wtp_2b_584 wtp_3b_info_584
 	
