@@ -15,7 +15,7 @@
 	clear				all
 	
 	cap log 		close
-	log using		"$logs/assignment_tijerina1", append	
+	log using		"$logs/assignment_tijerina2", append	
 	set 			scheme s2color
 	graph set 		window fontface "Arial"
 **********************************************************************
@@ -66,9 +66,9 @@
 	*** all WTP variables are aready numeric (float)
 
 * keep day 1 only
-	keep if 				day == 1
+	keep if 				day == 2
 	*** 73 observations deleted
-	
+	lidjoidoimoied
 * keep only the variables needed
 	keep 					wtp_2b_584 wtp_3b_info_584 ///
 							wtp_2b_793 wtp_3b_info_793 ///
