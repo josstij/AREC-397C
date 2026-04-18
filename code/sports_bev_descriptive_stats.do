@@ -2,8 +2,8 @@
 * assignment: 1
 * created on: 26 mar 2026
 * created by: jmt
-* edited on: 26 mar 2026
-* edited by: jmt
+* edited on: 18 apr 2026
+* edited by: tml
 * Stata v.19.5
 
 * does
@@ -40,6 +40,14 @@
 **********************************************************************
 **# 1 Importing the data
 **********************************************************************
+* needs
+	* all
+	
+	clear				all
+	
+	cap log 		close
+	log using		"$logs/assignment_leavy.smcl", append	
+************************************************************ Import the data
 * import data from CSV
 
 	import delimited		using "$data/spors_bev_data_use_me.csv"
@@ -48,16 +56,28 @@
 * drop the un-finished responses
 	drop 			if finished != 1
 	
-***************************************************************************
-* need to just SUMMARIZE THE STATISTICS OF THE VARS.
-* EVERYTHING BELOW IS THE NEXT STEP OF THE PROCESS.
+* keep male and female because there are only two obs that are not male and female
+	tab			gender, missing
+	keep		if inlist(gender, 1, 2)
+	
+* flag respondents who finished in under 300 seconds
+	gen			speeder_300 = (durationinseconds < 300) if !missing(durationinseconds)
+	label var 	speeder_300 "Completed survey in under 300 seconds"
 
- 
+	label 		define speeder_lbl 0 "No" 1 "Yes", replace
+	label 		values speeder_300 speeder_lbl
+
+	tab 		speeder_300, missing
+	sum 		durationinseconds, detail
+	
+	count if 	speeder_300 == 1
+	count if 	speeder_300 == 0
+	
+	drop if			speeder_300 == 1
 	
 ***********************************************************************
-**# addressing hypotheses
-***********************************************************************
-	
+**# hypotheses (original)
+***********************************************************************	
 	
 *** first we need to determine what vars should be inspected based on 
 *the hypotheses
@@ -78,788 +98,201 @@ information and higher magnesium content increase the probability
 that the lab-produced beverage is chosen and raise WTP and 
 purchase likelihood for it, while flavor liking and perceived sweetness remain
 important but not exclusively dominant drivers of choice.
-
-*** Hypothesis 2
-*********
-NULL HYPOTHESIS
-Our null hypothesis is
-that males and females respond the same way and magnesium does not increase willingness to pay beyond flavor and sweetness
-*********
-ALT HYPOTHESIS
-Magnesium increases willingness to pay more for females than males, or for participants who exercise more, showing that functional benefits like
-magnesium can influence choices differently depending on gender and activity level.
-*/
-********************************************************************************
-**# Defining vars
-********************************************************************************
-
-**# Hyopthesis 1
-
-********************************************************************************
-**## 1. Clean var names
-***************************************************************************
-
-* fixing typos
-	cap			rename Sure_2b_793 sure_2b_793
-	cap			rename sensory_831_slat sensory_831_salt
-	cap			rename mag_benefit_3b_d1_musle mag_benefit_3b_d1_muscle
-	cap 		rename preknow_5_magn preknow_magn
-	
-**## Setting up the sample structure
-
-	gen 		byte day1 = !missing(sensory_584_overall) ///
-                | !missing(sensory_793_overall)
-	label var	day1 "Day 1 sample: lemon-lime 584 vs 793"
-	gen			byte day2 = !missing(sensory_356_overall) ///
-				| !missing(sensory_831_overall)
-	label var	day2 "Day 2 sample: 356 vs 831"
-	
-* Day 1 wave
-	
-	gen 		byte d1_tastefirst = !missing(wtp_2b_584) | !missing(wtp_2b_793)
-	label var 	d1_tastefirst "Day 1: tasted first, WTP before magnesium info"
-
-	gen 		byte d1_infofirst = !missing(wtp_2a_info_584) | !missing(wtp_2a_info_793)
-	label var 	d1_infofirst "Day 1: magnesium info shown before later tasting/labeled WTP"
-	
-********************************************************************************
-**# 3. Create Day 1 vars for HYP 1
-********************************************************************************
-
-* product 584 = HAS MAGNESIUM
-
-	gen			d1_mag_overall_like = sensory_584_overall if day1
-	gen 		d1_mag_flavor_like = sensory_584_flavor if day1
-	gen 		d1_mag_lemon_like = sensory_584_lemon if day1
-	gen 		d1_mag_sweet_like = sensory_584_sweet if day1
-	gen 		d1_mag_refresh = refresh_584 if day1
-
-	label var 	d1_mag_overall_like "Day 1 product 584 overall liking"
-	label var 	d1_mag_flavor_like  "Day 1 product 584 overall flavor liking"
-	label var 	d1_mag_lemon_like   "Day 1 product 584 lemon-lime flavor liking"
-	label var 	d1_mag_sweet_like   "Day 1 product 584 sweetness liking"
-	label var 	d1_mag_refresh      "Day 1 product 584 refreshing sensation"
-
-* product 793 = NO MAGNESIUM
-	gen 		d1_nomag_overall_like = sensory_793_overall if day1
-	gen 		d1_nomag_flavor_like = sensory_793_flavor if day1
-	gen 		d1_nomag_lemon_like = sensory_793_lemon if day1
-	gen 		d1_nomag_sweet_like = sensory_793_sweet if day1
-	gen 		d1_nomag_refresh = refresh_793 if day1
-	
-	label var 	d1_nomag_overall_like "Day 1 product 793 overall liking"
-	label var 	d1_nomag_flavor_like  "Day 1 product 793 overall flavor liking"
-	label var 	d1_nomag_lemon_like   "Day 1 product 793 lemon-lime flavor liking"
-	label var 	d1_nomag_sweet_like   "Day 1 product 793 sweetness liking"
-	label var 	d1_nomag_refresh      "Day 1 product 793 refreshing sensation"
-	
-* Compare each Day 1 participants rating for the MAGNESIUM drink (584)
-* to the NON-MAGNESIUM drink (793)
-* POSTIVIE values mean participants liked the magnesium MORE
-* NEGATIVE values mean they liked the magnesium LESS
-
-	gen 		d1_diff_overall_like = d1_mag_overall_like - d1_nomag_overall_like if day1
-	gen 		d1_diff_flavor_like  = d1_mag_flavor_like  - d1_nomag_flavor_like  if day1
-	gen 		d1_diff_lemon_like   = d1_mag_lemon_like   - d1_nomag_lemon_like   if day1
-	gen 		d1_diff_sweet_like   = d1_mag_sweet_like   - d1_nomag_sweet_like   if day1
-	gen 		d1_diff_refresh      = d1_mag_refresh      - d1_nomag_refresh      if day1
-
-	label var 	d1_diff_overall_like "Day 1: 584 minus 793 overall liking"
-	label var 	d1_diff_flavor_like  "Day 1: 584 minus 793 flavor liking"
-	label var 	d1_diff_lemon_like   "Day 1: 584 minus 793 lemon-lime liking"
-	label var 	d1_diff_sweet_like   "Day 1: 584 minus 793 sweetness liking"
-	label var 	d1_diff_refresh      "Day 1: 584 minus 793 refreshing sensation"
-
-********************************************************************************
-**# Create Day 1 WTP
-********************************************************************************
-
-* Generic baseline WTP before product-specific info
-	gen			wtp_baseline = wtp_1
-	label var 	wtp_baseline "Baseline WTP for new generic sports beverage"
-
-* Taste-first branch: product-specific WTP BEFORE magnesium info
-	gen			d1_mag_wtp_taste_noinfo   = wtp_2b_584 if day1
-	gen 		d1_nomag_wtp_taste_noinfo = wtp_2b_793 if day1
-
-	label var 	d1_mag_wtp_taste_noinfo   "Day 1 product 584 WTP after taste, before magnesium info"
-	label var 	d1_nomag_wtp_taste_noinfo "Day 1 product 793 WTP after taste, before magnesium info"
-
-	gen 		d1_diff_wtp_taste_noinfo = d1_mag_wtp_taste_noinfo - d1_nomag_wtp_taste_noinfo if day1
-	label var 	d1_diff_wtp_taste_noinfo "Day 1: 584 minus 793 WTP after taste, before info"
-
-* Setting up the INFORMED branch and then calculating the WTP difference 584-793
-	gen 		d1_mag_wtp_info = .
-	replace 	d1_mag_wtp_info = wtp_2a_info_584 if !missing(wtp_2a_info_584)
-	replace 	d1_mag_wtp_info = wtp_3b_info_584 if missing(d1_mag_wtp_info) & !missing(wtp_3b_info_584)
-
-	gen 		d1_nomag_wtp_info = .
-	replace 	d1_nomag_wtp_info = wtp_2a_info_793 if !missing(wtp_2a_info_793)
-	replace 	d1_nomag_wtp_info = wtp_3b_info_793 if missing(d1_nomag_wtp_info) & !missing(wtp_3b_info_793)
-
-	label var 	d1_mag_wtp_info   "Day 1 informed WTP for product 584"
-	label var 	d1_nomag_wtp_info "Day 1 informed WTP for product 793"
-
-	gen 		d1_diff_wtp_info = d1_mag_wtp_info - d1_nomag_wtp_info if day1
-	label var 	d1_diff_wtp_info "Day 1: 584 minus 793 informed WTP"
-
-* Info-first branch later labeled WTP after tasting
-	gen 		d1_mag_wtp_labeled   = wtp_3a_584 if day1
-	gen 		d1_nomag_wtp_labeled = wtp_3a_793 if day1
-
-	label var 	d1_mag_wtp_labeled   "Day 1 labeled WTP for product 584"
-	label var 	d1_nomag_wtp_labeled "Day 1 labeled WTP for product 793"
-
-	gen 		d1_diff_wtp_labeled = d1_mag_wtp_labeled - d1_nomag_wtp_labeled if day1
-	label var 	d1_diff_wtp_labeled "Day 1: 584 minus 793 labeled WTP"
-	
-********************************************************************************
-**# 5. Capture the certainty vars
-********************************************************************************
-
-	cap			rename sure_2b_793 sure_2b_793
-
-* No info vars
-	gen 		d1_mag_sure_taste_noinfo   = sure_2b_584 if day1
-	gen 		d1_nomag_sure_taste_noinfo = sure_2b_793 if day1
-	
-	gen 		d1_mag_sure_info = .
-	replace 	d1_mag_sure_info = sure_2a_info_584 if !missing(sure_2a_info_584)
-	replace 	d1_mag_sure_info = sure_3b_info_584 if missing(d1_mag_sure_info) & !missing(sure_3b_info_584)
-
-	gen 		d1_nomag_sure_info = .
-	replace 	d1_nomag_sure_info = sure_2a_info_793 if !missing(sure_2a_info_793)
-	replace 	d1_nomag_sure_info = sure_3b_info_793 if missing(d1_nomag_sure_info) & !missing(sure_3b_info_793)
-	
-********************************************************************************
-**# 6. Magnesium info reaction vars
-********************************************************************************
-
-	gen 		d1_info_new = .
-	replace 	d1_info_new = after_info_2a_d1_new if !missing(after_info_2a_d1_new)
-	replace 	d1_info_new = after_info_3b_d1_new if missing(d1_info_new) & !missing(after_info_3b_d1_new)
-
-	gen 		d1_info_useful = .
-	replace 	d1_info_useful = after_info_2a_d1_useful if !missing(after_info_2a_d1_useful)
-	replace 	d1_info_useful = after_info_3b_d1_useful if missing(d1_info_useful) & !missing(after_info_3b_d1_useful)
-
-	label var 	d1_info_new    "Day 1 magnesium information was new to me"
-	label var 	d1_info_useful "Day 1 magnesium information was useful to me"
-	
-********************************************************************************
-**# 7. Magnesium benefit importance vars
-********************************************************************************
-
-	gen 		d1_magbenefit_recovery = .
-	replace 	d1_magbenefit_recovery = mag_benefit_2a_d1_muscle ///
-				if !missing(mag_benefit_2a_d1_muscle)
-	replace 	d1_magbenefit_recovery = mag_benefit_3b_d1_muscle ///
-				if missing(d1_magbenefit_recovery) & !missing(mag_benefit_3b_d1_muscle)
-
-	gen 		d1_magbenefit_cramps = .
-	replace 	d1_magbenefit_cramps = mag_benefit_2a_d1_cramps ///
-				if !missing(mag_benefit_2a_d1_cramps)
-	replace 	d1_magbenefit_cramps = mag_benefit_3b_d1_cramps ///
-				if missing(d1_magbenefit_cramps) & !missing(mag_benefit_3b_d1_cramps)
-
-	gen 		d1_magbenefit_sugar = .
-	replace 	d1_magbenefit_sugar = mag_benefit_2a_d1_sugar ///
-				if !missing(mag_benefit_2a_d1_sugar)
-	replace 	d1_magbenefit_sugar = mag_benefit_3b_d1_sugar ///
-				if missing(d1_magbenefit_sugar) & !missing(mag_benefit_3b_d1_sugar)
-
-	gen 		d1_magbenefit_bone = .
-	replace 	d1_magbenefit_bone = mag_benefit_2a_d1_bone ///
-				if !missing(mag_benefit_2a_d1_bone)
-	replace 	d1_magbenefit_bone = mag_benefit_3b_d1_bone ///
-				if missing(d1_magbenefit_bone) & !missing(mag_benefit_3b_d1_bone)
-
-	gen 		d1_magbenefit_sleep = .
-	replace 	d1_magbenefit_sleep = mag_benefit_2a_d1_sleep ///
-				if !missing(mag_benefit_2a_d1_sleep)
-	replace 	d1_magbenefit_sleep = mag_benefit_3b_d1_sleep ///
-				if missing(d1_magbenefit_sleep) & !missing(mag_benefit_3b_d1_sleep)
-
-	egen 		d1_magbenefit_mean = rowmean( ///
-				d1_magbenefit_recovery ///
-				d1_magbenefit_cramps ///
-				d1_magbenefit_sugar ///
-				d1_magbenefit_bone ///
-				d1_magbenefit_sleep ///
-				)
-
-	label var 	d1_magbenefit_mean "Day 1 mean importance of magnesium benefits"
-	
-********************************************************************************
-**# 8. Individual preference controls for HYP 1
-********************************************************************************
-	gen 		sugar_importance      = pref_sugar
-	gen 		flavor_importance     = pref_flavor
-	gen 		sweetness_importance  = pref_sweet
-	gen 		ingredient_importance = pref_ingred
-	gen 		healthclaim_importance = pref_health
-
-	label var 	sugar_importance       "Importance of low to moderate sugar"
-	label var 	flavor_importance      "Importance of good flavor"
-	label var 	sweetness_importance   "Importance of sweetness being about right"
-	label var 	ingredient_importance  "Importance of performance/recovery ingredients"
-	label var 	healthclaim_importance "Importance of general health claims"
-
-	gen 		magnesium_awareness = preknow_magn
-	label var 	magnesium_awareness "Awareness of specific magnesium benefits"
-
-********************************************************************************
-**# Check the summaries
-********************************************************************************
-
-	sum 		day1 day2 d1_tastefirst d1_infofirst
-	sum 		d1_mag_flavor_like d1_nomag_flavor_like d1_diff_flavor_like if day1
-	sum 		d1_mag_sweet_like d1_nomag_sweet_like d1_diff_sweet_like if day1
-	sum 		d1_mag_wtp_taste_noinfo d1_nomag_wtp_taste_noinfo d1_diff_wtp_taste_noinfo if day1
-	sum 		d1_mag_wtp_info d1_nomag_wtp_info d1_diff_wtp_info if day1
-	sum 		d1_info_new d1_info_useful d1_magbenefit_mean if day1
-	
-	sum			day1 day2 d1_tastefirst d1_infofirst
-	tab			day1
-	tab			day2
-
-* Everything looks pretty good. I noticed the samples are split evenly.
-* Need to go back and inspect that there were equal number of obs
-* on both day 1 and day 2. That split seems a little too perfect...
-* I see a problem but I'm not sure if this is THE problem.
-* There are several obs at the end of the csv that are 0 for "finsihed" column
-* I need to drop these at the top of the do-file. I'm going to check that first
-* If it is the case, I will drop them at the top of the file
-
-	* describe
-	* tab			finished, missing
-	
-* looks like there are 6 obs that did not finish
-* I'm going to dopr these at the top of the do-file
-
-********************************************************************************
-**# Fleshing out Stats Table 1A
-********************************************************************************
-
-*** Hypotheses 1:
-
-* This one primarily concerns magnesium and flavor
-
-*********
-/* NULL HYPOTHESIS
-After controlling for sugar level, consumer choices, purchase likelihood, 
-and WTP are driven primarily by flavor liking and perceived sweetness. 
-Magnesium information and higher magnesium content in the lab-produced
-beverage do not meaningfully change the probability that a participant 
-would choose the lab beverage over the competitor or the WTP for it.
-
-* Here's what we are going to want to see based on the NULL HYPOTHESIS of 
-* Hypothesis 1
-
-d1_mag_flavor_like
-d1_nomag_flavor_like
-d1_diff_flavor_like
-d1_mag_sweet_like
-d1_nomag_sweet_like
-d1_diff_sweet_like
-d1_mag_wtp_taste_noinfo
-d1_nomag_wtp_taste_noinfo
-d1_diff_wtp_taste_noinfo
 */
 
-********************************************************************************
-**# Table 1A. Taste-driven outomces related to the null
-********************************************************************************
-
-**## Labeling Stats for Table 1A
-
-*** Day 1 Products
-* 584 = lab beverage with magnesium
-* 793 = competitor beverage without magnesium
-
-	label var			d1_mag_flavor_like         "Lab beverage flavor liking"
-	label var 			d1_nomag_flavor_like       "Competitor flavor liking"
-	label var 			d1_diff_flavor_like        "Flavor liking difference (lab - competitor)"
-
-	label var 			d1_mag_sweet_like          "Lab beverage sweetness liking"
-	label var 			d1_nomag_sweet_like        "Competitor sweetness liking"
-	label var 			d1_diff_sweet_like         "Sweetness liking difference (lab - competitor)"
-
-	label var 			d1_mag_wtp_taste_noinfo    "Lab beverage WTP before magnesium info"
-	label var 			d1_nomag_wtp_taste_noinfo  "Competitor WTP before magnesium info"
-	label var 			d1_diff_wtp_taste_noinfo   "WTP difference before info (lab - competitor)"
-
-* Check the table 1A before gnerating a clean table
-	tabstat ///
-				d1_mag_flavor_like ///
-				d1_nomag_flavor_like ///
-				d1_diff_flavor_like ///
-				d1_mag_sweet_like ///
-				d1_nomag_sweet_like ///
-				d1_diff_sweet_like ///
-				d1_mag_wtp_taste_noinfo ///
-				d1_nomag_wtp_taste_noinfo ///
-				d1_diff_wtp_taste_noinfo ///
-				if day1, ///
-				stat(n mean sd min max) ///
-				col(statistics)
-* render the table
-
-	eststo clear
-				estpost tabstat ///
-				d1_mag_flavor_like ///
-				d1_nomag_flavor_like ///
-				d1_diff_flavor_like ///
-				d1_mag_sweet_like ///
-				d1_nomag_sweet_like ///
-				d1_diff_sweet_like ///
-				d1_mag_wtp_taste_noinfo ///
-				d1_nomag_wtp_taste_noinfo ///
-				d1_diff_wtp_taste_noinfo ///
-				if day1, ///
-				stat(n mean sd min max) ///
-				columns(statistics)
-
-	esttab ., ///
-				cells("count(fmt(0)) mean(fmt(2)) sd(fmt(2)) min(fmt(2)) max(fmt(2))") ///
-				label ///
-				nonumber ///
-				nomtitle ///
-				noobs ///
-				collabels("N" "Mean" "SD" "Min" "Max") ///
-				title("Table 1A. Descriptive Statistics") ///
-				varwidth(40)
-
-********************************************************************************
-**# Table 1B. Taste-driven outcomes related to the Alt
-********************************************************************************
-*********
-/* ALT HYPOTHESIS 
-Alternatively, we can state that magnesium functionality
-information and higher magnesium content increase the probability 
-that the lab-produced beverage is chosen and raise WTP and 
-purchase likelihood for it, while flavor liking and perceived sweetness remain
-important but not exclusively dominant drivers of choice.
-
-d1_mag_wtp_info
-d1_nomag_wtp_info
-d1_diff_wtp_info
-d1_info_new
-d1_info_useful
-d1_magbenefit_recovery
-d1_magbenefit_cramps
-d1_magbenefit_sugar
-d1_magbenefit_bone
-d1_magbenefit_sleep
-d1_magbenefit_mean
-*/ 
-
-* OK same operations as above
-* create labels for the stats tables 
-* do the table
-* render the table into a nicer format
-
-
-* create labels for the information WTP
-
-	label var			d1_mag_wtp_info "Lab beverage WTP after magnesium info"
-	label var 			d1_nomag_wtp_info        "Competitor WTP after magnesium info"
-	label var 			d1_diff_wtp_info         "WTP difference after info (lab - competitor)"
-
-* Reactions to magnesium information
-	label var 			d1_info_new "Magnesium information was new"
-	label var 			d1_info_useful "Magnesium information was useful"
-
-* Magnesium benefit importance
-	label var 			d1_magbenefit_recovery "Benefit importance: muscle recovery"
-	label var 			d1_magbenefit_cramps "Benefit importance: cramp reduction"
-	label var 			d1_magbenefit_sugar "Benefit importance: blood sugar support"
-	label var 			d1_magbenefit_bone "Benefit importance: bone health"
-	label var 			d1_magbenefit_sleep "Benefit importance: sleep/relaxation"
-	label var 			d1_magbenefit_mean "Mean magnesium-benefit importance"
-	
-* generate table 1B
-
-	eststo clear
-
-	estpost tabstat			d1_mag_wtp_info ///
-							d1_nomag_wtp_info ///
-							d1_diff_wtp_info ///
-							d1_info_new ///
-							d1_info_useful ///
-							d1_magbenefit_recovery ///
-							d1_magbenefit_cramps ///
-							d1_magbenefit_sugar ///
-							d1_magbenefit_bone ///
-							d1_magbenefit_sleep ///
-							d1_magbenefit_mean ///
-							if day1, ///
-							stat(n mean sd min max) ///
-							columns(statistics)
-
-	esttab ., ///
-							cells("count(fmt(0)) mean(fmt(2)) sd(fmt(2)) min(fmt(2)) max(fmt(2))") ///
-							label ///
-							nonumber ///
-							nomtitle ///
-							noobs ///
-							collabels("N" "Mean" "SD" "Min" "Max") ///
-							title("Table 1B. Descriptive Statistics") ///
-							varwidth(40)
-
-********************************************************************************
-**# Defining Variable
-********************************************************************************
-
-**## Hypothesis 2
-
-*** Hypothesis 2
+**## Restricted Hypotheses
 /*
-*********
-NULL HYPOTHESIS
-Our null hypothesis is
-that males and females respond the same way and magnesium does not increase 
-willingness to pay beyond flavor and sweetness
-*********
-ALT HYPOTHESIS
-Magnesium increases willingness to pay more for females than males, or for 
-participants who exercise more, showing that functional benefits like
-magnesium can influence choices differently depending on gender and activity level.
+Null: Differences in WTP are not meaningfully driven by magnesium information 
+or magnesium content; instead, WTP is primarily associated with flavor liking.
+Alternative: Magnesium information and/or magnesium content increase WTP, 
+even when flavor liking remains important.
 */
 
-*** Outcome for this hypothesis should be the variable that captures the
-* magnesium related WTP shift.
+********************************************************************************
+**## Value labels
+********************************************************************************
 
-* I think use d1_diff_wtp would be a useful variable for this one
-* this will show the difference between WTP for lab minus competitor
 
-* need to inspect these variables
-* GENDER
-* EXERCISE
-* WTP DIFF
+	label define		gender_lbl 1 "Male" 2 "Female", replace
+	label define		day_lbl 1 "Day 1" 2 "Day 2", replace
+	label define		yesno_lbl 0 "No" 1 "Yes", replace
 
-* start with gender
+* this is how the paths were chosen. need this for determining taste-first /
+* info first 
+	label define		randomizer_lbl ///
+						1 "Randomizer 1" ///
+						2 "Randomizer 2" ///
+						3 "Randomizer 3" ///
+						4 "Randomizer 4", replace
 
-	tab			gender, missing
+* 9 point hedonic scale
+	label define		hedonic9_lbl ///
+						1 "Dislike extremely" ///
+						2 "Dislike very much" ///
+						3 "Dislike moderately" ///
+						4 "Dislike slightly" ///
+						5 "Neither like nor dislike" ///
+						6 "Like slightly" ///
+						7 "Like moderately" ///
+						8 "Like very much" ///
+						9 "Like extremely", replace
 
-* exercise
+
+********************************************************************************
+**## Randomizer / Demo Data
+*******************************************************************************
+
+* gender
+	label var			gender "Gender"
+	label values		gender gender_lbl
+	tab					gender, missing
+
+* age
+	capture destring	age, replace
+	label var			age "Age"
+	sum					age, detail
+
+* day
+	label var			day "Survey day"
+	label values		day day_lbl
+	tab					day, missing
+
+* randomizer
+* This is what determines what the respondants got first, taste or information
+	label var			randomizer "Randomization path"
+	label values		randomizer randomizer_lbl
+	tab					randomizer, missing
+
+* finished
+	label var			finished "Survey completed"
+	label values		finished yesno_lbl
+	tab					finished, missing
 	
-	tab			exercise, missing
+* 584 overall flavor liking 	
+* sensory_584_flavor
+	label var			sensory_584_flavor "584 flavor liking"
+	label values		sensory_584_flavor hedonic9_lbl
+	tab					sensory_584_flavor, missing	
+
+* 793 overall flavor liking 
+* sensory_793_flavor
+	label var			sensory_793_flavor "793 flavor liking"
+	label values		sensory_793_flavor hedonic9_lbl
+	tab					sensory_793_flavor, missing
 	
-	codebook			gender
-	codebook			exercise
+* 356 overall flavor liking 
+* sensory_356_flavor
+	label var			sensory_356_flavor "356 flavor liking"
+	label values		sensory_356_flavor hedonic9_lbl
+	tab					sensory_356_flavor, missing
 	
-* gender coding from the data
-* 1 = Male
-* 2 = Female
-* 3 = Non-binary
-* 4 = Prefer to self-identify
+* 831 overall flavor liking 
+* sensory_831_flavor
+	label var			sensory_831_flavor "831 flavor liking"
+	label values		sensory_831_flavor hedonic9_lbl
+	tab					sensory_831_flavor, missing
 
-	label			define gender_lbl 1 "Male" ///
-                    2 "Female" ///
-                    3 "Non-binary" ///
-                    4 "Prefer to self-identify"
-
-	label 			values gender gender_lbl
-	label var		gender "Gender identity"
-
-********************************************************************************
-**# Inspect gender in the full cleaned sample and in Day 1
-********************************************************************************
-
-	tab			gender, missing
-	tab 		gender if day1, missing
-
-* Main Hypothesis 2 outcome and key sensory controls by gender
-
-	tabstat			d1_diff_wtp_info ///
-					d1_diff_flavor_like ///
-					d1_diff_sweet_like ///
-					if day1, ///
-					by(gender) ///
-					stat(n mean sd min max) ///
-					columns(statistics)
-
-* label the outcome statistics
-
-	label var			d1_diff_wtp_info      "Informed WTP difference (lab - competitor)"
-	label var 			d1_diff_flavor_like   "Flavor liking difference (lab - competitor)"
-	label var 			d1_diff_sweet_like    "Sweetness liking difference (lab - competitor)"
 	
-* render teh summary stats table
-
-	tabstat			d1_diff_wtp_info ///
-					d1_diff_flavor_like ///
-					d1_diff_sweet_like ///
-					if day1, ///
-					stat(n mean sd min max) ///
-					columns(statistics)
-					
-* OK. Brinigng them all together for a clean summary table for hyp 2
-
-* Outcome labels
-	label var			d1_diff_wtp_info      "Informed WTP difference (lab - competitor)"
-	label var			d1_diff_flavor_like   "Flavor liking difference (lab - competitor)"
-	label var			d1_diff_sweet_like    "Sweetness liking difference (lab - competitor)"
-
-* Gender labels
-	label			define gender_lbl 1 "Male" ///
-                    2 "Female" ///
-                    3 "Non-binary" ///
-                    4 "Prefer to self-identify", replace
-	label			values gender gender_lbl
-	label var 		gender "Gender identity"
-
-********************************************************************************
-**# Render a clean descriptive table by gender
-********************************************************************************
-
-	preserve
-
-	keep if 		day1
-	keep			gender d1_diff_wtp_info d1_diff_flavor_like d1_diff_sweet_like
-
-	gen 			obs_id = _n
-
-	rename 			d1_diff_wtp_info      h2_outcome1
-	rename 			d1_diff_flavor_like   h2_outcome2
-	rename 			d1_diff_sweet_like    h2_outcome3
-
-	reshape 		long h2_outcome, i(obs_id gender) j(h2_measure)
-
-	label 			define h2_measure_lbl ///
-					1 "Informed WTP difference (lab - competitor)" ///
-					2 "Flavor liking difference (lab - competitor)" ///
-					3 "Sweetness liking difference (lab - competitor)", replace
-
-	label 			values h2_measure h2_measure_lbl
-	label var 		h2_measure "Outcome"
-	label var 		h2_outcome "Value"
-
-	table			(h2_measure) (gender), ///
-					statistic(count h2_outcome) ///
-					statistic(mean h2_outcome) ///
-					statistic(sd h2_outcome) ///
-					statistic(min h2_outcome) ///
-					statistic(max h2_outcome) ///
-					nototal
-
-**# Hypothesis 2 ALT
-**## Alt Hyp
-/*ALT HYPOTHESIS
-Magnesium increases willingness to pay more for females than males, or for 
-participants who exercise more, showing that functional benefits like
-magnesium can influence choices differently depending on gender and activity level.
-*/
-
-* need to take a label exercise vars
-
-* exercise coding from Qualtrics:
-* 1 = 0 days
-* 2 = 1 to 2 days
-* 3 = 3 to 4 days
-* 4 = 5 or more days
-
-	restore
-	tab			exercise, missing
-
-
-	label			define exercise_lbl 1 "0 days" ///
-                    2 "1 to 2 days" ///
-                    3 "3 to 4 days" ///
-                    4 "5 or more days", replace
-	label 			values exercise exercise_lbl
-	label var 		exercise "Days per week with at least 30 minutes of exercise"
-
-* outcome labels for this table
-	label var			d1_diff_wtp_info    "Informed WTP difference (lab - competitor)"
-	label var 			d1_info_useful      "Magnesium information was useful"
-	label var 			d1_magbenefit_mean  "Mean magnesium-benefit importance"
-
-
-
-	tabstat			d1_diff_wtp_info ///
-					d1_info_useful ///
-					d1_magbenefit_mean ///
-					if day1, ///
-					by(exercise) ///
-					stat(n mean sd min max)
-					
-* ok now I need to figure out how to bring gender into this. This is just 
-* a summary of exercise itself
-* There should be both gender and exercise being examined in this table. 
-*"For Females who exercise [this amount] their willingness to pay was 
-* [this amount after information]
-
-	preserve
-
-	keep if			day1 & !missing(d1_diff_wtp_taste_noinfo)
-	keep 			gender exercise d1_diff_wtp_taste_noinfo d1_diff_wtp_info
-
-	gen 			obs_id = _n
-
-	rename 			d1_diff_wtp_taste_noinfo h2_wtp1
-	rename 			d1_diff_wtp_info h2_wtp2
-
-	reshape 		long h2_wtp, i(obs_id gender exercise) j(h2_stage)
-
-	label 			define h2_stage_lbl ///
-					1 "Pre-info relative WTP (lab - competitor)" ///
-					2 "Post-info relative WTP (lab - competitor)", replace
-	label 			values h2_stage h2_stage_lbl
-
-	table 			(h2_stage exercise) (gender), ///
-					statistic(count h2_wtp) ///
-					statistic(mean h2_wtp) ///
-					statistic(sd h2_wtp) ///
-					statistic(min h2_wtp) ///
-					statistic(max h2_wtp) ///
-					nototal
-					
-********************************************************************************
-**# Making the graphs
-********************************************************************************
-
-* I think what I'm going to do is just make one for each of these tables.
-*** the first two should be super easy. I'm thinking bar charts.
-
-*** the second two might be a little more dificult.
-*** My guess would be a scatter plot for each would be best
-
-
-**## Graph 1 / Table 1
-                                                	
-/*
-
-Table 1A. Descriptive Statistics
----------------------------------------------------------------------------------------------------------
-                                                    N         Mean           SD          Min          Max
----------------------------------------------------------------------------------------------------------
-Lab beverage flavor liking                         70         6.51         1.71         1.00         9.00
-Competitor flavor liking                           70         7.10         1.76         1.00         9.00
-Flavor liking difference (lab - competit           70        -0.59         2.38        -7.00         5.00
-Lab beverage sweetness liking                      70         6.41         1.71         1.00         9.00
-Competitor sweetness liking                        70         6.90         1.68         1.00         9.00
-Sweetness liking difference (lab - compe           70        -0.49         2.33        -6.00         5.00
-Lab beverage WTP before magnesium info             34         2.62         0.76         0.75         4.50
-Competitor WTP before magnesium info               34         2.76         0.81         1.25         4.50
-WTP difference before info (lab - compet           34        -0.14         0.84        -2.50         1.25
----------------------------------------------------------------------------------------------------------
-*/
-
-**** Probably just need to graph the means and not worry about the other stuff
-
-********************************************************************************
-**# Figure 1. Taste ratings and pre-information WTP
-********************************************************************************
-
-	input 			str20 outcome lab competitor
-					"Flavor liking"    6.51 7.10
-					"Sweetness liking" 6.41 6.90
-					end
-
-	graph 			bar lab competitor, ///
-					over(outcome, label(angle(0))) ///
-					blabel(bar) ///
-					legend(order(1 "Lab beverage" 2 "Competitor") rows(1) position(6)) ///
-					ytitle("Mean rating") ///
-					title("Panel A. Mean flavor and sweetness ratings") ///
-					graphregion(color(white)) ///
-					plotregion(color(white)) ///
-					name(g_taste, replace)
-
-	clear
-	input 			str20 outcome lab competitor
-					"Pre-info WTP" 2.62 2.76
-					end
-
-	graph 			bar lab competitor, ///
-					over(outcome, label(angle(0))) ///
-					blabel(bar) ///
-					legend(order(1 "Lab beverage" 2 "Competitor") rows(1) position(6)) ///
-					ytitle("Mean willingness to pay ($)") ///
-					title("Panel B. Mean WTP before magnesium information") ///
-					graphregion(color(white)) ///
-					plotregion(color(white)) ///
-					name(g_wtp, replace)
-
-	graph 			combine g_taste g_wtp, ///
-					col(1) ///
-					imargin(2 2 2 2) ///
-					title("Figure 1. Taste ratings and pre-information willingness to pay") ///
-					graphregion(color(white))
-
-	restore
-
-
-
-	preserve
-	clear
-
-********************************************************************************
-**# Figure 2. Responses to magnesium information
-********************************************************************************
-* Need to make a 3 panel bar chart and then combine them
-* Bring in the input that i need specifically for this one first
-* Panel A: post-information WTP
-	input 			str20 outcome lab competitor
-					"Post-info WTP" 2.93 2.43
-	end
-
-	graph 			bar lab competitor, ///
-					over(outcome, label(angle(0))) ///
-					blabel(bar) ///
-					legend(order(1 "Lab beverage" 2 "Competitor") rows(1) position(6)) ///
-					ytitle("Mean willingness to pay ($)") ///
-					title("Panel A. WTP after magnesium information") ///
-					graphregion(color(white)) ///
-					plotregion(color(white)) ///
-					name(g_info_wtp, replace)
-
-* Panel B: information reactions
-* bring in the data i need just for this one 
-	clear
-	input			str25 outcome mean
-					"Information was new"    3.06
-					"Information was useful" 3.83
-	end
-
-	graph 			bar mean, ///
-					over(outcome, label(angle(0))) ///
-					blabel(bar) ///
-					legend(off) ///
-					ytitle("Mean rating (1 to 5)") ///
-					title("Panel B. Reaction to magnesium information") ///
-					graphregion(color(white)) ///
-					plotregion(color(white)) ///
-					name(g_info_react, replace)
+**## WTP	
 	
-* bring in the data that i need for this one
-* Panel C: magnesium benefit importance
-	clear
-	input 			str30 outcome mean
-					"Muscle recovery"      71.63
-					"Cramp reduction"      72.87
-					"Blood sugar support"  70.15
-					"Bone health"          63.82
-					"Sleep/relaxation"     74.36
-	end	
+* baseline wtp_1
+	capture destring	wtp_1, replace
+	label var			wtp_1 "Baseline willingness to pay"	
 
-	graph 			bar mean, ///
-					over(outcome, label(angle(35) labsize(small))) ///
-					blabel(bar) ///
-					legend(off) ///
-					ytitle("Mean importance (0 to 100)") ///
-					title("Panel C. Importance of magnesium benefits") ///
-					graphregion(color(white)) ///
-					plotregion(color(white)) ///
-					name(g_info_benefits, replace)
-* combine them
+* WTP variables
 
-	graph 			combine g_info_wtp g_info_react g_info_benefits, ///
-					col(1) ///
-					imargin(2 2 2 2) ///
-					title("Figure 2. Responses to magnesium information") ///
-					graphregion(color(white))
+* Taste-first
+	capture destring    wtp_2b_584, replace
+	label var           wtp_2b_584 "WTP for 584, tasting first"
+	sum                 wtp_2b_584, detail
+	
+	capture destring    wtp_2b_793, replace
+	label var           wtp_2b_793 "WTP for 793, tasting first"
+	sum                 wtp_2b_793, detail
+	
+	capture destring    wtp_2b_356, replace
+	label var           wtp_2b_356 "WTP for 356, tasting first"
+	sum                 wtp_2b_356, detail
+	
+	capture destring    wtp_2b_831, replace
+	label var           wtp_2b_831 "WTP for 831, tasting first"
+	sum                 wtp_2b_831, detail
+	
+	
+* After information, tasting first
+	capture destring    wtp_3b_info_584, replace
+	label var           wtp_3b_info_584 "WTP for 584 after information, tasting first"
+	sum                 wtp_3b_info_584, detail
 
-	restore
+	capture destring    wtp_3b_info_793, replace
+	label var           wtp_3b_info_793 "WTP for 793 after information, tasting first"
+	sum                 wtp_3b_info_793, detail
+	
+	capture destring    wtp_3b_info_356, replace
+	label var           wtp_3b_info_356 "WTP for 356 after information, tasting first"
+	sum                 wtp_3b_info_356, detail
+	
+	capture destring    wtp_3b_info_831, replace
+	label var           wtp_3b_info_831 "WTP for 831 after information, tasting first"
+	sum                 wtp_3b_info_831, detail
+	
+	
+* Information-first
+	capture destring    wtp_2a_info_584, replace
+	label var           wtp_2a_info_584 "WTP for 584, information first"
+	sum                 wtp_2a_info_584, detail
+	
+	capture destring    wtp_2a_info_793, replace
+	label var           wtp_2a_info_793 "WTP for 793, information first"
+	sum                 wtp_2a_info_793, detail
+	
+	capture destring    wtp_2a_info_356, replace
+	label var           wtp_2a_info_356 "WTP for 356, information first"
+	sum                 wtp_2a_info_356, detail
+	
+	capture destring    wtp_2a_info_831, replace
+	label var           wtp_2a_info_831 "WTP for 831, information first"
+	sum                 wtp_2a_info_831, detail
+	
+	
+* After tasting, information first
+	capture destring    wtp_3a_584, replace
+	label var           wtp_3a_584 "WTP for 584 after tasting, information first"
+	sum                 wtp_3a_584, detail
+
+	capture destring    wtp_3a_793, replace
+	label var           wtp_3a_793 "WTP for 793 after tasting, information first"
+	sum                 wtp_3a_793, detail
+
+	capture destring    wtp_3a_356, replace
+	label var           wtp_3a_356 "WTP for 356 after tasting, information first"
+	sum                 wtp_3a_356, detail
+	
+	capture destring    wtp_3a_831, replace
+	label var           wtp_3a_831 "WTP for 831 after tasting, information first"
+	sum                 wtp_3a_831, detail
+
+
+********************************************************************************
+**# Restricted Summary Stats	
+********************************************************************************
+
+* print a new summary stats table with only these vars
+
+	local			hyp1_vars ///
+						wtp_1 ///
+						wtp_2b_584 wtp_2b_793 wtp_2b_356 wtp_2b_831 ///
+						wtp_3b_info_584 wtp_3b_info_793 wtp_3b_info_356 wtp_3b_info_831 ///
+						wtp_2a_info_584 wtp_2a_info_793 wtp_2a_info_356 wtp_2a_info_831 ///
+						wtp_3a_584 wtp_3a_793 wtp_3a_356 wtp_3a_831 ///
+						sensory_584_flavor sensory_793_flavor sensory_356_flavor sensory_831_flavor
+
+	estpost 		summarize `hyp1_vars'
+	esttab 			using "$data/hyp1_summary_stats.csv", ///
+						cells("count(fmt(0)) mean(fmt(3)) sd(fmt(3)) min(fmt(3)) max(fmt(3))") ///
+						label noobs nonumber nomtitle plain replace csv
+						
+********************************************************************************
+**# hyp testing
+********************************************************************************
+
