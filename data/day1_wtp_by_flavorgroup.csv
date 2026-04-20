@@ -1,0 +1,17 @@
+test,splitvar,group,label,N,mean,sd,se,ci_lo,ci_hi
+wtp_2b_584, like584_hi,Low/neutral,"WTP for 584, tasting first",8,2.3125,1.1397839,.40297443,1.3596169,3.265383
+wtp_2b_584, like584_hi,High,"WTP for 584, tasting first",24,2.7291667,.60754615,.12401484,2.4726224,2.9857109
+wtp_3b_info_584, like584_hi,Low/neutral,"WTP for 584 after information, tasting first",8,2.34375,1.2459756,.44051892,1.3020883,3.3854117
+wtp_3b_info_584, like584_hi,High,"WTP for 584 after information, tasting first",24,2.96875,.58194065,.11878813,2.7230179,3.2144821
+wtp_2a_info_584, like584_hi,Low/neutral,"WTP for 584, information first",7,3.3571429,.95587158,.36128551,2.473109,4.2411766
+wtp_2a_info_584, like584_hi,High,"WTP for 584, information first",29,2.9655173,.47586453,.088365823,2.784508,3.1465263
+wtp_3a_584, like584_hi,Low/neutral,"WTP for 584 after tasting, information first",7,1.7857143,1.0745984,.40616006,.79187644,2.7795522
+wtp_3a_584, like584_hi,High,"WTP for 584 after tasting, information first",29,2.9568965,.54309368,.10084996,2.7503147,3.1634784
+wtp_2b_793, like793_hi,Low/neutral,"WTP for 793, tasting first",5,2.5999999,1.2067518,.53967583,1.1016197,4.0983801
+wtp_2b_793, like793_hi,High,"WTP for 793, tasting first",27,2.8518519,.72807455,.14011802,2.5638351,3.1398685
+wtp_3b_info_793, like793_hi,Low/neutral,"WTP for 793 after information, tasting first",5,2.5,.72886896,.32596013,1.5949897,3.4050105
+wtp_3b_info_793, like793_hi,High,"WTP for 793 after information, tasting first",27,2.4907408,.93150383,.179268,2.1222501,2.8592315
+wtp_2a_info_793, like793_hi,Low/neutral,"WTP for 793, information first",5,2.1500001,1.3416408,.60000002,.48413295,3.8158669
+wtp_2a_info_793, like793_hi,High,"WTP for 793, information first",31,2.4354839,.7387144,.13267702,2.1645212,2.7064464
+wtp_3a_793, like793_hi,Low/neutral,"WTP for 793 after tasting, information first",5,2.5,.58630198,.2622022,1.77201,3.2279902
+wtp_3a_793, like793_hi,High,"WTP for 793 after tasting, information first",31,2.967742,.64466381,.11578503,2.7312775,3.2042065

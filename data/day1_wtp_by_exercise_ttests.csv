@@ -1,0 +1,17 @@
+test,group,label,N,mean,sd,se,pval,ci_lo,ci_hi
+wtp_2b_584,Low exercise,"WTP for 584, tasting first",10,2.4749999,.57069647,.18047006,.46953872,2.0667484,2.8832517
+wtp_2b_584,High exercise,"WTP for 584, tasting first",22,2.6931818,.8554163,.18237536,.46953872,2.3139114,3.0724521
+wtp_3b_info_584,Low exercise,"WTP for 584 after information, tasting first",10,2.7750001,.53294259,.16853124,.86535305,2.3937559,3.156244
+wtp_3b_info_584,High exercise,"WTP for 584 after information, tasting first",22,2.8295455,.93664283,.19969292,.86535305,2.4142613,3.2448297
+wtp_2a_info_584,Low exercise,"WTP for 584, information first",15,3.1333334,.66726166,.17228621,.44808006,2.7638161,3.5028505
+wtp_2a_info_584,High exercise,"WTP for 584, information first",21,2.9761906,.55848432,.12187128,.44808006,2.7219715,3.2304094
+wtp_3a_584,Low exercise,"WTP for 584 after tasting, information first",15,3.0166667,.47684479,.12312079,.070960715,2.7525988,3.2807345
+wtp_3a_584,High exercise,"WTP for 584 after tasting, information first",21,2.5238094,.9384321,.20478266,.070960715,2.0966403,2.9509788
+wtp_2b_793,Low exercise,"WTP for 793, tasting first",10,2.3499999,.7187953,.22730303,.024993727,1.8358048,2.8641951
+wtp_2b_793,High exercise,"WTP for 793, tasting first",22,3.0227273,.75949973,.16192588,.024993727,2.6859839,3.3594706
+wtp_3b_info_793,Low exercise,"WTP for 793 after information, tasting first",10,2.0999999,.84327406,.26666668,.094066188,1.4967581,2.7032418
+wtp_3b_info_793,High exercise,"WTP for 793 after information, tasting first",22,2.6704545,.87418795,.1863775,.094066188,2.2828612,3.0580478
+wtp_2a_info_793,Low exercise,"WTP for 793, information first",15,2.4166667,.91449958,.23612279,.90049261,1.9102336,2.9230998
+wtp_2a_info_793,High exercise,"WTP for 793, information first",21,2.3809524,.78110117,.17045026,.90049261,2.0253994,2.7365053
+wtp_3a_793,Low exercise,"WTP for 793 after tasting, information first",15,2.8499999,.62535703,.16146649,.68667394,2.5036888,3.1963112
+wtp_3a_793,High exercise,"WTP for 793 after tasting, information first",21,2.9404762,.67963576,.14830868,.68667394,2.6311097,3.2498426

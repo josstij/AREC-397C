@@ -1,0 +1,17 @@
+test,group,label,N,mean,sd,se,pval,ci_lo,ci_hi
+wtp_2b_356,Low exercise,"WTP for 356, tasting first",14,2.3392856,.80028325,.2138847,.017325822,1.8772159,2.8013556
+wtp_2b_356,High exercise,"WTP for 356, tasting first",23,3.0108695,.7886923,.16445372,.017325822,2.6698134,3.3519256
+wtp_3b_info_356,Low exercise,"WTP for 356 after information, tasting first",14,2.5535715,.89967179,.2404474,.018803464,2.0341165,3.0730264
+wtp_3b_info_356,High exercise,"WTP for 356 after information, tasting first",23,3.2391305,.77047157,.16065444,.018803464,2.9059536,3.5723073
+wtp_2a_info_356,Low exercise,"WTP for 356, information first",16,2.484375,.86346567,.21586642,.74931324,2.0242667,2.9444833
+wtp_2a_info_356,High exercise,"WTP for 356, information first",19,2.5789473,.86623639,.19872826,.74931324,2.1614349,2.99646
+wtp_3a_356,Low exercise,"WTP for 356 after tasting, information first",16,2.09375,1.0160176,.25400439,.09396597,1.5523524,2.6351476
+wtp_3a_356,High exercise,"WTP for 356 after tasting, information first",19,2.6184211,.78337067,.17971756,.09396597,2.2408485,2.9959936
+wtp_2b_831,Low exercise,"WTP for 831, tasting first",14,2.375,.87568653,.23403707,.22305135,1.8693936,2.8806064
+wtp_2b_831,High exercise,"WTP for 831, tasting first",23,2.6847825,.640567,.13356745,.22305135,2.4077806,2.9617846
+wtp_3b_info_831,Low exercise,"WTP for 831 after information, tasting first",14,2.5714285,.95790523,.25601095,.1982169,2.0183506,3.1245065
+wtp_3b_info_831,High exercise,"WTP for 831 after information, tasting first",23,2.9565217,.80711389,.16829488,.1982169,2.6074996,3.3055439
+wtp_2a_info_831,Low exercise,"WTP for 831, information first",16,2.75,.56273144,.14068286,.72499788,2.4501417,3.0498583
+wtp_2a_info_831,High exercise,"WTP for 831, information first",19,2.8157895,.53256524,.12217885,.72499788,2.5591013,3.0724778
+wtp_3a_831,Low exercise,"WTP for 831 after tasting, information first",16,2.609375,1.161783,.29044574,.92071146,1.9903046,3.2284455
+wtp_3a_831,High exercise,"WTP for 831 after tasting, information first",19,2.5789473,.58364654,.13389769,.92071146,2.2976387,2.860256

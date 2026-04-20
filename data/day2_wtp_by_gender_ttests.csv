@@ -1,0 +1,17 @@
+test,group,label,N,mean,sd,se,pval,ci_lo,ci_hi
+wtp_2b_356,Male,"WTP for 356, tasting first",19,2.8552632,.66830939,.15332069,.47605008,2.5331483,3.1773779
+wtp_2b_356,Female,"WTP for 356, tasting first",18,2.6527777,1.0151025,.23926194,.47605008,2.1479793,3.1575763
+wtp_3b_info_356,Male,"WTP for 356 after information, tasting first",19,3.1315789,.76088589,.17455921,.28531715,2.7648437,3.4983141
+wtp_3b_info_356,Female,"WTP for 356 after information, tasting first",18,2.8194444,.98071688,.23115718,.28531715,2.3317454,3.3071434
+wtp_2a_info_356,Male,"WTP for 356, information first",17,2.8235295,.58473223,.14181839,.050987333,2.5228879,3.124171
+wtp_2a_info_356,Female,"WTP for 356, information first",18,2.2638888,.98694503,.23262517,.050987333,1.7730926,2.7546852
+wtp_3a_356,Male,"WTP for 356 after tasting, information first",17,2.5735295,.98728126,.23945087,.2295427,2.0659163,3.0811427
+wtp_3a_356,Female,"WTP for 356 after tasting, information first",18,2.1944444,.84259558,.19860168,.2295427,1.7754315,2.6134574
+wtp_2b_831,Male,"WTP for 831, tasting first",19,2.7236843,.61742485,.14164698,.19263926,2.426095,3.0212734
+wtp_2b_831,Female,"WTP for 831, tasting first",18,2.4027777,.84077561,.1981727,.19263926,1.9846699,2.8208857
+wtp_3b_info_831,Male,"WTP for 831 after information, tasting first",19,3.0657895,.81155759,.18618408,.06775561,2.6746311,3.4569478
+wtp_3b_info_831,Female,"WTP for 831 after information, tasting first",18,2.5416667,.87971419,.20735063,.06775561,2.1041951,2.9791381
+wtp_2a_info_831,Male,"WTP for 831, information first",17,2.8676472,.6131224,.14870404,.39049551,2.5524087,3.1828854
+wtp_2a_info_831,Female,"WTP for 831, information first",18,2.7083333,.4637602,.10930933,.39049551,2.4777107,2.9389558
+wtp_3a_831,Male,"WTP for 831 after tasting, information first",17,2.5,.9722718,.23581055,.55240673,2.000104,2.999896
+wtp_3a_831,Female,"WTP for 831 after tasting, information first",18,2.6805556,.80351049,.18938923,.55240673,2.2809792,3.080132

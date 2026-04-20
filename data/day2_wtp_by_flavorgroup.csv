@@ -1,0 +1,17 @@
+test,splitvar,group,label,N,mean,sd,se,ci_lo,ci_hi
+wtp_2b_356, like356_hi,Low/neutral,"WTP for 356, tasting first",8,2.46875,.72503078,.25633711,1.8626091,3.0748909
+wtp_2b_356, like356_hi,High,"WTP for 356, tasting first",29,2.8362069,.87442803,.16237721,2.5035923,3.1688216
+wtp_3b_info_356, like356_hi,Low/neutral,"WTP for 356 after information, tasting first",8,2.59375,.66731739,.23593232,2.0358586,3.1516414
+wtp_3b_info_356, like356_hi,High,"WTP for 356 after information, tasting first",29,3.0862069,.90700614,.16842681,2.7412002,3.4312136
+wtp_2a_info_356, like356_hi,Low/neutral,"WTP for 356, information first",9,2.2777777,.50689685,.16896562,1.8881423,2.6674132
+wtp_2a_info_356, like356_hi,High,"WTP for 356, information first",26,2.625,.93608224,.18358083,2.2469082,3.0030918
+wtp_3a_356, like356_hi,Low/neutral,"WTP for 356 after tasting, information first",9,1.4166666,.83852547,.2795085,.77211893,2.0612144
+wtp_3a_356, like356_hi,High,"WTP for 356 after tasting, information first",26,2.7115386,.69531399,.13636228,2.4306951,2.9923818
+wtp_2b_831, like831_hi,Low/neutral,"WTP for 831, tasting first",9,1.9722222,.7750448,.25834826,1.3764701,2.5679743
+wtp_2b_831, like831_hi,High,"WTP for 831, tasting first",28,2.7589285,.63275611,.11957967,2.5135713,3.0042858
+wtp_3b_info_831, like831_hi,Low/neutral,"WTP for 831 after information, tasting first",9,2.0277777,.79494935,.26498312,1.4167256,2.6388299
+wtp_3b_info_831, like831_hi,High,"WTP for 831 after information, tasting first",28,3.0625,.7503857,.14180957,2.7715309,3.3534691
+wtp_2a_info_831, like831_hi,Low/neutral,"WTP for 831, information first",10,2.55,.52440441,.16583124,2.1748636,2.9251363
+wtp_2a_info_831, like831_hi,High,"WTP for 831, information first",25,2.8800001,.52599114,.10519823,2.6628816,3.0971184
+wtp_3a_831, like831_hi,Low/neutral,"WTP for 831 after tasting, information first",10,1.725,.91628778,.28975564,1.0695271,2.3804729
+wtp_3a_831, like831_hi,High,"WTP for 831 after tasting, information first",25,2.9400001,.58754432,.11750887,2.6974735,3.1825264
