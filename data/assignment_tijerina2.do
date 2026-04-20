@@ -2,7 +2,7 @@
 * assignment: 1
 * created on: 7 april 2026
 * created by: jmt
-* edited on: 9 april 2026
+* edited on: 20 april 2026
 * edited by: jmt
 * Stata v.19.5
 
