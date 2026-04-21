@@ -18,7 +18,7 @@
 	log using		"$logs/assignment_tijerina1", append	
 	set 			scheme s2color
 	graph set 		window fontface "Arial"
-	
+	ssc 			install estout, replace
 	
 **********************************************************************
 **# 0 - hypothesis testing without regression - TO DO
@@ -532,10 +532,120 @@ wtp_3b_info_831 CV = .31291796
 	
 * correlation between changes in WTP
 	pwcorr 					diff_584 diff_793 diff_356 diff_831, sig
+	*** diff_584 vs 793: correlation coefficient (r) = 0.1279 p = 0.4709
+	* very weak and not statistically significant
+	* changes in wtp for mag product are not related to changes for non mag
+	*** diff_356 vs 831: correlation coefficient (r) = 0.7534 p = 0.000
+	* strong positive and statistically significant
+	* people who increased WTP for 356 also increased WTP for product 831
 	
 	
 **********************************************************************
-**# 8 - close log
+**# 8 - Table 1: Summary Statistics
+**********************************************************************
+	tempname 				memhold
+	postfile `memhold' 		str20 variable mean sd n cv using "$logs/table1_sumstats.dta", replace
+
+	foreach var of varlist 	wtp_2b_584 wtp_3b_info_584 ///
+							wtp_2b_793 wtp_3b_info_793 ///
+							wtp_2b_356 wtp_3b_info_356 ///
+							wtp_2b_831 wtp_3b_info_831 {
+
+		summarize `var'
+		local mean = r(mean)
+		local sd   = r(sd)
+		local n    = r(N)
+		local cv   = r(sd)/r(mean)
+
+		post `memhold' ("`var'") (`mean') (`sd') (`n') (`cv')
+	}
+
+	postclose `memhold'
+
+	use "$logs/table1_sumstats.dta", clear
+
+	label variable variable "Variable"
+	label variable mean     "Mean"
+	label variable sd       "Std. Dev."
+	label variable n        "N"
+	label variable cv       "Coefficient of Variation"
+
+	list, clean noobs
+
+	export delimited using "$logs/table1_sumstats.csv", replace
+	
+
+**********************************************************************
+**# 9 - Table 2: One-sample t-tests
+**********************************************************************
+	tempname 			memhold
+	postfile `memhold' 	str20 variable mean tstat pvalue ci_low ci_high using "$logs/table2_onesample.dta", replace
+
+	foreach var of varlist 	wtp_3b_info_584 ///
+						wtp_3b_info_793 ///
+						wtp_3b_info_356 ///
+						wtp_3b_info_831 {
+
+	ttest `var' == 2.5
+
+	local mean    = r(mu_1)
+	local tstat   = r(t)
+	local pvalue  = r(p)
+	local ci_low  = r(lb)
+	local ci_high = r(ub)
+
+	post `memhold' ("`var'") (`mean') (`tstat') (`pvalue') (`ci_low') (`ci_high')
+}
+
+	postclose `memhold'
+
+	use "$logs/table2_onesample.dta", clear
+
+	label variable variable "Variable"
+	label variable mean     "Mean WTP"
+	label variable tstat    "t-stat"
+	label variable pvalue   "p-value"
+	label variable ci_low   "95% CI Lower"
+	label variable ci_high  "95% CI Upper"
+
+	list, clean noobs
+	
+	sljslks
+**********************************************************************
+**# 10 - Table 3: Paired t-tests
+**********************************************************************
+	tempname memhold
+	postfile `memhold' str20 product mean_before mean_after diff pvalue ci_low ci_high using "$logs/table3_paired.dta", replace
+
+	ttest wtp_3b_info_584 == wtp_2b_584
+	post `memhold' ("584") (r(mu_2)) (r(mu_1)) (r(mu_1)-r(mu_2)) (r(p)) (r(lb)) (r(ub))
+
+	ttest wtp_3b_info_793 == wtp_2b_793
+	post `memhold' ("793") (r(mu_2)) (r(mu_1)) (r(mu_1)-r(mu_2)) (r(p)) (r(lb)) (r(ub))
+
+	ttest wtp_3b_info_356 == wtp_2b_356
+	post `memhold' ("356") (r(mu_2)) (r(mu_1)) (r(mu_1)-r(mu_2)) (r(p)) (r(lb)) (r(ub))
+
+	ttest wtp_3b_info_831 == wtp_2b_831
+	post `memhold' ("831") (r(mu_2)) (r(mu_1)) (r(mu_1)-r(mu_2)) (r(p)) (r(lb)) (r(ub))
+
+	postclose `memhold'
+
+	use "$logs/table3_paired.dta", clear
+
+	label variable product     "Product"
+	label variable mean_before "Mean Before"
+	label variable mean_after  "Mean After"
+	label variable diff        "Difference"
+	label variable pvalue      "p-value"
+	label variable ci_low      "95% CI Lower"
+	label variable ci_high     "95% CI Upper"
+
+	list, clean noobs
+
+
+**********************************************************************
+**# 11 - close log
 **********************************************************************
 	log 					close
 
