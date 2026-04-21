@@ -1,8 +1,8 @@
 * course: AREC 397C
 * assignment: 1
-* created on: 26 mar 2026
+* created on: 18 apr 2026
 * created by: jmt
-* edited on: 18 apr 2026
+* edited on: 20 apr 2026
 * edited by: tml
 * Stata v.19.5
 
@@ -10,7 +10,7 @@
 	
 	
 * needs
-	* all
+	* done
 	
 	clear				all
 	
@@ -286,7 +286,7 @@ even when flavor liking remains important.
 						wtp_3b_info_584 wtp_3b_info_793 wtp_3b_info_356 wtp_3b_info_831 ///
 						wtp_2a_info_584 wtp_2a_info_793 wtp_2a_info_356 wtp_2a_info_831 ///
 						wtp_3a_584 wtp_3a_793 wtp_3a_356 wtp_3a_831 ///
-						sensory_584_flavor sensory_793_flavor sensory_356_flavor sensory_831_flavor /// 
+						sensory_584_flavor sensory_793_flavor sensory_356_flavor 									sensory_831_flavor /// 
 						
 
 	estpost 		summarize `hyp1_vars'
@@ -308,172 +308,172 @@ even when flavor liking remains important.
 * wtp_1
 ************************************************************
 
-ttest wtp_1 == 2.5
-ttest wtp_1 == 2.5 if day == 1
-ttest wtp_1 == 2.5 if day == 2
+	ttest			wtp_1 == 2.5
+	ttest			wtp_1 == 2.5 if day == 1
+	ttest 			wtp_1 == 2.5 if day == 2
 
 * print the table
-preserve
+	preserve
 
-tempfile results
-postfile memhold str20 test str60 label double N mean diff se t df pval ci_lo ci_hi using `results', replace
+	tempfile 		results
+	postfile 		memhold str20 test str60 label double N mean diff se t df pval ci_lo ci_hi using `results', replace
 
-local lbl : variable label wtp_1
+	local 			lbl : variable label wtp_1
 
-quietly ttest wtp_1 == 2.5
-post memhold ("wtp_1_all") ///
-    (`"`lbl'"') ///
-    (r(N_1)) ///
-    (r(mu_1)) ///
-    (r(mu_1)-2.5) ///
-    (r(se)) ///
-    (r(t)) ///
-    (r(df_t)) ///
-    (r(p)) ///
-    (r(lb_1)) ///
-    (r(ub_1))
+	quietly 		ttest wtp_1 == 2.5
+	post 				memhold ("wtp_1_all") ///
+						(`"`lbl'"') ///
+						(r(N_1)) ///
+						(r(mu_1)) ///
+						(r(mu_1)-2.5) ///
+						(r(se)) ///
+						(r(t)) ///
+						(r(df_t)) ///
+						(r(p)) ///
+						(r(lb_1)) ///
+						(r(ub_1))
 
-quietly ttest wtp_1 == 2.5 if day == 1
-post memhold ("wtp_1_day1") ///
-    (`"`lbl'"') ///
-    (r(N_1)) ///
-    (r(mu_1)) ///
-    (r(mu_1)-2.5) ///
-    (r(se)) ///
-    (r(t)) ///
-    (r(df_t)) ///
-    (r(p)) ///
-    (r(lb_1)) ///
-    (r(ub_1))
+	quietly 			ttest wtp_1 == 2.5 if day == 1
+	post 				memhold ("wtp_1_day1") ///
+							(`"`lbl'"') ///
+							(r(N_1)) ///
+							(r(mu_1)) ///
+							(r(mu_1)-2.5) ///
+							(r(se)) ///
+							(r(t)) ///
+							(r(df_t)) ///
+							(r(p)) ///
+							(r(lb_1)) ///
+							(r(ub_1))
 
-quietly ttest wtp_1 == 2.5 if day == 2
-post memhold ("wtp_1_day2") ///
-    (`"`lbl'"') ///
-    (r(N_1)) ///
-    (r(mu_1)) ///
-    (r(mu_1)-2.5) ///
-    (r(se)) ///
-    (r(t)) ///
-    (r(df_t)) ///
-    (r(p)) ///
-    (r(lb_1)) ///
-    (r(ub_1))
+	quietly 		ttest wtp_1 == 2.5 if day == 2
+						post memhold ("wtp_1_day2") ///
+						(`"`lbl'"') ///
+						(r(N_1)) ///
+						(r(mu_1)) ///
+						(r(mu_1)-2.5) ///
+						(r(se)) ///
+						(r(t)) ///
+						(r(df_t)) ///
+						(r(p)) ///
+						(r(lb_1)) ///
+						(r(ub_1))
 
-postclose memhold
-use `results', clear
+	postclose 			memhold
+	use 				`results', clear
+	
+	format 				N %9.0f
+	format 				mean diff se t df pval ci_lo ci_hi %9.3f
 
-format N %9.0f
-format mean diff se t df pval ci_lo ci_hi %9.3f
+	export 				delimited using "$data/wtp1_ttests.csv", replace
 
-export delimited using "$data/wtp1_ttests.csv", replace
-
-restore
+	restore
 
 
-************************************************************
+********************************************************************************
 * day 1
-************************************************************
+********************************************************************************
 
-ttest wtp_2b_584 == 2.5
-ttest wtp_2b_793 == 2.5
-ttest wtp_3b_info_584 == 2.5
-ttest wtp_3b_info_793 == 2.5
-ttest wtp_2a_info_584 == 2.5
-ttest wtp_2a_info_793 == 2.5
-ttest wtp_3a_584 == 2.5
-ttest wtp_3a_793 == 2.5
+	ttest 			wtp_2b_584 == 2.5
+	ttest 			wtp_2b_793 == 2.5
+	ttest 			wtp_3b_info_584 == 2.5
+	ttest 			wtp_3b_info_793 == 2.5
+	ttest 			wtp_2a_info_584 == 2.5
+	ttest 			wtp_2a_info_793 == 2.5
+	ttest 			wtp_3a_584 == 2.5
+	ttest 			wtp_3a_793 == 2.5
 
 * print the table
-preserve
+	preserve
 
-tempfile results
-postfile memhold str20 test str60 label double N mean diff se t df pval ci_lo ci_hi using `results', replace
+	tempfile 		results
+	postfile 		memhold str20 test str60 label double N mean diff se t df pval ci_lo ci_hi using `results', replace
 
-foreach v in ///
-    wtp_2b_584 wtp_2b_793 ///
-    wtp_3b_info_584 wtp_3b_info_793 ///
-    wtp_2a_info_584 wtp_2a_info_793 ///
-    wtp_3a_584 wtp_3a_793 {
+	foreach 		v in ///
+						wtp_2b_584 wtp_2b_793 ///
+						wtp_3b_info_584 wtp_3b_info_793 ///
+						wtp_2a_info_584 wtp_2a_info_793 ///
+						wtp_3a_584 wtp_3a_793 {
 
-    quietly ttest `v' == 2.5
-    local lbl : variable label `v'
+    quietly			ttest `v' == 2.5
+    local 			lbl : variable label `v'
 
-    post memhold ///
-        ("`v'") ///
-        (`"`lbl'"') ///
-        (r(N_1)) ///
-        (r(mu_1)) ///
-        (r(mu_1)-2.5) ///
-        (r(se)) ///
-        (r(t)) ///
-        (r(df_t)) ///
-        (r(p)) ///
-        (r(lb_1)) ///
-        (r(ub_1))
-}
+	post 			memhold ///
+						("`v'") ///
+						(`"`lbl'"') ///
+						(r(N_1)) ///
+						(r(mu_1)) ///
+						(r(mu_1)-2.5) ///
+						(r(se)) ///
+						(r(t)) ///
+						(r(df_t)) ///
+						(r(p)) ///
+						(r(lb_1)) ///
+						(r(ub_1))
+						}
 
-postclose memhold
-use `results', clear
+	postclose 			memhold
+	use 				`results', clear
+		
+	format 				N %9.0f
+	format 				mean diff se t df pval ci_lo ci_hi %9.3f
 
-format N %9.0f
-format mean diff se t df pval ci_lo ci_hi %9.3f
+	export 				delimited using "$data/day1_wtp_ttests.csv", replace
 
-export delimited using "$data/day1_wtp_ttests.csv", replace
-
-restore
+	restore
 
 
 ************************************************************
 * day 2
 ************************************************************
 
-ttest wtp_2b_356 == 2.5
-ttest wtp_2b_831 == 2.5
-ttest wtp_3b_info_356 == 2.5
-ttest wtp_3b_info_831 == 2.5
-ttest wtp_2a_info_356 == 2.5
-ttest wtp_2a_info_831 == 2.5
-ttest wtp_3a_356 == 2.5
-ttest wtp_3a_831 == 2.5
+	ttest 			wtp_2b_356 == 2.5
+	ttest 			wtp_2b_831 == 2.5
+	ttest 			wtp_3b_info_356 == 2.5
+	ttest 			wtp_3b_info_831 == 2.5
+	ttest 			wtp_2a_info_356 == 2.5
+	ttest 			wtp_2a_info_831 == 2.5
+	ttest 			wtp_3a_356 == 2.5
+	ttest 			wtp_3a_831 == 2.5
 
 * print the table
-preserve
+	preserve
 
-tempfile results
-postfile memhold str20 test str60 label double N mean diff se t df pval ci_lo ci_hi using `results', replace
+	tempfile 		results
+	postfile 		memhold str20 test str60 label double N mean diff se t df pval ci_lo ci_hi using `results', 	replace
 
-foreach v in ///
-    wtp_2b_356 wtp_2b_831 ///
-    wtp_3b_info_356 wtp_3b_info_831 ///
-    wtp_2a_info_356 wtp_2a_info_831 ///
-    wtp_3a_356 wtp_3a_831 {
+	foreach 		v in ///
+						wtp_2b_356 wtp_2b_831 ///
+						wtp_3b_info_356 wtp_3b_info_831 ///
+						wtp_2a_info_356 wtp_2a_info_831 ///
+						wtp_3a_356 wtp_3a_831 {
 
-    quietly ttest `v' == 2.5
-    local lbl : variable label `v'
+    quietly 		ttest `v' == 2.5
+    local 			lbl : variable label `v'
 
-    post memhold ///
-        ("`v'") ///
-        (`"`lbl'"') ///
-        (r(N_1)) ///
-        (r(mu_1)) ///
-        (r(mu_1)-2.5) ///
-        (r(se)) ///
-        (r(t)) ///
-        (r(df_t)) ///
-        (r(p)) ///
-        (r(lb_1)) ///
-        (r(ub_1))
-}
+    post 			memhold ///
+						("`v'") ///
+						(`"`lbl'"') ///
+						(r(N_1)) ///
+						(r(mu_1)) ///
+						(r(mu_1)-2.5) ///
+						(r(se)) ///
+						(r(t)) ///
+						(r(df_t)) ///
+						(r(p)) ///
+						(r(lb_1)) ///
+						(r(ub_1))
+						}
+	
+	postclose 			memhold
+	use 				`results', clear
 
-postclose memhold
-use `results', clear
+	format 				N %9.0f
+	format 				mean diff se t df pval ci_lo ci_hi %9.3f
 
-format N %9.0f
-format mean diff se t df pval ci_lo ci_hi %9.3f
+	export 				delimited using "$data/day2_wtp_ttests.csv", replace
 
-export delimited using "$data/day2_wtp_ttests.csv", replace
-
-restore
+	restore
 
 ********************************************************************************
 **# overall flavor liking 
@@ -483,59 +483,59 @@ restore
 * 5> and 5<
 
 
-gen like584_hi = sensory_584_flavor > 5 if !missing(sensory_584_flavor)
-gen like793_hi = sensory_793_flavor > 5 if !missing(sensory_793_flavor)
-gen like356_hi = sensory_356_flavor > 5 if !missing(sensory_356_flavor)
-gen like831_hi = sensory_831_flavor > 5 if !missing(sensory_831_flavor)
+	gen			like584_hi = sensory_584_flavor > 5 if !missing(sensory_584_flavor)
+	gen 		like793_hi = sensory_793_flavor > 5 if !missing(sensory_793_flavor)
+	gen 		like356_hi = sensory_356_flavor > 5 if !missing(sensory_356_flavor)
+	gen 		like831_hi = sensory_831_flavor > 5 if !missing(sensory_831_flavor)
 
-label define like_hi_lbl 0 "Low/neutral liking (1-5)" 1 "High liking (6-9)", replace
-label values like584_hi like_hi_lbl
-label values like793_hi like_hi_lbl
-label values like356_hi like_hi_lbl
-label values like831_hi like_hi_lbl
+	label 		define like_hi_lbl 0 "Low/neutral liking (1-5)" 1 "High liking (6-9)", replace
+	label 		values like584_hi like_hi_lbl
+	label 		values like793_hi like_hi_lbl
+	label 		values like356_hi like_hi_lbl
+	label 		values like831_hi like_hi_lbl
 
-tab like584_hi, missing
-tab like793_hi, missing
-tab like356_hi, missing
-tab like831_hi, missing
+	tab 		like584_hi, missing
+	tab 		like793_hi, missing
+	tab 		like356_hi, missing
+	tab 		like831_hi, missing
 
 
 ************************************************************
-**# Day 1 t-tests
+**# Day 1 t-tests (flavor)
 ************************************************************
 
 * tasting first: information effect within flavor-liking groups
-ttest wtp_2b_584 == wtp_3b_info_584 if like584_hi == 0
-ttest wtp_2b_584 == wtp_3b_info_584 if like584_hi == 1
+	ttest 			wtp_2b_584 == wtp_3b_info_584 if like584_hi == 0
+	ttest 			wtp_2b_584 == wtp_3b_info_584 if like584_hi == 1
 
 * information first: tasting effect within flavor-liking groups
-ttest wtp_2a_info_584 == wtp_3a_584 if like584_hi == 0
-ttest wtp_2a_info_584 == wtp_3a_584 if like584_hi == 1
+	ttest 			wtp_2a_info_584 == wtp_3a_584 if like584_hi == 0
+	ttest 			wtp_2a_info_584 == wtp_3a_584 if like584_hi == 1
 
 * 793, tasting first: did information change WTP within flavor-liking groups?
-ttest wtp_2b_793 == wtp_3b_info_793 if like793_hi == 0
-ttest wtp_2b_793 == wtp_3b_info_793 if like793_hi == 1
+	ttest 			wtp_2b_793 == wtp_3b_info_793 if like793_hi == 0
+	ttest 			wtp_2b_793 == wtp_3b_info_793 if like793_hi == 1
 
 * 793, information first: did tasting change WTP within flavor-liking groups?
-ttest wtp_2a_info_793 == wtp_3a_793 if like793_hi == 0
-ttest wtp_2a_info_793 == wtp_3a_793 if like793_hi == 1
+	ttest 			wtp_2a_info_793 == wtp_3a_793 if like793_hi == 0
+	ttest 			wtp_2a_info_793 == wtp_3a_793 if like793_hi == 1
 
 * print the table
-preserve
+	preserve
 
-tempfile results
-postfile memhold ///
-    str10 beverage ///
-    str20 path ///
-    str15 group ///
-    double N mean_pre mean_post diff sd_diff se_diff pval ci_lo ci_hi ///
-    using `results', replace
+	tempfile 		results
+	postfile 		memhold ///
+						str10 beverage ///
+						str20 path ///
+						str15 group ///
+						double N mean_pre mean_post diff sd_diff se_diff pval ci_lo ci_hi ///
+						using `results', replace
 
-foreach spec in ///
-    "wtp_2b_584 wtp_3b_info_584 like584_hi 584 tastefirst_info" ///
-    "wtp_2a_info_584 wtp_3a_584 like584_hi 584 infofirst_taste" ///
-    "wtp_2b_793 wtp_3b_info_793 like793_hi 793 tastefirst_info" ///
-    "wtp_2a_info_793 wtp_3a_793 like793_hi 793 infofirst_taste" {
+	foreach 			spec in ///
+							"wtp_2b_584 wtp_3b_info_584 like584_hi 584 tastefirst_info" ///
+							"wtp_2a_info_584 wtp_3a_584 like584_hi 584 infofirst_taste" ///
+							"wtp_2b_793 wtp_3b_info_793 like793_hi 793 tastefirst_info" ///
+							"wtp_2a_info_793 wtp_3a_793 like793_hi 793 infofirst_taste" {
 
     gettoken pre  rest : spec
     gettoken post rest : rest
@@ -588,70 +588,71 @@ foreach spec in ///
                 (`pval') ///
                 (`ci_lo') ///
                 (`ci_hi')
-        }
-    }
-}
+					}
+				}
+			}
 
-postclose memhold
-use `results', clear
+	postclose 			memhold
+	use 				`results', clear
 
-format N %9.0f
-format mean_pre mean_post diff sd_diff se_diff pval ci_lo ci_hi %9.3f
+	format 				N %9.0f
+	format 				mean_pre mean_post diff sd_diff se_diff pval ci_lo ci_hi %9.3f
 
-list, clean noobs
-export delimited using "$data/day1_paired_ttests_flavor.csv", replace
+	list, clean noobs
+	export 			delimited using "$data/day1_paired_ttests_flavor.csv", replace
 
-restore
+	restore
 
 **## Day 2
 
 * 356, tasting first: did information change WTP within flavor-liking groups?
-ttest wtp_2b_356 == wtp_3b_info_356 if like356_hi == 0
-ttest wtp_2b_356 == wtp_3b_info_356 if like356_hi == 1
+	ttest 			wtp_2b_356 == wtp_3b_info_356 if like356_hi == 0
+	ttest 			wtp_2b_356 == wtp_3b_info_356 if like356_hi == 1
 
 * 356, information first: did tasting change WTP within flavor-liking groups?
-ttest wtp_2a_info_356 == wtp_3a_356 if like356_hi == 0
-ttest wtp_2a_info_356 == wtp_3a_356 if like356_hi == 1
+	ttest 			wtp_2a_info_356 == wtp_3a_356 if like356_hi == 0
+	ttest 			wtp_2a_info_356 == wtp_3a_356 if like356_hi == 1
 
 * 831, tasting first: did information change WTP within flavor-liking groups?
-ttest wtp_2b_831 == wtp_3b_info_831 if like831_hi == 0
-ttest wtp_2b_831 == wtp_3b_info_831 if like831_hi == 1
+	ttest 			wtp_2b_831 == wtp_3b_info_831 if like831_hi == 0
+	ttest 			wtp_2b_831 == wtp_3b_info_831 if like831_hi == 1
 
 * 831, information first: did tasting change WTP within flavor-liking groups?
-ttest wtp_2a_info_831 == wtp_3a_831 if like831_hi == 0
-ttest wtp_2a_info_831 == wtp_3a_831 if like831_hi == 1
+	ttest 			wtp_2a_info_831 == wtp_3a_831 if like831_hi == 0
+	ttest 			wtp_2a_info_831 == wtp_3a_831 if like831_hi == 1
 
-preserve
+* print the table	
+	preserve
 
-tempfile results
-postfile memhold ///
-    str10 beverage ///
-    str20 path ///
-    str15 group ///
-    double N mean_pre mean_post diff sd_diff se_diff pval ci_lo ci_hi ///
-    using `results', replace
+	tempfile 			results
+							postfile memhold ///
+							str10 beverage ///
+							str20 path ///
+							str15 group ///
+							double N mean_pre mean_post diff sd_diff se_diff pval ci_lo ci_hi ///
+							using `results', replace
 
-foreach spec in ///
-    "wtp_2b_356 wtp_3b_info_356 like356_hi 356 tastefirst_info" ///
-    "wtp_2a_info_356 wtp_3a_356 like356_hi 356 infofirst_taste" ///
-    "wtp_2b_831 wtp_3b_info_831 like831_hi 831 tastefirst_info" ///
-    "wtp_2a_info_831 wtp_3a_831 like831_hi 831 infofirst_taste" {
+	foreach 			spec in ///
+							"wtp_2b_356 wtp_3b_info_356 like356_hi 356 tastefirst_info" ///
+							"wtp_2a_info_356 wtp_3a_356 like356_hi 356 infofirst_taste" ///
+							"wtp_2b_831 wtp_3b_info_831 like831_hi 831 tastefirst_info" ///
+							"wtp_2a_info_831 wtp_3a_831 like831_hi 831 infofirst_taste" {
 
-    gettoken pre  rest : spec
-    gettoken post rest : rest
-    gettoken gvar rest : rest
-    gettoken bev  rest : rest
-    gettoken path rest : rest
+		gettoken 			pre  rest : spec
+		gettoken 			post rest : rest
+		gettoken 			gvar rest : rest
+		gettoken 			bev  rest : rest
+		gettoken 			path rest : rest
 
-    foreach g in 0 1 {
+		foreach 			g in 0 1 {
 
-        quietly count if `gvar' == `g' & !missing(`pre', `post')
-        local N = r(N)
+		quietly 			count if `gvar' == `g' & !missing(`pre', `post')
+		local 				N = r(N)
 
-        if `N' > 1 {
+			if 			`N' > 1 {
 
-            if `g' == 0 local glab "Low/neutral"
-            if `g' == 1 local glab "High"
+			if 				`g' == 0 local glab "Low/neutral"
+            if 				`g' == 1 local glab "High"
 
             quietly summarize `pre' if `gvar' == `g' & !missing(`pre', `post')
             local mean_pre = r(mean)
@@ -682,17 +683,443 @@ foreach spec in ///
                 (`pval') ///
                 (`ci_lo') ///
                 (`ci_hi')
-        }
-    }
-}
+						}
+					}
+				}
 
-postclose memhold
-use `results', clear
+	postclose 			memhold
+	use 					`results', clear
 
-format N %9.0f
-format mean_pre mean_post diff sd_diff se_diff pval ci_lo ci_hi %9.3f
+	format 				N %9.0f
+	format 				mean_pre mean_post diff sd_diff se_diff pval ci_lo ci_hi %9.3f
 
-list, clean noobs
-export delimited using "$data/day2_paired_ttests_flavor.csv", replace
+	list, 				clean noobs
+	export 				delimited using "$data/day2_paired_ttests_flavor.csv", replace
 
-restore
+	restore
+	
+********************************************************************************
+**## hyp 2 - gender
+********************************************************************************
+
+
+************************************************************
+* Day 1: 584
+************************************************************
+
+* 584, tasting first: did information change WTP?
+ttest wtp_2b_584 == wtp_3b_info_584 if gender == 1
+ttest wtp_2b_584 == wtp_3b_info_584 if gender == 2
+
+* 584, information first: did tasting change WTP?
+ttest wtp_2a_info_584 == wtp_3a_584 if gender == 1
+ttest wtp_2a_info_584 == wtp_3a_584 if gender == 2
+
+
+************************************************************
+* Day 1: 793
+************************************************************
+
+* 793, tasting first: did information change WTP?
+ttest wtp_2b_793 == wtp_3b_info_793 if gender == 1
+ttest wtp_2b_793 == wtp_3b_info_793 if gender == 2
+
+* 793, information first: did tasting change WTP?
+ttest wtp_2a_info_793 == wtp_3a_793 if gender == 1
+ttest wtp_2a_info_793 == wtp_3a_793 if gender == 2
+
+
+********************************************************************************
+* Day 2: 356
+********************************************************************************
+
+* 584
+	preserve 
+	tempfile out
+	postfile 			H str3 bev str16 path str6 group ///
+							double N mean_pre mean_post diff sd_diff se pval ci_lo ci_hi ///
+							using `out', replace
+
+	foreach 			g in 1 2 {
+	local 				grp = cond(`g'==1, "Male", "Female")
+
+    quietly 			ttest wtp_2b_584 == wtp_3b_info_584 if gender==`g'
+    local 				N    = r(N_1)
+    local 				diff = r(mu_2) - r(mu_1)
+    local 				se   = r(se)
+    local 				sd   = `se' * sqrt(`N')
+    local 				crit = invttail(`N' - 1, .025)
+    local 				lo   = `diff' - `crit' * `se'
+    local 				hi   = `diff' + `crit' * `se'
+
+    post 			H ("584") ("tastefirst_info") ("`grp'") ///
+						(`N') (r(mu_1)) (r(mu_2)) (`diff') ///
+						(`sd') (`se') (r(p)) (`lo') (`hi')
+
+    quietly 		ttest wtp_2a_info_584 == wtp_3a_584 if gender==`g'
+	local 			N    = r(N_1)
+    local 			diff = r(mu_2) - r(mu_1)
+    local 			se   = r(se)
+	local 			sd   = `se' * sqrt(`N')
+	local 			crit = invttail(`N' - 1, .025)
+    local 			lo   = `diff' - `crit' * `se'
+    local 			hi   = `diff' + `crit' * `se'
+
+    post 			H ("584") ("infofirst_taste") ("`grp'") ///
+					(`N') (r(mu_1)) (r(mu_2)) (`diff') ///
+					(`sd') (`se') (r(p)) (`lo') (`hi')
+					}
+
+* 793
+	foreach 		g in 1 2 {
+	local 			grp = cond(`g'==1, "Male", "Female")
+
+    quietly 		ttest wtp_2b_793 == wtp_3b_info_793 if gender==`g'
+    local 			N    = r(N_1)
+    local 			diff = r(mu_2) - r(mu_1)
+    local 			se   = r(se)
+    local 			sd   = `se' * sqrt(`N')
+    local 			crit = invttail(`N' - 1, .025)
+    local 			lo   = `diff' - `crit' * `se'
+    local 			hi   = `diff' + `crit' * `se'
+
+    post 			H ("793") ("tastefirst_info") ("`grp'") ///
+					(`N') (r(mu_1)) (r(mu_2)) (`diff') ///
+					(`sd') (`se') (r(p)) (`lo') (`hi')
+
+    quietly 		ttest wtp_2a_info_793 == wtp_3a_793 if gender==`g'
+	local 			N    = r(N_1)
+    local 			diff = r(mu_2) - r(mu_1)
+    local 			se   = r(se)
+    local 			sd   = `se' * sqrt(`N')
+    local 			crit = invttail(`N' - 1, .025)
+    local 			lo   = `diff' - `crit' * `se'
+    local 			hi   = `diff' + `crit' * `se'
+
+    post 			H ("793") ("infofirst_taste") ("`grp'") ///
+					(`N') (r(mu_1)) (r(mu_2)) (`diff') ///
+					(`sd') (`se') (r(p)) (`lo') (`hi')
+					}
+
+	postclose 		H
+	use 			`results', clear
+
+	format 			N %9.0f
+	format 			mean_pre mean_post diff sd_diff se pval ci_lo ci_hi %9.3f
+
+	export 			delimited using "$data/day1_paired_ttests_gender.csv", replace
+	restore
+	
+********************************************************************************
+* Day 2:
+********************************************************************************
+
+* 831, tasting first: did information change WTP?
+	ttest 			wtp_2b_831 == wtp_3b_info_831 if gender == 1
+	ttest 			wtp_2b_831 == wtp_3b_info_831 if gender == 2
+
+* 831, information first: did tasting change WTP?
+	ttest 			wtp_2a_info_831 == wtp_3a_831 if gender == 1
+	ttest 			wtp_2a_info_831 == wtp_3a_831 if gender == 2
+
+* 356
+		ttest 		wtp_2b_356 == wtp_3b_info_356 if gender == 1
+	ttest 			wtp_2b_356 == wtp_3b_info_356 if gender == 2
+
+* 831, information first: did tasting change WTP?
+	ttest 			wtp_2a_info_356 == wtp_3a_356 if gender == 1
+	ttest 			wtp_2a_info_356 == wtp_3a_356 if gender == 2
+	
+* print the table
+
+* 356
+	preserve 
+	tempfile out
+	postfile 			H str3 bev str16 path str6 group ///
+							double N mean_pre mean_post diff sd_diff se pval ci_lo ci_hi ///
+							using `out', replace
+
+	foreach 			g in 1 2 {
+	local 				grp = cond(`g'==1, "Male", "Female")
+
+    quietly 			ttest wtp_2b_356 == wtp_3b_info_356 if gender==`g'
+    local 				N    = r(N_1)
+    local 				diff = r(mu_2) - r(mu_1)
+    local 				se   = r(se)
+    local 				sd   = `se' * sqrt(`N')
+    local 				crit = invttail(`N' - 1, .025)
+    local 				lo   = `diff' - `crit' * `se'
+    local 				hi   = `diff' + `crit' * `se'
+
+    post 			H ("356") ("tastefirst_info") ("`grp'") ///
+						(`N') (r(mu_1)) (r(mu_2)) (`diff') ///
+						(`sd') (`se') (r(p)) (`lo') (`hi')
+
+    quietly 		ttest wtp_2a_info_356 == wtp_3a_356 if gender==`g'
+	local 			N    = r(N_1)
+    local 			diff = r(mu_2) - r(mu_1)
+    local 			se   = r(se)
+	local 			sd   = `se' * sqrt(`N')
+	local 			crit = invttail(`N' - 1, .025)
+    local 			lo   = `diff' - `crit' * `se'
+    local 			hi   = `diff' + `crit' * `se'
+
+    post 			H ("356") ("infofirst_taste") ("`grp'") ///
+					(`N') (r(mu_1)) (r(mu_2)) (`diff') ///
+					(`sd') (`se') (r(p)) (`lo') (`hi')
+					}
+
+* 831
+	foreach 		g in 1 2 {
+	local 			grp = cond(`g'==1, "Male", "Female")
+
+    quietly 		ttest wtp_2b_831 == wtp_3b_info_831 if gender==`g'
+    local 			N    = r(N_1)
+    local 			diff = r(mu_2) - r(mu_1)
+    local 			se   = r(se)
+    local 			sd   = `se' * sqrt(`N')
+    local 			crit = invttail(`N' - 1, .025)
+    local 			lo   = `diff' - `crit' * `se'
+    local 			hi   = `diff' + `crit' * `se'
+
+    post 			H ("831") ("tastefirst_info") ("`grp'") ///
+					(`N') (r(mu_1)) (r(mu_2)) (`diff') ///
+					(`sd') (`se') (r(p)) (`lo') (`hi')
+
+    quietly 		ttest wtp_2a_info_831 == wtp_3a_831 if gender==`g'
+	local 			N    = r(N_1)
+    local 			diff = r(mu_2) - r(mu_1)
+    local 			se   = r(se)
+    local 			sd   = `se' * sqrt(`N')
+    local 			crit = invttail(`N' - 1, .025)
+    local 			lo   = `diff' - `crit' * `se'
+    local 			hi   = `diff' + `crit' * `se'
+
+    post 			H ("831") ("infofirst_taste") ("`grp'") ///
+					(`N') (r(mu_1)) (r(mu_2)) (`diff') ///
+					(`sd') (`se') (r(p)) (`lo') (`hi')
+					}
+
+	postclose 		H
+	use 			`out', clear
+
+	format 			N %9.0f
+	format 			mean_pre mean_post diff sd_diff se pval ci_lo ci_hi %9.3f
+
+	export 			delimited using "$data/day2_paired_ttests_gender.csv", replace
+	restore
+	
+********************************************************************************
+* Exercise groups
+********************************************************************************
+
+	capture drop 		exercise_hi
+	gen 				exercise_hi = exercise >= 3 if !missing(exercise)
+
+	label define 		exercise_hi_lbl 0 "Low exercise" 1 "High exercise", replace
+	label values 		exercise_hi exercise_hi_lbl
+
+	tab 				exercise, missing
+	tab 				exercise_hi, missing
+
+
+********************************************************************************
+* Day 1:
+********************************************************************************
+
+* 584, tasting first: did information change WTP?
+	ttest 			wtp_2b_584 == wtp_3b_info_584 if exercise_hi == 0
+	ttest 			wtp_2b_584 == wtp_3b_info_584 if exercise_hi == 1
+
+* 584, information first: did tasting change WTP?
+	ttest 			wtp_2a_info_584 == wtp_3a_584 if exercise_hi == 0
+	ttest 			wtp_2a_info_584 == wtp_3a_584 if exercise_hi == 1
+
+* 793, tasting first: did information change WTP?
+	ttest 			wtp_2b_793 == wtp_3b_info_793 if exercise_hi == 0
+	ttest 			wtp_2b_793 == wtp_3b_info_793 if exercise_hi == 1
+
+* 793, information first: did tasting change WTP?
+	ttest 			wtp_2a_info_793 == wtp_3a_793 if exercise_hi == 0
+	ttest 			wtp_2a_info_793 == wtp_3a_793 if exercise_hi == 1
+
+
+* print the table
+
+	preserve
+	tempfile out
+	postfile 			H str3 bev str16 path str13 group ///
+							double N mean_pre mean_post diff sd_diff se pval ci_lo ci_hi ///
+							using `out', replace
+
+* 584
+	foreach 			g in 0 1 {
+		local 			grp = cond(`g'==0, "Low exercise", "High exercise")
+
+		quietly 		ttest wtp_2b_584 == wtp_3b_info_584 if exercise_hi == `g'
+		local 			N    = r(N_1)
+		local 			diff = r(mu_2) - r(mu_1)
+		local 			se   = r(se)
+		local 			sd   = `se' * sqrt(`N')
+		local 			crit = invttail(`N' - 1, .025)
+		local 			lo   = `diff' - `crit' * `se'
+		local 			hi   = `diff' + `crit' * `se'
+
+		post 			H ("584") ("tastefirst_info") ("`grp'") ///
+							(`N') (r(mu_1)) (r(mu_2)) (`diff') ///
+							(`sd') (`se') (r(p)) (`lo') (`hi')
+
+		quietly 		ttest wtp_2a_info_584 == wtp_3a_584 if exercise_hi == `g'
+		local 			N    = r(N_1)
+		local 			diff = r(mu_2) - r(mu_1)
+		local 			se   = r(se)
+		local 			sd   = `se' * sqrt(`N')
+		local 			crit = invttail(`N' - 1, .025)
+		local 			lo   = `diff' - `crit' * `se'
+		local 			hi   = `diff' + `crit' * `se'
+
+		post 			H ("584") ("infofirst_taste") ("`grp'") ///
+							(`N') (r(mu_1)) (r(mu_2)) (`diff') ///
+							(`sd') (`se') (r(p)) (`lo') (`hi')
+		}
+
+* 793
+	foreach 			g in 0 1 {
+		local 			grp = cond(`g'==0, "Low exercise", "High exercise")
+
+		quietly 		ttest wtp_2b_793 == wtp_3b_info_793 if exercise_hi == `g'
+		local 			N    = r(N_1)
+		local 			diff = r(mu_2) - r(mu_1)
+		local 			se   = r(se)
+		local 			sd   = `se' * sqrt(`N')
+		local 			crit = invttail(`N' - 1, .025)
+		local 			lo   = `diff' - `crit' * `se'
+		local 			hi   = `diff' + `crit' * `se'
+
+		post 			H ("793") ("tastefirst_info") ("`grp'") ///
+							(`N') (r(mu_1)) (r(mu_2)) (`diff') ///
+							(`sd') (`se') (r(p)) (`lo') (`hi')
+
+		quietly 		ttest wtp_2a_info_793 == wtp_3a_793 if exercise_hi == `g'
+		local 			N    = r(N_1)
+		local 			diff = r(mu_2) - r(mu_1)
+		local 			se   = r(se)
+		local 			sd   = `se' * sqrt(`N')
+		local 			crit = invttail(`N' - 1, .025)
+		local 			lo   = `diff' - `crit' * `se'
+		local 			hi   = `diff' + `crit' * `se'
+
+		post 			H ("793") ("infofirst_taste") ("`grp'") ///
+							(`N') (r(mu_1)) (r(mu_2)) (`diff') ///
+							(`sd') (`se') (r(p)) (`lo') (`hi')
+		}
+
+	postclose 			H
+	use 				`out', clear
+
+	format 				N %9.0f
+	format 				mean_pre mean_post diff sd_diff se pval ci_lo ci_hi %9.3f
+
+	export 				delimited using "$data/day1_paired_ttests_exercise.csv", replace
+	restore
+
+
+********************************************************************************
+* Day 2:
+********************************************************************************
+
+* 356, tasting first: did information change WTP?
+	ttest 			wtp_2b_356 == wtp_3b_info_356 if exercise_hi == 0
+	ttest 			wtp_2b_356 == wtp_3b_info_356 if exercise_hi == 1
+
+* 356, information first: did tasting change WTP?
+	ttest 			wtp_2a_info_356 == wtp_3a_356 if exercise_hi == 0
+	ttest 			wtp_2a_info_356 == wtp_3a_356 if exercise_hi == 1
+
+* 831, tasting first: did information change WTP?
+	ttest 			wtp_2b_831 == wtp_3b_info_831 if exercise_hi == 0
+	ttest 			wtp_2b_831 == wtp_3b_info_831 if exercise_hi == 1
+
+* 831, information first: did tasting change WTP?
+	ttest 			wtp_2a_info_831 == wtp_3a_831 if exercise_hi == 0
+	ttest 			wtp_2a_info_831 == wtp_3a_831 if exercise_hi == 1
+
+
+* print the table
+
+	preserve
+	tempfile out
+	postfile 			H str3 bev str16 path str13 group ///
+							double N mean_pre mean_post diff sd_diff se pval ci_lo ci_hi ///
+							using `out', replace
+
+* 356
+	foreach 			g in 0 1 {
+		local 			grp = cond(`g'==0, "Low exercise", "High exercise")
+
+		quietly 		ttest wtp_2b_356 == wtp_3b_info_356 if exercise_hi == `g'
+		local 			N    = r(N_1)
+		local 			diff = r(mu_2) - r(mu_1)
+		local 			se   = r(se)
+		local 			sd   = `se' * sqrt(`N')
+		local 			crit = invttail(`N' - 1, .025)
+		local 			lo   = `diff' - `crit' * `se'
+		local 			hi   = `diff' + `crit' * `se'
+
+		post 			H ("356") ("tastefirst_info") ("`grp'") ///
+							(`N') (r(mu_1)) (r(mu_2)) (`diff') ///
+							(`sd') (`se') (r(p)) (`lo') (`hi')
+
+		quietly 		ttest wtp_2a_info_356 == wtp_3a_356 if exercise_hi == `g'
+		local 			N    = r(N_1)
+		local 			diff = r(mu_2) - r(mu_1)
+		local 			se   = r(se)
+		local 			sd   = `se' * sqrt(`N')
+		local 			crit = invttail(`N' - 1, .025)
+		local 			lo   = `diff' - `crit' * `se'
+		local 			hi   = `diff' + `crit' * `se'
+
+		post 			H ("356") ("infofirst_taste") ("`grp'") ///
+							(`N') (r(mu_1)) (r(mu_2)) (`diff') ///
+							(`sd') (`se') (r(p)) (`lo') (`hi')
+		}
+
+* 831
+	foreach 			g in 0 1 {
+		local 			grp = cond(`g'==0, "Low exercise", "High exercise")
+
+		quietly 		ttest wtp_2b_831 == wtp_3b_info_831 if exercise_hi == `g'
+		local 			N    = r(N_1)
+		local 			diff = r(mu_2) - r(mu_1)
+		local 			se   = r(se)
+		local 			sd   = `se' * sqrt(`N')
+		local 			crit = invttail(`N' - 1, .025)
+		local 			lo   = `diff' - `crit' * `se'
+		local 			hi   = `diff' + `crit' * `se'
+
+		post 			H ("831") ("tastefirst_info") ("`grp'") ///
+							(`N') (r(mu_1)) (r(mu_2)) (`diff') ///
+							(`sd') (`se') (r(p)) (`lo') (`hi')
+
+		quietly 		ttest wtp_2a_info_831 == wtp_3a_831 if exercise_hi == `g'
+		local 			N    = r(N_1)
+		local 			diff = r(mu_2) - r(mu_1)
+		local 			se   = r(se)
+		local 			sd   = `se' * sqrt(`N')
+		local 			crit = invttail(`N' - 1, .025)
+		local 			lo   = `diff' - `crit' * `se'
+		local 			hi   = `diff' + `crit' * `se'
+
+		post 			H ("831") ("infofirst_taste") ("`grp'") ///
+							(`N') (r(mu_1)) (r(mu_2)) (`diff') ///
+							(`sd') (`se') (r(p)) (`lo') (`hi')
+		}
+
+	postclose 			H
+	use 				`out', clear
+
+	format 				N %9.0f
+	format 				mean_pre mean_post diff sd_diff se pval ci_lo ci_hi %9.3f
+
+	export 				delimited using "$data/day2_paired_ttests_exercise.csv", replace
+	restore	
