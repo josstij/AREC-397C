@@ -889,7 +889,251 @@ wtp_3b_info_831 CV = .31291796
 	
 	
 **********************************************************************
-**# 11 - close log
+**# 13 - Table 5: Group comparisons for magnesium drivers (Day 1 and 2)
+**********************************************************************
+	import delimited using "$data/spors_bev_data_use_me.csv", clear
+	drop if finished != 1
+
+	keep wtp_2b_584 wtp_3b_info_584 ///
+		 wtp_2b_356 wtp_3b_info_356 ///
+		 wtp_2b_831 wtp_3b_info_831 ///
+		 after_info_3b_d1_useful after_info_3b_d2_useful ///
+		 mag_benefit_3b_d1_sleep mag_benefit_3b_d1_musle ///
+		 mag_benefit_3b_d1_cramps mag_benefit_3b_d1_sugar ///
+		 mag_benefit_3b_d1_bone ///
+		 mag_benefit_3b_d2_sleep mag_benefit_3b_d2_muscle ///
+		 mag_benefit_3b_d2_cramps mag_benefit_3b_d2_sugar ///
+		 mag_benefit_3b_d2_bone
+
+	gen diff_584 = wtp_3b_info_584 - wtp_2b_584
+	gen diff_356 = wtp_3b_info_356 - wtp_2b_356
+	gen diff_831 = wtp_3b_info_831 - wtp_2b_831
+
+	tempname memhold
+	postfile `memhold' str30 driver ///
+		low_584 high_584 p_584 ///
+		low_356 high_356 p_356 ///
+		low_831 high_831 p_831 ///
+		using "$logs/table5_groups_allmag.dta", replace
+
+	* 1. info useful
+	summarize after_info_3b_d1_useful, detail
+	gen high_d1 = after_info_3b_d1_useful > r(p50)
+	quietly summarize diff_584 if high_d1 == 0
+	local low584 = r(mean)
+	quietly summarize diff_584 if high_d1 == 1
+	local high584 = r(mean)
+	quietly ttest diff_584, by(high_d1)
+	local p584 = r(p)
+	drop high_d1
+
+	summarize after_info_3b_d2_useful, detail
+	gen high_d2 = after_info_3b_d2_useful > r(p50)
+	quietly summarize diff_356 if high_d2 == 0
+	local low356 = r(mean)
+	quietly summarize diff_356 if high_d2 == 1
+	local high356 = r(mean)
+	quietly ttest diff_356, by(high_d2)
+	local p356 = r(p)
+
+	quietly summarize diff_831 if high_d2 == 0
+	local low831 = r(mean)
+	quietly summarize diff_831 if high_d2 == 1
+	local high831 = r(mean)
+	quietly ttest diff_831, by(high_d2)
+	local p831 = r(p)
+	drop high_d2
+
+	post `memhold' ("Info useful") ///
+		(`low584') (`high584') (`p584') ///
+		(`low356') (`high356') (`p356') ///
+		(`low831') (`high831') (`p831')
+
+	* 2. muscle recovery
+	summarize mag_benefit_3b_d1_musle, detail
+	gen high_d1 = mag_benefit_3b_d1_musle > r(p50)
+	quietly summarize diff_584 if high_d1 == 0
+	local low584 = r(mean)
+	quietly summarize diff_584 if high_d1 == 1
+	local high584 = r(mean)
+	quietly ttest diff_584, by(high_d1)
+	local p584 = r(p)
+	drop high_d1
+
+	summarize mag_benefit_3b_d2_muscle, detail
+	gen high_d2 = mag_benefit_3b_d2_muscle > r(p50)
+	quietly summarize diff_356 if high_d2 == 0
+	local low356 = r(mean)
+	quietly summarize diff_356 if high_d2 == 1
+	local high356 = r(mean)
+	quietly ttest diff_356, by(high_d2)
+	local p356 = r(p)
+
+	quietly summarize diff_831 if high_d2 == 0
+	local low831 = r(mean)
+	quietly summarize diff_831 if high_d2 == 1
+	local high831 = r(mean)
+	quietly ttest diff_831, by(high_d2)
+	local p831 = r(p)
+	drop high_d2
+
+	post `memhold' ("Muscle recovery") ///
+		(`low584') (`high584') (`p584') ///
+		(`low356') (`high356') (`p356') ///
+		(`low831') (`high831') (`p831')
+
+	* 3. reduce cramps
+	summarize mag_benefit_3b_d1_cramps, detail
+	gen high_d1 = mag_benefit_3b_d1_cramps > r(p50)
+	quietly summarize diff_584 if high_d1 == 0
+	local low584 = r(mean)
+	quietly summarize diff_584 if high_d1 == 1
+	local high584 = r(mean)
+	quietly ttest diff_584, by(high_d1)
+	local p584 = r(p)
+	drop high_d1
+
+	summarize mag_benefit_3b_d2_cramps, detail
+	gen high_d2 = mag_benefit_3b_d2_cramps > r(p50)
+	quietly summarize diff_356 if high_d2 == 0
+	local low356 = r(mean)
+	quietly summarize diff_356 if high_d2 == 1
+	local high356 = r(mean)
+	quietly ttest diff_356, by(high_d2)
+	local p356 = r(p)
+
+	quietly summarize diff_831 if high_d2 == 0
+	local low831 = r(mean)
+	quietly summarize diff_831 if high_d2 == 1
+	local high831 = r(mean)
+	quietly ttest diff_831, by(high_d2)
+	local p831 = r(p)
+	drop high_d2
+
+	post `memhold' ("Reduce cramps") ///
+		(`low584') (`high584') (`p584') ///
+		(`low356') (`high356') (`p356') ///
+		(`low831') (`high831') (`p831')
+
+	* 4. blood sugar support
+	summarize mag_benefit_3b_d1_sugar, detail
+	gen high_d1 = mag_benefit_3b_d1_sugar > r(p50)
+	quietly summarize diff_584 if high_d1 == 0
+	local low584 = r(mean)
+	quietly summarize diff_584 if high_d1 == 1
+	local high584 = r(mean)
+	quietly ttest diff_584, by(high_d1)
+	local p584 = r(p)
+	drop high_d1
+
+	summarize mag_benefit_3b_d2_sugar, detail
+	gen high_d2 = mag_benefit_3b_d2_sugar > r(p50)
+	quietly summarize diff_356 if high_d2 == 0
+	local low356 = r(mean)
+	quietly summarize diff_356 if high_d2 == 1
+	local high356 = r(mean)
+	quietly ttest diff_356, by(high_d2)
+	local p356 = r(p)
+
+	quietly summarize diff_831 if high_d2 == 0
+	local low831 = r(mean)
+	quietly summarize diff_831 if high_d2 == 1
+	local high831 = r(mean)
+	quietly ttest diff_831, by(high_d2)
+	local p831 = r(p)
+	drop high_d2
+
+	post `memhold' ("Blood sugar support") ///
+		(`low584') (`high584') (`p584') ///
+		(`low356') (`high356') (`p356') ///
+		(`low831') (`high831') (`p831')
+
+	* 5. bone health
+	summarize mag_benefit_3b_d1_bone, detail
+	gen high_d1 = mag_benefit_3b_d1_bone > r(p50)
+	quietly summarize diff_584 if high_d1 == 0
+	local low584 = r(mean)
+	quietly summarize diff_584 if high_d1 == 1
+	local high584 = r(mean)
+	quietly ttest diff_584, by(high_d1)
+	local p584 = r(p)
+	drop high_d1
+
+	summarize mag_benefit_3b_d2_bone, detail
+	gen high_d2 = mag_benefit_3b_d2_bone > r(p50)
+	quietly summarize diff_356 if high_d2 == 0
+	local low356 = r(mean)
+	quietly summarize diff_356 if high_d2 == 1
+	local high356 = r(mean)
+	quietly ttest diff_356, by(high_d2)
+	local p356 = r(p)
+
+	quietly summarize diff_831 if high_d2 == 0
+	local low831 = r(mean)
+	quietly summarize diff_831 if high_d2 == 1
+	local high831 = r(mean)
+	quietly ttest diff_831, by(high_d2)
+	local p831 = r(p)
+	drop high_d2
+
+	post `memhold' ("Bone health") ///
+		(`low584') (`high584') (`p584') ///
+		(`low356') (`high356') (`p356') ///
+		(`low831') (`high831') (`p831')
+
+	* 6. relaxation / sleep
+	summarize mag_benefit_3b_d1_sleep, detail
+	gen high_d1 = mag_benefit_3b_d1_sleep > r(p50)
+	quietly summarize diff_584 if high_d1 == 0
+	local low584 = r(mean)
+	quietly summarize diff_584 if high_d1 == 1
+	local high584 = r(mean)
+	quietly ttest diff_584, by(high_d1)
+	local p584 = r(p)
+	drop high_d1
+
+	summarize mag_benefit_3b_d2_sleep, detail
+	gen high_d2 = mag_benefit_3b_d2_sleep > r(p50)
+	quietly summarize diff_356 if high_d2 == 0
+	local low356 = r(mean)
+	quietly summarize diff_356 if high_d2 == 1
+	local high356 = r(mean)
+	quietly ttest diff_356, by(high_d2)
+	local p356 = r(p)
+
+	quietly summarize diff_831 if high_d2 == 0
+	local low831 = r(mean)
+	quietly summarize diff_831 if high_d2 == 1
+	local high831 = r(mean)
+	quietly ttest diff_831, by(high_d2)
+	local p831 = r(p)
+	drop high_d2
+
+	post `memhold' ("Relaxation / sleep") ///
+		(`low584') (`high584') (`p584') ///
+		(`low356') (`high356') (`p356') ///
+		(`low831') (`high831') (`p831')
+
+	postclose `memhold'
+
+	use "$logs/table5_groups_allmag.dta", clear
+
+	label variable driver   "Driver"
+	label variable low_584  "Low (584)"
+	label variable high_584 "High (584)"
+	label variable p_584    "p-value"
+	label variable low_356  "Low (356)"
+	label variable high_356 "High (356)"
+	label variable p_356    "p-value"
+	label variable low_831  "Low (831)"
+	label variable high_831 "High (831)"
+	label variable p_831    "p-value"
+
+	list, clean noobs
+
+
+**********************************************************************
+**# 14 - close log
 **********************************************************************
 	log 					close
 
