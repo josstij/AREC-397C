@@ -154,6 +154,8 @@
 	label variable preknow_5_magn       "Prior knowledge of magnesium benefits"
 	label variable exercise             "Days of moderate/vigorous exercise"
 	label variable con_freq             "Sports drink consumption frequency"
+	
+	save						"$logs/clean_data.dta", replace
 
 **********************************************************************
 **# 3 - Descriptive statistics table
@@ -382,7 +384,9 @@ diff_793 |      34   -.2867647    .1117697    .6517237   -.5141618   -.0593676
 **********************************************************************
 **## 5.1 - Day 1 magnesium product (584)
 	ttest					wtp_3b_info_584 == 2.5
-	
+	ttest wtp_3b_info_584 == 2.5
+return list
+
 /*
 One-sample t test
 ------------------------------------------------------------------------------
@@ -578,24 +582,30 @@ wtp_3b_info_831 CV = .31291796
 **********************************************************************
 **# 9 - Table 2: One-sample t-tests
 **********************************************************************
-	tempname 			memhold
-	postfile `memhold' 	str20 variable mean tstat pvalue ci_low ci_high using "$logs/table2_onesample.dta", replace
+	use "$logs/clean_data.dta", clear
+
+	tempname memhold
+	postfile `memhold' str20 variable mean tstat pvalue ci_low ci_high tcrit me using "$logs/table2_onesample.dta", replace
 
 	foreach var of varlist 	wtp_3b_info_584 ///
-						wtp_3b_info_793 ///
-						wtp_3b_info_356 ///
-						wtp_3b_info_831 {
+							wtp_3b_info_793 ///
+							wtp_3b_info_356 ///
+							wtp_3b_info_831 {
 
-	ttest `var' == 2.5
+		ttest `var' == 2.5
 
-	local mean    = r(mu_1)
-	local tstat   = r(t)
-	local pvalue  = r(p)
-	local ci_low  = r(lb)
-	local ci_high = r(ub)
+		local mean    = r(mu_1)
+		local tstat   = r(t)
+		local pvalue  = r(p)
+		local ci_low  = r(lb_1)
+		local ci_high = r(ub_1)
+		local df      = r(df_t)
+		local se      = r(se)
+		local tcrit   = invttail(`df', 0.025)
+		local me      = `tcrit' * `se'
 
-	post `memhold' ("`var'") (`mean') (`tstat') (`pvalue') (`ci_low') (`ci_high')
-}
+		post `memhold' ("`var'") (`mean') (`tstat') (`pvalue') (`ci_low') (`ci_high') (`tcrit') (`me')
+	}
 
 	postclose `memhold'
 
@@ -607,27 +617,51 @@ wtp_3b_info_831 CV = .31291796
 	label variable pvalue   "p-value"
 	label variable ci_low   "95% CI Lower"
 	label variable ci_high  "95% CI Upper"
+	label variable tcrit    "t-critical"
+	label variable me       "Margin of Error"
 
 	list, clean noobs
+
 	
-	sljslks
 **********************************************************************
 **# 10 - Table 3: Paired t-tests
 **********************************************************************
+	use "$logs/clean_data.dta", clear
+
 	tempname memhold
-	postfile `memhold' str20 product mean_before mean_after diff pvalue ci_low ci_high using "$logs/table3_paired.dta", replace
+	postfile `memhold' str12 product mean_before mean_after diff pvalue ci_low ci_high tcrit me using "$logs/table3_paired.dta", replace
 
+	**## 10.1 - product 584
 	ttest wtp_3b_info_584 == wtp_2b_584
-	post `memhold' ("584") (r(mu_2)) (r(mu_1)) (r(mu_1)-r(mu_2)) (r(p)) (r(lb)) (r(ub))
+	local df    = r(df_t)
+	local se    = r(se)
+	local tcrit = invttail(`df', 0.025)
+	local me    = `tcrit' * `se'
+	post `memhold' ("584") (r(mu_2)) (r(mu_1)) (r(mu_1)-r(mu_2)) (r(p)) (r(lb_diff)) (r(ub_diff)) (`tcrit') (`me')
 
+	**## 10.2 - product 793
 	ttest wtp_3b_info_793 == wtp_2b_793
-	post `memhold' ("793") (r(mu_2)) (r(mu_1)) (r(mu_1)-r(mu_2)) (r(p)) (r(lb)) (r(ub))
+	local df    = r(df_t)
+	local se    = r(se)
+	local tcrit = invttail(`df', 0.025)
+	local me    = `tcrit' * `se'
+	post `memhold' ("793") (r(mu_2)) (r(mu_1)) (r(mu_1)-r(mu_2)) (r(p)) (r(lb_diff)) (r(ub_diff)) (`tcrit') (`me')
 
+	**## 10.3 - product 356
 	ttest wtp_3b_info_356 == wtp_2b_356
-	post `memhold' ("356") (r(mu_2)) (r(mu_1)) (r(mu_1)-r(mu_2)) (r(p)) (r(lb)) (r(ub))
+	local df    = r(df_t)
+	local se    = r(se)
+	local tcrit = invttail(`df', 0.025)
+	local me    = `tcrit' * `se'
+	post `memhold' ("356") (r(mu_2)) (r(mu_1)) (r(mu_1)-r(mu_2)) (r(p)) (r(lb_diff)) (r(ub_diff)) (`tcrit') (`me')
 
+	**## 10.4 - product 831
 	ttest wtp_3b_info_831 == wtp_2b_831
-	post `memhold' ("831") (r(mu_2)) (r(mu_1)) (r(mu_1)-r(mu_2)) (r(p)) (r(lb)) (r(ub))
+	local df    = r(df_t)
+	local se    = r(se)
+	local tcrit = invttail(`df', 0.025)
+	local me    = `tcrit' * `se'
+	post `memhold' ("831") (r(mu_2)) (r(mu_1)) (r(mu_1)-r(mu_2)) (r(p)) (r(lb_diff)) (r(ub_diff)) (`tcrit') (`me')
 
 	postclose `memhold'
 
@@ -640,10 +674,220 @@ wtp_3b_info_831 CV = .31291796
 	label variable pvalue      "p-value"
 	label variable ci_low      "95% CI Lower"
 	label variable ci_high     "95% CI Upper"
+	label variable tcrit       "t-critical"
+	label variable me          "Margin of Error"
 
 	list, clean noobs
 
+	
+**********************************************************************
+**# 11 - drivers of WTP change (all magnesium products)
+**********************************************************************
+	import delimited using "$data/spors_bev_data_use_me.csv", clear
+	drop if finished != 1
 
+	keep wtp_2b_584 wtp_3b_info_584 ///
+		 wtp_2b_356 wtp_3b_info_356 ///
+		 wtp_2b_831 wtp_3b_info_831 ///
+		 after_info_3b_d1_useful after_info_3b_d2_useful ///
+		 mag_benefit_3b_d1_musle mag_benefit_3b_d1_cramps ///
+		 mag_benefit_3b_d1_sugar mag_benefit_3b_d1_bone ///
+		 mag_benefit_3b_d1_sleep ///
+		 mag_benefit_3b_d2_muscle mag_benefit_3b_d2_cramps ///
+		 mag_benefit_3b_d2_sugar mag_benefit_3b_d2_bone ///
+		 mag_benefit_3b_d2_sleep
+
+	* generate WTP changes
+	gen diff_584 = wtp_3b_info_584 - wtp_2b_584
+	gen diff_356 = wtp_3b_info_356 - wtp_2b_356
+	gen diff_831 = wtp_3b_info_831 - wtp_2b_831
+
+	tempname memhold
+	postfile `memhold' str30 driver ///
+		corr_584 p_584 ///
+		corr_356 p_356 ///
+		corr_831 p_831 ///
+		using "$logs/table4_drivers_all.dta", replace
+
+	* info useful
+	quietly pwcorr diff_584 after_info_3b_d1_useful, sig
+	matrix M1 = r(C)
+	matrix P1 = r(sig)
+	local c1 = M1[1,2]
+	local p1 = P1[1,2]
+
+	quietly pwcorr diff_356 after_info_3b_d2_useful, sig
+	matrix M2 = r(C)
+	matrix P2 = r(sig)
+	local c2 = M2[1,2]
+	local p2 = P2[1,2]
+
+	quietly pwcorr diff_831 after_info_3b_d2_useful, sig
+	matrix M3 = r(C)
+	matrix P3 = r(sig)
+	local c3 = M3[1,2]
+	local p3 = P3[1,2]
+
+	post `memhold' ("Info useful") (`c1') (`p1') (`c2') (`p2') (`c3') (`p3')
+
+	* muscle recovery
+	quietly pwcorr diff_584 mag_benefit_3b_d1_musle, sig
+	matrix M1 = r(C)
+	matrix P1 = r(sig)
+	local c1 = M1[1,2]
+	local p1 = P1[1,2]
+
+	quietly pwcorr diff_356 mag_benefit_3b_d2_muscle, sig
+	matrix M2 = r(C)
+	matrix P2 = r(sig)
+	local c2 = M2[1,2]
+	local p2 = P2[1,2]
+
+	quietly pwcorr diff_831 mag_benefit_3b_d2_muscle, sig
+	matrix M3 = r(C)
+	matrix P3 = r(sig)
+	local c3 = M3[1,2]
+	local p3 = P3[1,2]
+
+	post `memhold' ("Muscle recovery") (`c1') (`p1') (`c2') (`p2') (`c3') (`p3')
+
+	* reduce cramps
+	quietly pwcorr diff_584 mag_benefit_3b_d1_cramps, sig
+	matrix M1 = r(C)
+	matrix P1 = r(sig)
+	local c1 = M1[1,2]
+	local p1 = P1[1,2]
+
+	quietly pwcorr diff_356 mag_benefit_3b_d2_cramps, sig
+	matrix M2 = r(C)
+	matrix P2 = r(sig)
+	local c2 = M2[1,2]
+	local p2 = P2[1,2]
+
+	quietly pwcorr diff_831 mag_benefit_3b_d2_cramps, sig
+	matrix M3 = r(C)
+	matrix P3 = r(sig)
+	local c3 = M3[1,2]
+	local p3 = P3[1,2]
+
+	post `memhold' ("Reduce cramps") (`c1') (`p1') (`c2') (`p2') (`c3') (`p3')
+
+	* blood sugar support
+	quietly pwcorr diff_584 mag_benefit_3b_d1_sugar, sig
+	matrix M1 = r(C)
+	matrix P1 = r(sig)
+	local c1 = M1[1,2]
+	local p1 = P1[1,2]
+
+	quietly pwcorr diff_356 mag_benefit_3b_d2_sugar, sig
+	matrix M2 = r(C)
+	matrix P2 = r(sig)
+	local c2 = M2[1,2]
+	local p2 = P2[1,2]
+
+	quietly pwcorr diff_831 mag_benefit_3b_d2_sugar, sig
+	matrix M3 = r(C)
+	matrix P3 = r(sig)
+	local c3 = M3[1,2]
+	local p3 = P3[1,2]
+
+	post `memhold' ("Blood sugar support") (`c1') (`p1') (`c2') (`p2') (`c3') (`p3')
+
+	* bone health
+	quietly pwcorr diff_584 mag_benefit_3b_d1_bone, sig
+	matrix M1 = r(C)
+	matrix P1 = r(sig)
+	local c1 = M1[1,2]
+	local p1 = P1[1,2]
+
+	quietly pwcorr diff_356 mag_benefit_3b_d2_bone, sig
+	matrix M2 = r(C)
+	matrix P2 = r(sig)
+	local c2 = M2[1,2]
+	local p2 = P2[1,2]
+
+	quietly pwcorr diff_831 mag_benefit_3b_d2_bone, sig
+	matrix M3 = r(C)
+	matrix P3 = r(sig)
+	local c3 = M3[1,2]
+	local p3 = P3[1,2]
+
+	post `memhold' ("Bone health") (`c1') (`p1') (`c2') (`p2') (`c3') (`p3')
+
+	* relaxation / sleep
+	quietly pwcorr diff_584 mag_benefit_3b_d1_sleep, sig
+	matrix M1 = r(C)
+	matrix P1 = r(sig)
+	local c1 = M1[1,2]
+	local p1 = P1[1,2]
+
+	quietly pwcorr diff_356 mag_benefit_3b_d2_sleep, sig
+	matrix M2 = r(C)
+	matrix P2 = r(sig)
+	local c2 = M2[1,2]
+	local p2 = P2[1,2]
+
+	quietly pwcorr diff_831 mag_benefit_3b_d2_sleep, sig
+	matrix M3 = r(C)
+	matrix P3 = r(sig)
+	local c3 = M3[1,2]
+	local p3 = P3[1,2]
+
+	post `memhold' ("Relaxation / sleep") (`c1') (`p1') (`c2') (`p2') (`c3') (`p3')
+
+	postclose `memhold'
+
+	use "$logs/table4_drivers_all.dta", clear
+
+	label variable driver   "Attribute"
+	label variable corr_584 "Corr (584)"
+	label variable p_584    "p-value"
+	label variable corr_356 "Corr (356)"
+	label variable p_356    "p-value"
+	label variable corr_831 "Corr (831)"
+	label variable p_831    "p-value"
+
+	list, clean noobs
+	
+	
+**********************************************************************
+**# 12 - Group comparisons: high vs low benefit importance
+**********************************************************************
+	import delimited using "$data/spors_bev_data_use_me.csv", clear
+	drop if finished != 1
+
+	keep wtp_2b_584 wtp_3b_info_584 ///
+		 mag_benefit_3b_d1_sleep ///
+		 mag_benefit_3b_d1_musle ///
+		 mag_benefit_3b_d1_cramps ///
+		 mag_benefit_3b_d1_sugar ///
+		 mag_benefit_3b_d1_bone ///
+		 after_info_3b_d1_useful
+
+	gen diff_584 = wtp_3b_info_584 - wtp_2b_584
+
+	local drivers ///
+		mag_benefit_3b_d1_sleep ///
+		mag_benefit_3b_d1_musle ///
+		mag_benefit_3b_d1_cramps ///
+		mag_benefit_3b_d1_sugar ///
+		mag_benefit_3b_d1_bone ///
+		after_info_3b_d1_useful
+
+	foreach var of local drivers {
+
+		summarize `var', detail
+		gen high_`var' = `var' > r(p50)
+
+		display "----------------------------------------"
+		display "`var' (High vs Low)"
+
+		ttest diff_584, by(high_`var')
+
+		drop high_`var'
+	}
+	
+	
 **********************************************************************
 **# 11 - close log
 **********************************************************************
