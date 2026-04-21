@@ -5728,4 +5728,4 @@ end of do-file
 
 {search r(111), local:r(111);}
 
-{com}. 
+{com}. exit, clear
