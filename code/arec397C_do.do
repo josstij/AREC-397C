@@ -61,4 +61,10 @@
 		global 	logs	"C:\Users\timleavy\Desktop\GitHub Folder\AREC-397C\logs"
 	}
 
+			if `"`c(username)'"' == "tleav" {
+		global	code	"C:\Users\tleav\Desktop\GitFolder\AREC-397C\code"
+		global	data	"C:\Users\tleav\Desktop\GitFolder\AREC-397C\data""
+		global 	logs	"C:\Users\tleav\Desktop\GitFolder\AREC-397C\logs""
+	}
+	
 
