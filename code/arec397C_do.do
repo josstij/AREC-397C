@@ -67,6 +67,7 @@
 		global	data	"C:\Users\tleav\Desktop\GitFolder\AREC-397C\data"
 		global 	logs	"C:\Users\tleav\Desktop\GitFolder\AREC-397C\logs"
 		global	graphs	"C:\Users\tleav\Desktop\GitFolder\AREC-397C\graphs"
+		global	reg_tables	"C:\Users\tleav\Desktop\GitFolder\AREC-397C\reg_tables"
 		
 	}
 

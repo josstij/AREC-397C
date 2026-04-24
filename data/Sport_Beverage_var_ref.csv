@@ -1,0 +1,375 @@
+StartDate,Start Date
+EndDate,End Date
+Status,Response Type
+IPAddress,IP Address
+Progress,Progress
+Duration (in seconds),Duration (in seconds)
+Finished,Finished
+RecordedDate,Recorded Date
+ResponseId,Response ID
+RecipientLastName,Recipient Last Name
+RecipientFirstName,Recipient First Name
+RecipientEmail,Recipient Email
+ExternalReference,External Data Reference
+LocationLatitude,Location Latitude
+LocationLongitude,Location Longitude
+DistributionChannel,Distribution Channel
+UserLanguage,User Language
+consent,"I have read (or someone has read to me) this form, and I am aware that I am being asked to participate in a research study. I have had the opportunity to ask questions and have had them answered to my satisfaction. I am not giving up any legal rights by signing this form."
+con_freq,"How often do you usually drink sport beverages, such as Gatorade, Powerade, BodyArmor, or similar products?"
+con_situation _1,In which situations do you MOST OFTEN drink sports beverages? Select all that apply. - Selected Choice - Before exercise
+con_situation _2,In which situations do you MOST OFTEN drink sports beverages? Select all that apply. - Selected Choice - During exercise
+con_situation _3,In which situations do you MOST OFTEN drink sports beverages? Select all that apply. - Selected Choice - After exercise
+con_situation _4,In which situations do you MOST OFTEN drink sports beverages? Select all that apply. - Selected Choice - With hot weather / heat exposure
+con_situation _5,In which situations do you MOST OFTEN drink sports beverages? Select all that apply. - Selected Choice - When I am sick or recovering from illness
+con_situation _6,In which situations do you MOST OFTEN drink sports beverages? Select all that apply. - Selected Choice - As a daily hydration drink
+con_situation _7,"In which situations do you MOST OFTEN drink sports beverages? Select all that apply. - Selected Choice - Other, please specify"
+con_situation _7_TEXT,"In which situations do you MOST OFTEN drink sports beverages? Select all that apply. - Other, please specify - Text"
+exercise,"On a typical week, how many days do you do at least 30 minutes of moderate to vigorous physical activity?"
+flavor_pref1_1,You are in the grocery store looking in the cold beverage cooler. These flavors are all stocked on the shelves. Which of these flavors are you likely to choose? Select all that apply. - Selected Choice - Blueberry
+flavor_pref1_2,You are in the grocery store looking in the cold beverage cooler. These flavors are all stocked on the shelves. Which of these flavors are you likely to choose? Select all that apply. - Selected Choice - Berry blend
+flavor_pref1_3,You are in the grocery store looking in the cold beverage cooler. These flavors are all stocked on the shelves. Which of these flavors are you likely to choose? Select all that apply. - Selected Choice - Fruit Punch
+flavor_pref1_4,You are in the grocery store looking in the cold beverage cooler. These flavors are all stocked on the shelves. Which of these flavors are you likely to choose? Select all that apply. - Selected Choice - Grape
+flavor_pref1_5,You are in the grocery store looking in the cold beverage cooler. These flavors are all stocked on the shelves. Which of these flavors are you likely to choose? Select all that apply. - Selected Choice - Lemon Lime
+flavor_pref1_6,You are in the grocery store looking in the cold beverage cooler. These flavors are all stocked on the shelves. Which of these flavors are you likely to choose? Select all that apply. - Selected Choice - Orange
+flavor_pref1_7,You are in the grocery store looking in the cold beverage cooler. These flavors are all stocked on the shelves. Which of these flavors are you likely to choose? Select all that apply. - Selected Choice - Pineapple
+flavor_pref1_8,You are in the grocery store looking in the cold beverage cooler. These flavors are all stocked on the shelves. Which of these flavors are you likely to choose? Select all that apply. - Selected Choice - None of them
+flavor_pref1_9,You are in the grocery store looking in the cold beverage cooler. These flavors are all stocked on the shelves. Which of these flavors are you likely to choose? Select all that apply. - Selected Choice - I have another favorite flavor. Please specify below:
+flavor_pref1_9_TEXT,You are in the grocery store looking in the cold beverage cooler. These flavors are all stocked on the shelves. Which of these flavors are you likely to choose? Select all that apply. - I have another favorite flavor. Please specify below: - Text
+flavor_pref2,What is the flavor that you like the MOST among your choices above? - Selected Choice
+flavor_pref2_9_TEXT,What is the flavor that you like the MOST among your choices above? - I have another favorite flavor. Please specify below: - Text
+pref_flavor,"How important are the following statements to you when you consume sports beverages? - ""The flavor tastes good to me."""
+pref_sweet,"How important are the following statements to you when you consume sports beverages? - ""The sweetness level is about right to me."""
+pref_sugar,"How important are the following statements to you when you consume sports beverages? - ""The amount of sugar per serving is low to moderate."""
+pref_ingred,"How important are the following statements to you when you consume sports beverages? - ""The drink contains ingredients that support performance and/or recovery."""
+pref_health,"How important are the following statements to you when you consume sports beverages? - ""The drink claims health benefit in general."""
+label_habit_loyal,"How much do you agree with the following statements?
+
+
+
+"" When I purchase sports beverages, ... - ... I go to the brand I always buy."""
+label_habit_read,"How much do you agree with the following statements?
+
+
+
+"" When I purchase sports beverages, ... - ... I usually read the nutrition fact labels before purchasing."""
+label_habit_ingred,"How much do you agree with the following statements?
+
+
+
+"" When I purchase sports beverages, ... - ... I look for specific functional ingredients for physiological benefits of hydration, energy, recovery or performance stimulation. """
+preknow_vitd,"How much do you agree with the following statements related to vitamins and minerals?
+
+""I am aware of specific benefits of ..."" - Vitamin D"
+preknow_vitc,"How much do you agree with the following statements related to vitamins and minerals?
+
+""I am aware of specific benefits of ..."" - Vitamin C"
+preknow_calc,"How much do you agree with the following statements related to vitamins and minerals?
+
+""I am aware of specific benefits of ..."" - Calcium"
+preknow_iron,"How much do you agree with the following statements related to vitamins and minerals?
+
+""I am aware of specific benefits of ..."" - Iron"
+preknow_pota,"How much do you agree with the following statements related to vitamins and minerals?
+
+""I am aware of specific benefits of ..."" - Potassium"
+preknow_5_magn,"How much do you agree with the following statements related to vitamins and minerals?
+
+""I am aware of specific benefits of ..."" - Magnesium"
+wtp_1,"You are in the grocery store looking in the cold beverage cooler, and you see a new sports beverage. What is the most you are willing to pay for a 20-oz bottle of the new sports beverage? For reference, a typical 20-oz bottle of sports beverage costs about $2.50."
+sure_1,How sure are you that you would pay [QID131-ChoiceGroup-SelectedChoices]?
+sensory_584_overall,Please rate how much you liked or disliked the sports beverage you just tasted based on the following characteristics: - Overall liking
+sensory_584_appear,Please rate how much you liked or disliked the sports beverage you just tasted based on the following characteristics: - Overall appearance
+sensory_584_color,Please rate how much you liked or disliked the sports beverage you just tasted based on the following characteristics: - Color
+sensory_584_aroma,Please rate how much you liked or disliked the sports beverage you just tasted based on the following characteristics: - Aroma
+sensory_584_flavor,Please rate how much you liked or disliked the sports beverage you just tasted based on the following characteristics: - Overall flavor
+sensory_584_lemon,Please rate how much you liked or disliked the sports beverage you just tasted based on the following characteristics: - Lemon Lime flavor
+sensory_584_sweet,Please rate how much you liked or disliked the sports beverage you just tasted based on the following characteristics: - Sweetness
+sensory_584_salt,Please rate how much you liked or disliked the sports beverage you just tasted based on the following characteristics: - Saltiness
+sensory_584_sour,Please rate how much you liked or disliked the sports beverage you just tasted based on the following characteristics: - Sourness/acidity
+sensory_584_aftert,Please rate how much you liked or disliked the sports beverage you just tasted based on the following characteristics: - Aftertaste
+refresh_584,How would you rate the refreshing sensation from this sports beverage?
+wtp_2b_584,"You are in the grocery store looking in the cold beverage cooler, and you see the sports beverage you just tasted. What is the most you are willing to pay for a 20-oz bottle of the sports beverage? For reference, a typical 20-oz bottle of sports beverage costs about $2.50."
+sure_2b_584,How sure are you that you would pay [QID174-ChoiceGroup-SelectedChoices]?
+sensory_793_overall,Please rate how much you liked or disliked the sports beverage you just tasted based on the following characteristics: - Overall liking
+sensory_793_appear,Please rate how much you liked or disliked the sports beverage you just tasted based on the following characteristics: - Overall appearance
+sensory_793_color,Please rate how much you liked or disliked the sports beverage you just tasted based on the following characteristics: - Color
+sensory_793_aroma,Please rate how much you liked or disliked the sports beverage you just tasted based on the following characteristics: - Aroma
+sensory_793_flavor,Please rate how much you liked or disliked the sports beverage you just tasted based on the following characteristics: - Overall flavor
+sensory_793_lemon,Please rate how much you liked or disliked the sports beverage you just tasted based on the following characteristics: - Lemon Lime flavor
+sensory_793_sweet,Please rate how much you liked or disliked the sports beverage you just tasted based on the following characteristics: - Sweetness
+sensory_793_salt,Please rate how much you liked or disliked the sports beverage you just tasted based on the following characteristics: - Saltiness
+sensory_793_sour,Please rate how much you liked or disliked the sports beverage you just tasted based on the following characteristics: - Sourness/acidity
+sensory_793_aftert,Please rate how much you liked or disliked the sports beverage you just tasted based on the following characteristics: - Aftertaste
+refresh_793,How would you rate the refreshing sensation from this sports beverage?
+wtp_2b_793,"You are in the grocery store looking in the cold beverage cooler, and you see the sports beverage you just tasted. What is the most you are willing to pay for a 20-oz bottle of the sports beverage? For reference, a typical 20-oz bottle of sports beverage costs about $2.50."
+Sure_2b_793,How sure are you that you would pay [QID176-ChoiceGroup-SelectedChoices]?
+wtp_3b_info_584,"Magnesium is an essential electrolyte that has several potential health benefits, including:
+
+	supports muscle recovery after exercise
+	helps reduce muscle cramps
+	supports healthy blood sugar metabolism and may help lower the risk of type 2 diabetes
+	supports bone health
+	promotes relaxation and better sleep
+
+The average daily magnesium intake in the U.S. is 352 mg for men and 202 mg for women. The recommended daily value is 420 mg. 
+
+
+
+You are considering two 20-oz sports beverages you just tasted earlier:
+
+	Product 584: contains 82 mg of magnesium (20% of the Daily Value)
+	Product 793: contains no magnesium
+
+For each product, what is the most you are willing to pay for a 20-oz bottle? For reference, a typical 20-oz bottle of sports beverage costs about $2.50. - Product 584 (with magnesium)"
+wtp_3b_info_793,"Magnesium is an essential electrolyte that has several potential health benefits, including:
+
+	supports muscle recovery after exercise
+	helps reduce muscle cramps
+	supports healthy blood sugar metabolism and may help lower the risk of type 2 diabetes
+	supports bone health
+	promotes relaxation and better sleep
+
+The average daily magnesium intake in the U.S. is 352 mg for men and 202 mg for women. The recommended daily value is 420 mg. 
+
+
+
+You are considering two 20-oz sports beverages you just tasted earlier:
+
+	Product 584: contains 82 mg of magnesium (20% of the Daily Value)
+	Product 793: contains no magnesium
+
+For each product, what is the most you are willing to pay for a 20-oz bottle? For reference, a typical 20-oz bottle of sports beverage costs about $2.50. - Product 793 (no magnesium)"
+sure_3b_info_584,How sure are you that you're willing to pay [QID180-ChoiceGroup-SelectedAnswers-1] for Product 584 (with magnesium) and [QID180-ChoiceGroup-SelectedAnswers-2] for Product 793 (no magnesium)? - Product 584 (with magnesium): [QID180-ChoiceGroup-SelectedAnswers-1]
+sure_3b_info_793,How sure are you that you're willing to pay [QID180-ChoiceGroup-SelectedAnswers-1] for Product 584 (with magnesium) and [QID180-ChoiceGroup-SelectedAnswers-2] for Product 793 (no magnesium)? - Product 793 (no magnesium): [QID180-ChoiceGroup-SelectedAnswers-2]
+after_info_3b_d1_new,"To what extent do you agree with the following statements regarding the magnesium benefit information shown to you earlier? - ""The information was new to me."""
+after_info_3b_d1_useful,"To what extent do you agree with the following statements regarding the magnesium benefit information shown to you earlier? - ""The information was useful to me."""
+mag_benefit_3b_d1_musle,"How important was each of the following health benefits of magnesium when you decided what you'd be willing to pay for Product 584 (with magnesium)? Use the sliders to indicate the importance of each, where 100 = Extremely important and 0= Not important at all. - Supports muscle recovery after exercise"
+mag_benefit_3b_d1_cramps,"How important was each of the following health benefits of magnesium when you decided what you'd be willing to pay for Product 584 (with magnesium)? Use the sliders to indicate the importance of each, where 100 = Extremely important and 0= Not important at all. - Helps reduce muscle cramps"
+mag_benefit_3b_d1_sugar,"How important was each of the following health benefits of magnesium when you decided what you'd be willing to pay for Product 584 (with magnesium)? Use the sliders to indicate the importance of each, where 100 = Extremely important and 0= Not important at all. - Supports healthy blood sugar levels"
+mag_benefit_3b_d1_bone,"How important was each of the following health benefits of magnesium when you decided what you'd be willing to pay for Product 584 (with magnesium)? Use the sliders to indicate the importance of each, where 100 = Extremely important and 0= Not important at all. - Supports bone health"
+mag_benefit_3b_d1_sleep,"How important was each of the following health benefits of magnesium when you decided what you'd be willing to pay for Product 584 (with magnesium)? Use the sliders to indicate the importance of each, where 100 = Extremely important and 0= Not important at all. - Promotes relaxation and better sleep"
+mag_intake_d1_magsupp,"In a month, how often do you take the following vitamin/mineral supplements? - Magnesium supplement"
+mag_intake_d1_multivit,"In a month, how often do you take the following vitamin/mineral supplements? - Multi-vitamin & mineral supplement"
+wtp_2a_info_584,"Magnesium is an essential electrolyte that has several potential health benefits, including:
+
+	supports muscle recovery after exercise
+	helps reduce muscle cramps
+	supports healthy blood sugar metabolism and may help lower the risk of type 2 diabetes
+	supports bone health
+	promotes relaxation and better sleep
+
+The average daily magnesium intake in the U.S. is 352 mg for men and 202 mg for women. The recommended daily value is 420 mg. 
+
+
+
+You are considering two 20-oz sports beverages:
+
+	Product 584: contains 82 mg of magnesium (20% of the Daily Value)
+	Product 793: contains no magnesium
+
+
+
+For each product, what is the most you are willing to pay for a 20-oz bottle? For reference, a typical 20-oz bottle of sports beverage costs about $2.50. - Product 584 (with magnesium)"
+wtp_2a_info_793,"Magnesium is an essential electrolyte that has several potential health benefits, including:
+
+	supports muscle recovery after exercise
+	helps reduce muscle cramps
+	supports healthy blood sugar metabolism and may help lower the risk of type 2 diabetes
+	supports bone health
+	promotes relaxation and better sleep
+
+The average daily magnesium intake in the U.S. is 352 mg for men and 202 mg for women. The recommended daily value is 420 mg. 
+
+
+
+You are considering two 20-oz sports beverages:
+
+	Product 584: contains 82 mg of magnesium (20% of the Daily Value)
+	Product 793: contains no magnesium
+
+
+
+For each product, what is the most you are willing to pay for a 20-oz bottle? For reference, a typical 20-oz bottle of sports beverage costs about $2.50. - Product 793 (no magnesium)"
+sure_2a_info_584,How sure are you that you're willing to pay [QID187-ChoiceGroup-SelectedAnswers-1] for Product 584 (with magnesium) and [QID187-ChoiceGroup-SelectedAnswers-2] for Product 793 (no magnesium)? - Product 584 (with magnesium): [QID187-ChoiceGroup-SelectedAnswers-1]
+sure_2a_info_793,How sure are you that you're willing to pay [QID187-ChoiceGroup-SelectedAnswers-1] for Product 584 (with magnesium) and [QID187-ChoiceGroup-SelectedAnswers-2] for Product 793 (no magnesium)? - Product 793 (no magnesium): [QID187-ChoiceGroup-SelectedAnswers-2]
+after_info_2a_d1_new,"To what extent do you agree with the following statements regarding the magnesium benefit information shown to you earlier? - ""The information was new to me."""
+after_info_2a_d1_useful,"To what extent do you agree with the following statements regarding the magnesium benefit information shown to you earlier? - ""The information was useful to me."""
+mag_benefit_2a_d1_muscle,"How important was each of the following health benefits of magnesium when you decided what you'd be willing to pay for Product 584 (with magnesium)? Use the sliders to indicate the importance of each, where 100 = Extremely important and 0= Not important at all. - Supports muscle recovery after exercise"
+mag_benefit_2a_d1_cramps,"How important was each of the following health benefits of magnesium when you decided what you'd be willing to pay for Product 584 (with magnesium)? Use the sliders to indicate the importance of each, where 100 = Extremely important and 0= Not important at all. - Helps reduce muscle cramps"
+mag_benefit_2a_d1_sugar,"How important was each of the following health benefits of magnesium when you decided what you'd be willing to pay for Product 584 (with magnesium)? Use the sliders to indicate the importance of each, where 100 = Extremely important and 0= Not important at all. - Supports healthy blood sugar levels"
+mag_benefit_2a_d1_bone,"How important was each of the following health benefits of magnesium when you decided what you'd be willing to pay for Product 584 (with magnesium)? Use the sliders to indicate the importance of each, where 100 = Extremely important and 0= Not important at all. - Supports bone health"
+mag_benefit_2a_d1_sleep,"How important was each of the following health benefits of magnesium when you decided what you'd be willing to pay for Product 584 (with magnesium)? Use the sliders to indicate the importance of each, where 100 = Extremely important and 0= Not important at all. - Promotes relaxation and better sleep"
+mag_intake_2a_d1_magsupp,"In a month, how often do you take the following vitamin/mineral supplements? - Magnesium supplement"
+mag_intake_2a_d1_multivit,"In a month, how often do you take the following vitamin/mineral supplements? - Multi-vitamin & mineral supplement"
+wtp_3a_584,"You are in the grocery store looking in the cold beverage cooler, and you see the sports beverage Product 584 you just tasted. The product 584 contains 82 mg of magnesium per 20-oz bottle, which is equivalent to 20% of the Daily Value.
+
+ 
+
+What is the most you are willing to pay for a 20-oz bottle of Product 584? For reference, a typical 20-oz bottle of sports beverage costs about $2.50."
+sure_3a_584,How sure are you that you would pay [QID191-ChoiceGroup-SelectedChoices]?
+wtp_3a_793,"You are in the grocery store looking in the cold beverage cooler, and you see the sports beverage Product 793 you just tasted. The product 793 contains no magnesium.
+
+
+
+What is the most you are willing to pay for a 20-oz bottle of Product 793? For reference, a typical 20-oz bottle of sports beverage costs about $2.50."
+sure_3a_793,How sure are you that you would pay [QID193-ChoiceGroup-SelectedChoices]?
+sensory_356_overall,Please rate how much you liked or disliked the sports beverage you just tasted based on the following characteristics: - Overall liking
+sensory_356_appear,Please rate how much you liked or disliked the sports beverage you just tasted based on the following characteristics: - Overall appearance
+sensory_356_color,Please rate how much you liked or disliked the sports beverage you just tasted based on the following characteristics: - Color
+sensory_356_aroma,Please rate how much you liked or disliked the sports beverage you just tasted based on the following characteristics: - Aroma
+sensory_356_flavor,Please rate how much you liked or disliked the sports beverage you just tasted based on the following characteristics: - Overall flavor
+sensory_356_blueberry,Please rate how much you liked or disliked the sports beverage you just tasted based on the following characteristics: - Blueberry flavor
+sensory_356_sweet,Please rate how much you liked or disliked the sports beverage you just tasted based on the following characteristics: - Sweetness
+sensory_356_salt,Please rate how much you liked or disliked the sports beverage you just tasted based on the following characteristics: - Saltiness
+sensory_356_sour,Please rate how much you liked or disliked the sports beverage you just tasted based on the following characteristics: - Sourness/acidity
+sensory_356_aftert,Please rate how much you liked or disliked the sports beverage you just tasted based on the following characteristics: - Aftertaste
+refresh_356,How would you rate the refreshing sensation from this sports beverage?
+wtp_2b_356,"You are in the grocery store looking in the cold beverage cooler, and you see the sports beverage you just tasted. What is the most you are willing to pay for a 20-oz bottle of the sports beverage? For reference, a typical 20-oz bottle of sports beverage costs about $2.50."
+sure_2b_356,How sure are you that you would pay [QID209-ChoiceGroup-SelectedChoices]?
+sensory_831_overall,Please rate how much you liked or disliked the sports beverage you just tasted based on the following characteristics: - Overall liking
+sensory_831_appear,Please rate how much you liked or disliked the sports beverage you just tasted based on the following characteristics: - Overall appearance
+sensory_831_color,Please rate how much you liked or disliked the sports beverage you just tasted based on the following characteristics: - Color
+sensory_831_aroma,Please rate how much you liked or disliked the sports beverage you just tasted based on the following characteristics: - Aroma
+sensory_831_flavor,Please rate how much you liked or disliked the sports beverage you just tasted based on the following characteristics: - Overall flavor
+sensory_831_pineapple,Please rate how much you liked or disliked the sports beverage you just tasted based on the following characteristics: - Pineapple flavor
+sensory_831_sweet,Please rate how much you liked or disliked the sports beverage you just tasted based on the following characteristics: - Sweetness
+sensory_831_slat,Please rate how much you liked or disliked the sports beverage you just tasted based on the following characteristics: - Saltiness
+sensory_831_sour,Please rate how much you liked or disliked the sports beverage you just tasted based on the following characteristics: - Sourness/acidity
+sensory_831_aftert,Please rate how much you liked or disliked the sports beverage you just tasted based on the following characteristics: - Aftertaste
+refresh_831,How would you rate the refreshing sensation from this sports beverage?
+wtp_2b_831,"You are in the grocery store looking in the cold beverage cooler, and you see the sports beverage you just tasted. What is the most you are willing to pay for a 20-oz bottle of the sports beverage? For reference, a typical 20-oz bottle of sports beverage costs about $2.50."
+sure_2b_831,How sure are you that you would pay [QID211-ChoiceGroup-SelectedChoices]?
+wtp_3b_info_356,"Magnesium is an essential electrolyte that has several potential health benefits, including:
+
+	supports muscle recovery after exercise
+	helps reduce muscle cramps
+	supports healthy blood sugar metabolism and may help lower the risk of type 2 diabetes
+	supports bone health
+	promotes relaxation and better sleep
+
+The average daily magnesium intake in the U.S. is 352 mg for men and 202 mg for women. The recommended daily value is 420 mg. 
+
+
+
+The products 356 and 831 you just tasted each contain 82 mg of magnesium per 20-oz bottle, which is equivalent to 20% of the Daily Value. The other sports beverages currently on the market contain no magnesium. 
+
+
+
+For each product, what is the most you are willing to pay for a 20-oz bottle? For reference, a typical 20-oz bottle of sports beverage costs about $2.50. - Product 356 (with magnesium, blueberry flavor)"
+wtp_3b_info_831,"Magnesium is an essential electrolyte that has several potential health benefits, including:
+
+	supports muscle recovery after exercise
+	helps reduce muscle cramps
+	supports healthy blood sugar metabolism and may help lower the risk of type 2 diabetes
+	supports bone health
+	promotes relaxation and better sleep
+
+The average daily magnesium intake in the U.S. is 352 mg for men and 202 mg for women. The recommended daily value is 420 mg. 
+
+
+
+The products 356 and 831 you just tasted each contain 82 mg of magnesium per 20-oz bottle, which is equivalent to 20% of the Daily Value. The other sports beverages currently on the market contain no magnesium. 
+
+
+
+For each product, what is the most you are willing to pay for a 20-oz bottle? For reference, a typical 20-oz bottle of sports beverage costs about $2.50. - Product 831 (with magnesium, pineapple flavor)"
+sure_3b_info_356,"How sure are you that you're willing to pay [QID214-ChoiceGroup-SelectedAnswers-1] for Product 356 (with magnesium, blueberry flavor) and [QID214-ChoiceGroup-SelectedAnswers-2] for Product 831 (with magnesium, pineapple flavor)? - Product 356 (with magnesium, blueberry flavor): [QID214-ChoiceGroup-SelectedAnswers-1]"
+sure_3b_info_831,"How sure are you that you're willing to pay [QID214-ChoiceGroup-SelectedAnswers-1] for Product 356 (with magnesium, blueberry flavor) and [QID214-ChoiceGroup-SelectedAnswers-2] for Product 831 (with magnesium, pineapple flavor)? - Product 831 (with magnesium, pineapple flavor): [QID214-ChoiceGroup-SelectedAnswers-2]"
+after_info_3b_d2_new,"To what extent do you agree with the following statements regarding the magnesium benefit information shown to you earlier? - ""The information was new to me."""
+after_info_3b_d2_useful,"To what extent do you agree with the following statements regarding the magnesium benefit information shown to you earlier? - ""The information was useful to me."""
+mag_benefit_3b_d2_muscle,"How important was each of the following health benefits of magnesium when you decided what you'd be willing to pay for Product 356 and/or 831 (with magnesium)? Use the sliders to indicate the importance of each, where 100 = Extremely important and 0= Not important at all. - Supports muscle recovery after exercise"
+mag_benefit_3b_d2_cramps,"How important was each of the following health benefits of magnesium when you decided what you'd be willing to pay for Product 356 and/or 831 (with magnesium)? Use the sliders to indicate the importance of each, where 100 = Extremely important and 0= Not important at all. - Helps reduce muscle cramps"
+mag_benefit_3b_d2_sugar,"How important was each of the following health benefits of magnesium when you decided what you'd be willing to pay for Product 356 and/or 831 (with magnesium)? Use the sliders to indicate the importance of each, where 100 = Extremely important and 0= Not important at all. - Supports healthy blood sugar levels"
+mag_benefit_3b_d2_bone,"How important was each of the following health benefits of magnesium when you decided what you'd be willing to pay for Product 356 and/or 831 (with magnesium)? Use the sliders to indicate the importance of each, where 100 = Extremely important and 0= Not important at all. - Supports bone health"
+mag_benefit_3b_d2_sleep,"How important was each of the following health benefits of magnesium when you decided what you'd be willing to pay for Product 356 and/or 831 (with magnesium)? Use the sliders to indicate the importance of each, where 100 = Extremely important and 0= Not important at all. - Promotes relaxation and better sleep"
+mag_intake_3b_d2_magsupp,"In a month, how often do you take the following vitamin/mineral supplements? - Magnesium supplement"
+mag_intake_3b_d2_multivit,"In a month, how often do you take the following vitamin/mineral supplements? - Multi-vitamin & mineral supplement"
+wtp_2a_info_356,"Magnesium is an essential electrolyte that has several potential health benefits, including:
+
+	supports muscle recovery after exercise
+	helps reduce muscle cramps
+	supports healthy blood sugar metabolism and may help lower the risk of type 2 diabetes
+	supports bone health
+	promotes relaxation and better sleep
+
+The average daily magnesium intake in the U.S. is 352 mg for men and 202 mg for women. The recommended daily value is 420 mg. 
+
+
+
+You are considering two 20-oz sports beverages:
+
+	Product 356: contains 82 mg of magnesium (20% of the Daily Value), with blueberry flavor
+	Product 831: contains 82 mg of magnesium (20% of the Daily Value), with pineapple flavor
+
+
+
+The other sports beverages currently on the market contain no magnesium.
+
+
+
+For each product, what is the most you are willing to pay for a 20-oz bottle? For reference, a typical 20-oz bottle of sports beverage costs about $2.50. - Product 356:"
+wtp_2a_info_831,"Magnesium is an essential electrolyte that has several potential health benefits, including:
+
+	supports muscle recovery after exercise
+	helps reduce muscle cramps
+	supports healthy blood sugar metabolism and may help lower the risk of type 2 diabetes
+	supports bone health
+	promotes relaxation and better sleep
+
+The average daily magnesium intake in the U.S. is 352 mg for men and 202 mg for women. The recommended daily value is 420 mg. 
+
+
+
+You are considering two 20-oz sports beverages:
+
+	Product 356: contains 82 mg of magnesium (20% of the Daily Value), with blueberry flavor
+	Product 831: contains 82 mg of magnesium (20% of the Daily Value), with pineapple flavor
+
+
+
+The other sports beverages currently on the market contain no magnesium.
+
+
+
+For each product, what is the most you are willing to pay for a 20-oz bottle? For reference, a typical 20-oz bottle of sports beverage costs about $2.50. - Product 831:"
+sure_2a_info_356,How sure are you that you're willing to pay [QID219-ChoiceGroup-SelectedAnswers-1] for Product 356 and [QID219-ChoiceGroup-SelectedAnswers-2] for Product 831? - Product 356: [QID219-ChoiceGroup-SelectedAnswers-1]
+sure_2a_info_831,How sure are you that you're willing to pay [QID219-ChoiceGroup-SelectedAnswers-1] for Product 356 and [QID219-ChoiceGroup-SelectedAnswers-2] for Product 831? - Product 831: [QID219-ChoiceGroup-SelectedAnswers-2]
+after_info_2a_d2_new,"To what extent do you agree with the following statements regarding the magnesium benefit information shown to you earlier? - ""The information was new to me."""
+after_info_2a_d2_useful,"To what extent do you agree with the following statements regarding the magnesium benefit information shown to you earlier? - ""The information was useful to me."""
+mag_benefit_2a_d2_muscle,"How important was each of the following health benefits of magnesium when you decided what you'd be willing to pay for Product 356 and/or 831 (with magnesium)? Use the sliders to indicate the importance of each, where 100 = Extremely important and 0= Not important at all. - Supports muscle recovery after exercise"
+mag_benefit_2a_d2_cramps,"How important was each of the following health benefits of magnesium when you decided what you'd be willing to pay for Product 356 and/or 831 (with magnesium)? Use the sliders to indicate the importance of each, where 100 = Extremely important and 0= Not important at all. - Helps reduce muscle cramps"
+mag_benefit_2a_d2_sugar,"How important was each of the following health benefits of magnesium when you decided what you'd be willing to pay for Product 356 and/or 831 (with magnesium)? Use the sliders to indicate the importance of each, where 100 = Extremely important and 0= Not important at all. - Supports healthy blood sugar levels"
+mag_benefit_2a_d2_bone,"How important was each of the following health benefits of magnesium when you decided what you'd be willing to pay for Product 356 and/or 831 (with magnesium)? Use the sliders to indicate the importance of each, where 100 = Extremely important and 0= Not important at all. - Supports bone health"
+mag_benefit_2a_d2_sleep,"How important was each of the following health benefits of magnesium when you decided what you'd be willing to pay for Product 356 and/or 831 (with magnesium)? Use the sliders to indicate the importance of each, where 100 = Extremely important and 0= Not important at all. - Promotes relaxation and better sleep"
+mag_intake_2a_d2_magsupp,"In a month, how often do you take the following vitamin/mineral supplements? - Magnesium supplement"
+mag_intake_2a_d2_multivit,"In a month, how often do you take the following vitamin/mineral supplements? - Multi-vitamin & mineral supplement"
+wtp_3a_356,"You are in the grocery store looking in the cold beverage cooler, and you see the sports beverage Product 356 you just tasted. The product 356 contains 82 mg of magnesium per 20-oz bottle, which is equivalent to 20% of the Daily Value.
+
+ 
+
+What is the most you are willing to pay for a 20-oz bottle of Product 356? For reference, a typical 20-oz bottle of sports beverage costs about $2.50."
+sure_3a_356,How sure are you that you would pay [QID224-ChoiceGroup-SelectedChoices]?
+wtp_3a_831,"You are in the grocery store looking in the cold beverage cooler, and you see the sports beverage Product 831 you just tasted. The product 831 contains 82 mg of magnesium per 20-oz bottle, which is equivalent to 20% of the Daily Value.
+
+ 
+
+What is the most you are willing to pay for a 20-oz bottle of Product 831? For reference, a typical 20-oz bottle of sports beverage costs about $2.50."
+sure_3a_831,How sure are you that you would pay [QID226-ChoiceGroup-SelectedChoices]?
+gender,With which gender do you identify? - Selected Choice
+gender_4_TEXT,With which gender do you identify? - Prefer to self-identify as - Text
+age,What is your age in years?
+race_2,What race/ethnicity do you identify? Select all that apply. - Selected Choice - African American or Black
+race_7,What race/ethnicity do you identify? Select all that apply. - Selected Choice - American Indian or Alaska Native
+race_8,What race/ethnicity do you identify? Select all that apply. - Selected Choice - Asian American or Asian
+race_9,What race/ethnicity do you identify? Select all that apply. - Selected Choice - Hispanic or Latinx
+race_10,What race/ethnicity do you identify? Select all that apply. - Selected Choice - Middle Eastern or North African
+race_11,What race/ethnicity do you identify? Select all that apply. - Selected Choice - Pacific Islander or Native Hawaiian
+race_12,What race/ethnicity do you identify? Select all that apply. - Selected Choice - White or Caucasian
+race_13,What race/ethnicity do you identify? Select all that apply. - Selected Choice - I prefer to self-identify as
+race_-999,What race/ethnicity do you identify? Select all that apply. - Selected Choice - Prefer not to answer
+race_13_TEXT,What race/ethnicity do you identify? Select all that apply. - I prefer to self-identify as - Text
+edu,What is your highest level of education you have completed?
+income,What is your annual household income?
+randomizer,randomizer
+Day,Day

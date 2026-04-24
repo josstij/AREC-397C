@@ -9,19 +9,14 @@
 * does
 	
 	
-* needs
-	* all
 	
-	clear				all
-	
-	cap log 		close
-	log using		"$logs/assignment_leavy.smcl", append	
+
 ************************************************************ Import the data
 * import data from CSV
 
-	import delimited		using "$data/spors_bev_data_use_me.csv"
+	import delimited		using "$data/spors_bev_data_use_me.csv", clear
 	describe
-	tab
+	
 
 * drop the un-finished responses
 	drop 			if finished != 1
@@ -80,5 +75,1255 @@ the following will be the strategic plan
 */
 
 
+********************************************************************************
+**## Value labels
+********************************************************************************
+
+
+	label define		gender_lbl 1 "Male" 2 "Female", replace
+	label define		day_lbl 1 "Day 1" 2 "Day 2", replace
+	label define		yesno_lbl 0 "No" 1 "Yes", replace
+
+* this is how the paths were chosen. need this for determining taste-first /
+* info first 
+	label define		randomizer_lbl ///
+						1 "Randomizer 1" ///
+						2 "Randomizer 2" ///
+						3 "Randomizer 3" ///
+						4 "Randomizer 4", replace
+
+* 5 point importance scale
+	label define		imp5_lbl ///
+						1 "Not at all important" ///
+						2 "Slightly important" ///
+						3 "Moderately important" ///
+						4 "Very important" ///
+						5 "Extremely important", replace
+						
+						* lower flavor importance binary label
+	label define		flavor_low_lbl ///
+						0 "Very or extremely important" ///
+						1 "Moderately important", replace
+
+* 3 point certainty scale
+	label define		sure3_lbl ///
+						1 "Low certainty" ///
+						2 "Moderate certainty" ///
+						3 "High certainty", replace
+	
+* 5 point agreement scale
+	label define		agree5_lbl ///
+						1 "Strongly disagree" ///
+						2 "Disagree" ///
+						3 "Neither agree nor disagree" ///
+						4 "Agree" ///
+						5 "Strongly agree", replace
+* flavors
+	label define		flavor2_lbl ///
+						1 "Blueberry" ///
+						2 "Berry blend" ///
+						3 "Fruit Punch" ///
+						4 "Grape" ///
+						5 "Lemon Lime" ///
+						6 "Orange" ///
+						7 "Pineapple" ///
+						8 "None of them" ///
+						9 "Other", replace
+* 9 point hedonic scale
+	label define		hedonic9_lbl ///
+						1 "Dislike extremely" ///
+						2 "Dislike very much" ///
+						3 "Dislike moderately" ///
+						4 "Dislike slightly" ///
+						5 "Neither like nor dislike" ///
+						6 "Like slightly" ///
+						7 "Like moderately" ///
+						8 "Like very much" ///
+						9 "Like extremely", replace
+
+
+* 0 to 4 intake frequency scale
+	label define		intake5_lbl ///
+						0 "Never" ///
+						1 "Rarely" ///
+						2 "Sometimes" ///
+						3 "Often" ///
+						4 "Very often", replace
+						
+						********************************************************************************
+**## Randomizer / Demo Data
+*******************************************************************************
+
+* gender
+	label var			gender "Gender"
+	label values		gender gender_lbl
+	tab					gender, missing
+
+* age
+	capture destring	age, replace
+	label var			age "Age"
+	sum					age, detail
+
+* day
+	label var			day "Survey day"
+	label values		day day_lbl
+	tab					day, missing
+
+* randomizer
+* This is what determines what the respondants got first, taste or information
+	label var			randomizer "Randomization path"
+	label values		randomizer randomizer_lbl
+	tab					randomizer, missing
+
+* finished
+	label var			finished "Survey completed"
+	label values		finished yesno_lbl
+	tab					finished, missing
+
+********************************************************************************
+**## Preference Vars
+********************************************************************************
+	
+	* pref_sweet
+	label var			pref_sweet "Importance of sweetness"
+	label values		pref_sweet imp5_lbl
+	tab					pref_sweet, missing
+
+* pref_sugar
+	label var			pref_sugar "Importance of sugar level"
+	label values		pref_sugar imp5_lbl
+	tab					pref_sugar, missing
+
+* pref_ingred
+	label var			pref_ingred "Importance of functional ingredients"
+	label values		pref_ingred imp5_lbl
+	tab					pref_ingred, missing
+
+* pref_health
+	label var			pref_health "Importance of health claims"
+	label values		pref_health imp5_lbl
+	tab					pref_health, missing
+	
+	* lower flavor importance
+	capture drop		flavor_low
+	gen					flavor_low = pref_flavor == 3 ///
+							if !missing(pref_flavor)
+
+	label var			flavor_low ///
+							"Flavor importance is moderate rather than very/extremely important"
+
+	label values		flavor_low flavor_low_lbl
+
+	tab					flavor_low, missing
+	tab					pref_flavor flavor_low, missing
+	
+* high sweetness importance binary label
+	label define		sweet_high_lbl ///
+						0 "Slightly or moderately important" ///
+						1 "Very or extremely important", replace
+						
+* high sugar importance binary label
+	label define		sugar_high_lbl ///
+						0 "Not at all, slightly, or moderately important" ///
+						1 "Very or extremely important", replace
+
+* high functional ingredient importance binary label
+	label define		ingred_high_lbl ///
+						0 "Not at all, slightly, or moderately important" ///
+						1 "Very or extremely important", replace
+						
+* high health claim importance binary label
+	label define		health_high_lbl ///
+						0 "Not at all, slightly, or moderately important" ///
+						1 "Very or extremely important", replace
+						
+* high prior magnesium knowledge binary label
+	label define		magn_know_high_lbl ///
+						0 "Strongly disagree, disagree, or neither" ///
+						1 "Agree or strongly agree", replace
+
+
+********************************************************************************
+**## baseline wtp_1
+********************************************************************************
+
+* wtp_1
+	capture destring	wtp_1, replace
+	label var			wtp_1 "Baseline willingness to pay"
+	sum					wtp_1, detail
+
+********************************************************************************
+**## Flavor Pref
+********************************************************************************
+
+* flavor_pref1_1
+	replace				flavor_pref1_1 = 0 if missing(flavor_pref1_1)
+	label var			flavor_pref1_1 "Selected Blueberry"
+	label values		flavor_pref1_1 yesno_lbl
+	tab					flavor_pref1_1, missing
+
+* flavor_pref1_2
+	replace				flavor_pref1_2 = 0 if missing(flavor_pref1_2)
+	label var			flavor_pref1_2 "Selected Berry blend"
+	label values		flavor_pref1_2 yesno_lbl
+	tab					flavor_pref1_2, missing
+
+* flavor_pref1_3
+	replace				flavor_pref1_3 = 0 if missing(flavor_pref1_3)
+	label var			flavor_pref1_3 "Selected Fruit Punch"
+	label values		flavor_pref1_3 yesno_lbl
+	tab					flavor_pref1_3, missing
+
+* flavor_pref1_4
+	replace				flavor_pref1_4 = 0 if missing(flavor_pref1_4)
+	label var			flavor_pref1_4 "Selected Grape"
+	label values		flavor_pref1_4 yesno_lbl
+	tab					flavor_pref1_4, missing
+
+* flavor_pref1_5
+	replace				flavor_pref1_5 = 0 if missing(flavor_pref1_5)
+	label var			flavor_pref1_5 "Selected Lemon Lime"
+	label values		flavor_pref1_5 yesno_lbl
+	tab					flavor_pref1_5, missing
+
+* flavor_pref1_6
+	replace				flavor_pref1_6 = 0 if missing(flavor_pref1_6)
+	label var			flavor_pref1_6 "Selected Orange"
+	label values		flavor_pref1_6 yesno_lbl
+	tab					flavor_pref1_6, missing
+
+* flavor_pref1_7
+	replace				flavor_pref1_7 = 0 if missing(flavor_pref1_7)
+	label var			flavor_pref1_7 "Selected Pineapple"
+	label values		flavor_pref1_7 yesno_lbl
+	tab					flavor_pref1_7, missing
+
+* flavor_pref1_8
+	replace				flavor_pref1_8 = 0 if missing(flavor_pref1_8)
+	label var			flavor_pref1_8 "Selected None of them"
+	label values		flavor_pref1_8 yesno_lbl
+	tab					flavor_pref1_8, missing
+
+* flavor_pref1_9
+	replace				flavor_pref1_9 = 0 if missing(flavor_pref1_9)
+	label var			flavor_pref1_9 "Selected Other flavor"
+	label values		flavor_pref1_9 yesno_lbl
+	tab					flavor_pref1_9, missing
+	
+********************************************************************************
+**## Prior Knowledge
+********************************************************************************
+
+* preknow_vitd
+	label var			preknow_vitd "Prior knowledge of Vitamin D"
+	label values		preknow_vitd agree5_lbl
+	tab					preknow_vitd, missing
+
+* preknow_vitc
+	label var			preknow_vitc "Prior knowledge of Vitamin C"
+	label values		preknow_vitc agree5_lbl
+	tab					preknow_vitc, missing
+
+* preknow_calc
+	label var			preknow_calc "Prior knowledge of Calcium"
+	label values		preknow_calc agree5_lbl
+	tab					preknow_calc, missing
+
+* preknow_iron
+	label var			preknow_iron "Prior knowledge of Iron"
+	label values		preknow_iron agree5_lbl
+	tab					preknow_iron, missing
+
+* preknow_pota
+	label var			preknow_pota "Prior knowledge of Potassium"
+	label values		preknow_pota agree5_lbl
+	tab					preknow_pota, missing
+
+* preknow_5_magn
+	rename				preknow_5_magn preknow_magn
+	label var			preknow_magn "Prior knowledge of Magnesium"
+	label values		preknow_magn agree5_lbl
+	tab					preknow_magn, missing
+
+********************************************************************************
+**## 584 Mag
+********************************************************************************
+* label all sensory variables: hedonic 1-9
+
+* overall liking
+* sensory_584_overall
+	label var			sensory_584_overall "584 overall liking"
+	label values		sensory_584_overall hedonic9_lbl
+	tab					sensory_584_overall, missing
+	
+	
+* flavor liking 	
+* sensory_584_flavor
+	label var			sensory_584_flavor "584 flavor liking"
+	label values		sensory_584_flavor hedonic9_lbl
+	tab					sensory_584_flavor, missing
+
+* lemon-lime liking
+* sensory_584_lemon
+	label var			sensory_584_lemon "584 lemon-lime liking"
+	label values		sensory_584_lemon hedonic9_lbl
+	tab					sensory_584_lemon, missing
+
+* sweetness liking	
+* sensory_584_sweet
+	label var			sensory_584_sweet "584 sweetness liking"
+	label values		sensory_584_sweet hedonic9_lbl
+	tab					sensory_584_sweet, missing
 
 	
+********************************************************************************
+**## 793 No Mag
+********************************************************************************
+
+* sensory_793_overall
+	label var			sensory_793_overall "793 overall liking"
+	label values		sensory_793_overall hedonic9_lbl
+	tab					sensory_793_overall, missing
+	
+	
+	
+* sensory_793_flavor
+	label var			sensory_793_flavor "793 flavor liking"
+	label values		sensory_793_flavor hedonic9_lbl
+	tab					sensory_793_flavor, missing
+
+* sensory_793_lemon
+	label var			sensory_793_lemon "793 lemon-lime liking"
+	label values		sensory_793_lemon hedonic9_lbl
+	tab					sensory_793_lemon, missing
+
+* sensory_793_sweet
+	label var			sensory_793_sweet "793 sweetness liking"
+	label values		sensory_793_sweet hedonic9_lbl
+	tab					sensory_793_sweet, missing
+	
+********************************************************************************
+**## Day 1 WTP
+********************************************************************************
+
+* wtp_2b_584: taste-first
+	capture destring	wtp_2b_584, replace
+	label var			wtp_2b_584 "WTP for 584, tasting first"
+	sum					wtp_2b_584, detail
+
+* sure_2b_584
+	label var			sure_2b_584 "Certainty in WTP for 584, tasting first"
+	label values		sure_2b_584 sure3_lbl
+	tab					sure_2b_584, missing
+	
+* taste first
+* wtp_2b_793
+	capture destring	wtp_2b_793, replace
+	label var			wtp_2b_793 "WTP for 793, tasting first"
+	sum					wtp_2b_793, detail
+
+* Sure_2b_793
+	label var			sure_2b_793 "Certainty in WTP for 793, tasting first"
+	label values		sure_2b_793 sure3_lbl
+	tab					sure_2b_793, missing
+
+
+* wtp_3b_info_584
+	capture destring	wtp_3b_info_584, replace
+	label var			wtp_3b_info_584 "WTP for 584 after information, tasting first"
+	sum					wtp_3b_info_584, detail
+
+* wtp_3b_info_793
+	capture destring	wtp_3b_info_793, replace
+	label var			wtp_3b_info_793 "WTP for 793 after information, tasting first"
+	sum					wtp_3b_info_793, detail
+
+* sure_3b_info_584
+	label var			sure_3b_info_584 "Certainty in WTP for 584 after information, tasting first"
+	label values		sure_3b_info_584 sure3_lbl
+	tab					sure_3b_info_584, missing
+
+* sure_3b_info_793
+	label var			sure_3b_info_793 "Certainty in WTP for 793 after information, tasting first"
+	label values		sure_3b_info_793 sure3_lbl
+	tab					sure_3b_info_793, missing
+
+
+********************************************************************************
+**## Day 1 WTP Info First
+********************************************************************************
+
+* wtp_2a_info_584
+	capture destring	wtp_2a_info_584, replace
+	label var			wtp_2a_info_584 "WTP for 584, information first"
+	sum					wtp_2a_info_584, detail
+
+* wtp_2a_info_793
+	capture destring	wtp_2a_info_793, replace
+	label var			wtp_2a_info_793 "WTP for 793, information first"
+	sum					wtp_2a_info_793, detail
+
+* sure_2a_info_584
+	label var			sure_2a_info_584 "Certainty in WTP for 584, information first"
+	label values		sure_2a_info_584 sure3_lbl
+	tab					sure_2a_info_584, missing
+
+* sure_2a_info_793
+	label var			sure_2a_info_793 "Certainty in WTP for 793, information first"
+	label values		sure_2a_info_793 sure3_lbl
+	tab					sure_2a_info_793, missing
+
+* wtp_3a_584
+	capture destring	wtp_3a_584, replace
+	label var			wtp_3a_584 "WTP for 584 after information first, then tasting"
+	sum					wtp_3a_584, detail
+
+* sure_3a_584
+	label var			sure_3a_584 "Certainty in WTP for 584 information first, then tasting"
+	label values		sure_3a_584 sure3_lbl
+	tab					sure_3a_584, missing
+
+* wtp_3a_793
+	capture destring	wtp_3a_793, replace
+	label var			wtp_3a_793 "WTP for 793 information first, then tasting"
+	sum					wtp_3a_793, detail
+	
+* sure_3a_793
+	label var			sure_3a_793 "Certainty in WTP for 793 information first, then tasting"
+	label values		sure_3a_793 sure3_lbl
+	tab					sure_3a_793, missing
+
+
+********************************************************************************
+**## Day 1 Info Reaction
+********************************************************************************
+
+* after_info_3b_d1_new
+	label var			after_info_3b_d1_new "Magnesium information was new"
+	label values		after_info_3b_d1_new agree5_lbl
+	tab					after_info_3b_d1_new, missing
+
+* after_info_3b_d1_useful
+	label var			after_info_3b_d1_useful "Magnesium information was useful"
+	label values		after_info_3b_d1_useful agree5_lbl
+	tab					after_info_3b_d1_useful, missing
+
+* after_info_2a_d1_new
+	label var			after_info_2a_d1_new "Magnesium information was new"
+	label values		after_info_2a_d1_new agree5_lbl
+	tab					after_info_2a_d1_new, missing
+
+* after_info_2a_d1_useful
+	label var			after_info_2a_d1_useful "Magnesium information was useful"
+	label values		after_info_2a_d1_useful agree5_lbl
+	tab					after_info_2a_d1_useful, missing
+
+
+********************************************************************************
+**## Day 1 Mag Benefits
+********************************************************************************
+
+* mag_benefit_3b_d1_musle
+	label var			mag_benefit_3b_d1_musle "Importance of magnesium for muscle recovery"
+	sum					mag_benefit_3b_d1_musle, detail
+
+* mag_benefit_3b_d1_cramps
+	label var			mag_benefit_3b_d1_cramps "Importance of magnesium for cramp reduction"
+	sum					mag_benefit_3b_d1_cramps, detail
+
+* mag_benefit_3b_d1_sugar
+	label var			mag_benefit_3b_d1_sugar "Importance of magnesium for blood sugar support"
+	sum					mag_benefit_3b_d1_sugar, detail
+
+* mag_benefit_3b_d1_bone
+	label var			mag_benefit_3b_d1_bone "Importance of magnesium for bone health"
+	sum					mag_benefit_3b_d1_bone, detail
+
+* mag_benefit_3b_d1_sleep
+	label var			mag_benefit_3b_d1_sleep "Importance of magnesium for sleep support"
+	sum					mag_benefit_3b_d1_sleep, detail
+
+* mag_benefit_2a_d1_muscle
+	label var			mag_benefit_2a_d1_muscle "Importance of magnesium for muscle recovery"
+	sum					mag_benefit_2a_d1_muscle, detail
+
+* mag_benefit_2a_d1_cramps
+	label var			mag_benefit_2a_d1_cramps "Importance of magnesium for cramp reduction"
+	sum					mag_benefit_2a_d1_cramps, detail
+
+* mag_benefit_2a_d1_sugar
+	label var			mag_benefit_2a_d1_sugar "Importance of magnesium for blood sugar support"
+	sum					mag_benefit_2a_d1_sugar, detail
+
+* mag_benefit_2a_d1_bone
+	label var			mag_benefit_2a_d1_bone "Importance of magnesium for bone health"
+	sum					mag_benefit_2a_d1_bone, detail
+
+* mag_benefit_2a_d1_sleep
+	label var			mag_benefit_2a_d1_sleep "Importance of magnesium for sleep support"
+	sum					mag_benefit_2a_d1_sleep, detail
+
+
+********************************************************************************
+**## Day 1 Mag Intake
+********************************************************************************
+
+* mag_intake_d1_magsupp
+	label var			mag_intake_d1_magsupp "Magnesium supplement intake"
+	label values		mag_intake_d1_magsupp intake5_lbl
+	tab					mag_intake_d1_magsupp, missing
+
+* mag_intake_d1_multivit
+	label var			mag_intake_d1_multivit "Multivitamin intake"
+	label values		mag_intake_d1_multivit intake5_lbl
+	tab					mag_intake_d1_multivit, missing
+
+* mag_intake_2a_d1_magsupp
+	label var			mag_intake_2a_d1_magsupp "Magnesium supplement intake"
+	label values		mag_intake_2a_d1_magsupp intake5_lbl
+	tab					mag_intake_2a_d1_magsupp, missing
+
+* mag_intake_2a_d1_multivit
+	label var			mag_intake_2a_d1_multivit "Multivitamin intake"
+	label values		mag_intake_2a_d1_multivit intake5_lbl
+	tab					mag_intake_2a_d1_multivit, missing
+
+	
+********************************************************************************
+**# Day 2
+********************************************************************************
+
+********************************************************************************
+**## 356 Blueberry
+********************************************************************************
+
+* sensory_356_overall
+	label var			sensory_356_overall "356 overall liking"
+	label values		sensory_356_overall hedonic9_lbl
+	tab					sensory_356_overall, missing
+	
+	
+* sensory_356_flavor
+	label var			sensory_356_flavor "356 flavor liking"
+	label values		sensory_356_flavor hedonic9_lbl
+	tab					sensory_356_flavor, missing
+
+* sensory_356_blueberry
+	label var			sensory_356_blueberry "356 blueberry liking"
+	label values		sensory_356_blueberry hedonic9_lbl
+	tab					sensory_356_blueberry, missing
+
+* sensory_356_sweet
+	label var			sensory_356_sweet "356 sweetness liking"
+	label values		sensory_356_sweet hedonic9_lbl
+	tab					sensory_356_sweet, missing
+	
+********************************************************************************
+**## 831 Pineapple
+********************************************************************************
+
+* sensory_831_overall
+	label var			sensory_831_overall "831 overall liking"
+	label values		sensory_831_overall hedonic9_lbl
+	tab					sensory_831_overall, missing
+
+	
+* sensory_831_flavor
+	label var			sensory_831_flavor "831 flavor liking"
+	label values		sensory_831_flavor hedonic9_lbl
+	tab					sensory_831_flavor, missing
+	
+* sensory_831_pineapple
+	label var			sensory_831_pineapple "831 pineapple liking"
+	label values		sensory_831_pineapple hedonic9_lbl
+	tab					sensory_831_pineapple, missing
+
+* sensory_831_sweet
+	label var			sensory_831_sweet "831 sweetness liking"
+	label values		sensory_831_sweet hedonic9_lbl
+	tab					sensory_831_sweet, missing
+
+	
+********************************************************************************
+**## Day 2 WTP Taste First
+********************************************************************************
+
+* wtp_2b_356
+	capture destring	wtp_2b_356, replace
+	label var			wtp_2b_356 "WTP for 356, tasting first"
+	sum					wtp_2b_356, detail
+
+* sure_2b_356
+	label var			sure_2b_356 "Certainty in WTP for 356, tasting first"
+	label values		sure_2b_356 sure3_lbl
+	tab					sure_2b_356, missing
+
+* wtp_2b_831
+	capture destring	wtp_2b_831, replace
+	label var			wtp_2b_831 "WTP for 831, tasting first"
+	sum					wtp_2b_831, detail
+
+* sure_2b_831
+	label var			sure_2b_831 "Certainty in WTP for 831, tasting first"
+	label values		sure_2b_831 sure3_lbl
+	tab					sure_2b_831, missing
+
+* wtp_3b_info_356
+	capture destring	wtp_3b_info_356, replace
+	label var			wtp_3b_info_356 "WTP for 356 after information, tasting first"
+	sum					wtp_3b_info_356, detail
+
+* wtp_3b_info_831
+	capture destring	wtp_3b_info_831, replace
+	label var			wtp_3b_info_831 "WTP for 831 after information, tasting first"
+	sum					wtp_3b_info_831, detail
+	
+********************************************************************************
+**## Day 2 WTP - Info First
+********************************************************************************
+
+* wtp_2a_info_356
+	capture destring	wtp_2a_info_356, replace
+	label var			wtp_2a_info_356 "WTP for 356, information first"
+	sum					wtp_2a_info_356, detail
+
+* wtp_2a_info_831
+	capture destring	wtp_2a_info_831, replace
+	label var			wtp_2a_info_831 "WTP for 831, information first"
+	sum				wtp_2a_info_831, detail
+
+* sure_2a_info_356
+	label var			sure_2a_info_356 "Certainty in WTP for 356, information first"
+	label values		sure_2a_info_356 sure3_lbl
+	tab					sure_2a_info_356, missing
+
+* sure_2a_info_831
+	label var			sure_2a_info_831 "Certainty in WTP for 831, information first"
+	label values		sure_2a_info_831 sure3_lbl
+	tab					sure_2a_info_831, missing
+
+* wtp_3a_356
+	capture destring	wtp_3a_356, replace
+	label var			wtp_3a_356 "WTP for 356 information first, then tasting"
+	sum					wtp_3a_356, detail
+	
+	
+	********************************************************************************
+**## Day 2 Mag Benefits
+********************************************************************************
+
+* mag_benefit_3b_d2_muscle
+	label var			mag_benefit_3b_d2_muscle "Importance of magnesium for muscle recovery"
+	sum					mag_benefit_3b_d2_muscle, detail
+
+* mag_benefit_3b_d2_cramps
+	label var			mag_benefit_3b_d2_cramps "Importance of magnesium for cramp reduction"
+	sum				mag_benefit_3b_d2_cramps, detail
+
+* mag_benefit_3b_d2_sugar
+	label var			mag_benefit_3b_d2_sugar "Importance of magnesium for blood sugar support"
+	sum				mag_benefit_3b_d2_sugar, detail
+
+* mag_benefit_3b_d2_bone
+	label var			mag_benefit_3b_d2_bone "Importance of magnesium for bone health"
+	sum				mag_benefit_3b_d2_bone, detail
+
+* mag_benefit_3b_d2_sleep
+	label var			mag_benefit_3b_d2_sleep "Importance of magnesium for sleep support"
+	sum				mag_benefit_3b_d2_sleep, detail
+
+* mag_benefit_2a_d2_muscle
+	label var			mag_benefit_2a_d2_muscle "Importance of magnesium for muscle recovery"
+	sum					mag_benefit_2a_d2_muscle, detail
+
+* mag_benefit_2a_d2_cramps
+	label var			mag_benefit_2a_d2_cramps "Importance of magnesium for cramp reduction"
+	sum					mag_benefit_2a_d2_cramps, detail
+
+* mag_benefit_2a_d2_sugar
+	label var			mag_benefit_2a_d2_sugar "Importance of magnesium for blood sugar support"
+	sum					mag_benefit_2a_d2_sugar, detail
+
+* mag_benefit_2a_d2_bone
+	label var			mag_benefit_2a_d2_bone "Importance of magnesium for bone health"
+	sum					mag_benefit_2a_d2_bone, detail
+
+* mag_benefit_2a_d2_sleep
+	label var			mag_benefit_2a_d2_sleep "Importance of magnesium for sleep support"
+	sum					mag_benefit_2a_d2_sleep, detail
+
+
+********************************************************************************
+**## Day 2 Mag Intake
+********************************************************************************
+
+* mag_intake_3b_d2_magsupp
+	label var			mag_intake_3b_d2_magsupp "Magnesium supplement intake"
+	label values		mag_intake_3b_d2_magsupp intake5_lbl
+	tab					mag_intake_3b_d2_magsupp, missing
+
+* mag_intake_3b_d2_multivit
+	label var			mag_intake_3b_d2_multivit "Multivitamin intake"
+	label values		mag_intake_3b_d2_multivit intake5_lbl
+	tab					mag_intake_3b_d2_multivit, missing
+
+* mag_intake_2a_d2_magsupp
+	label var			mag_intake_2a_d2_magsupp "Magnesium supplement intake"
+	label values		mag_intake_2a_d2_magsupp intake5_lbl
+	tab					mag_intake_2a_d2_magsupp, missing
+
+* mag_intake_2a_d2_multivit
+	label var			mag_intake_2a_d2_multivit "Multivitamin intake"
+	label values		mag_intake_2a_d2_multivit intake5_lbl
+	tab					mag_intake_2a_d2_multivit, missing
+	
+	
+	*** participants who exercise more
+* exercise
+*** 30 minutes / days
+*** it's a string, need to destring it
+
+	cap destring			exercise, replace
+	label var				exercise "Days per week of 30+ min of moderate to vigourous physical activity"
+	sum						exercise, detail
+	
+	
+	*** consumption situation
+* con_situation 
+
+* con_situation_1 = Before Exercise
+	* con_situation_1
+	replace				con_situation_1 = 0 if missing(con_situation_1)
+	label var			con_situation_1 "Before exercise"
+	label values		con_situation_1 yesno_lbl
+	tab					con_situation_1, missing
+
+* con_situation_2 = During Exercise
+	replace				con_situation_2 = 0 if missing(con_situation_2)
+	label var			con_situation_2 "During exercise"
+	label values		con_situation_2 yesno_lbl
+	tab					con_situation_2, missing
+
+* con_situation_3 = After Exercise
+	replace				con_situation_3 = 0 if missing(con_situation_3)
+	label var			con_situation_3 "After exercise"
+	label values		con_situation_3 yesno_lbl
+	tab					con_situation_3, missing
+	
+	
+********************************************************************************
+* Exercise groups
+********************************************************************************
+
+	capture drop 		exercise_hi
+	gen 				exercise_hi = exercise >= 3 if !missing(exercise)
+
+	label define 		exercise_hi_lbl 0 "Low exercise" 1 "High exercise", replace
+	label values 		exercise_hi exercise_hi_lbl
+
+	tab 				exercise, missing
+	tab 				exercise_hi, missing
+	
+	
+	
+	
+	
+********************************************************************************
+**## brainstorm hyp 1 regs
+********************************************************************************
+
+* Are changes in willingness to pay mainly explained by sensory experience, ///
+ especially flavor and sweetness, or does magnesium information/functionality ///
+ add explanatory power beyond taste?
+ 
+ * let's start by setting our dependent. This will be reused for both hyps
+ 
+ **## wtp_3 dependent differences
+ 
+* wtp_3[final_path]_[beverage] - wtp_1
+
+
+**### Day 1 final wtp
+
+* Make sure baseline and final WTP variables are numeric
+foreach v in ///
+		wtp_1 ///
+		wtp_3b_info_584 wtp_3b_info_793 ///
+		wtp_3a_584      wtp_3a_793 ///
+		wtp_3b_info_356 wtp_3b_info_831 ///
+		wtp_3a_356      wtp_3a_831 {
+		
+		capture destring	`v', replace ignore("$, ")
+	}
+
+
+********************************************************************************
+**## Day 1 - final WTP change from baseline
+********************************************************************************
+
+* 584, taste-first path
+	capture drop		d1_dwtp_3b_584
+	gen					d1_dwtp_3b_584 = wtp_3b_info_584 - wtp_1 ///
+							if day == 1 & !missing(wtp_3b_info_584, wtp_1)
+	label var			d1_dwtp_3b_584 ///
+							"Day 1: WTP change for 584 from baseline, taste-first final WTP"
+
+* 793, taste-first path
+	capture drop		d1_dwtp_3b_793
+	gen					d1_dwtp_3b_793 = wtp_3b_info_793 - wtp_1 ///
+							if day == 1 & !missing(wtp_3b_info_793, wtp_1)
+	label var			d1_dwtp_3b_793 ///
+							"Day 1: WTP change for 793 from baseline, taste-first final WTP"
+
+* 584, info-first path
+	capture drop		d1_dwtp_3a_584
+	gen					d1_dwtp_3a_584 = wtp_3a_584 - wtp_1 ///
+							if day == 1 & !missing(wtp_3a_584, wtp_1)
+	label var			d1_dwtp_3a_584 ///
+							"Day 1: WTP change for 584 from baseline, info-first final WTP"
+
+* 793, info-first path
+	capture drop		d1_dwtp_3a_793
+	gen					d1_dwtp_3a_793 = wtp_3a_793 - wtp_1 ///
+							if day == 1 & !missing(wtp_3a_793, wtp_1)
+	label var			d1_dwtp_3a_793 ///
+							"Day 1: WTP change for 793 from baseline, info-first final WTP"
+
+
+********************************************************************************
+**## Day 2 - final WTP change from baseline
+********************************************************************************
+
+* 356, taste-first path
+	capture drop		d2_dwtp_3b_356
+	gen					d2_dwtp_3b_356 = wtp_3b_info_356 - wtp_1 ///
+							if day == 2 & !missing(wtp_3b_info_356, wtp_1)
+	label var			d2_dwtp_3b_356 ///
+							"Day 2: WTP change for 356 from baseline, taste-first final WTP"
+
+* 831, taste-first path
+	capture drop		d2_dwtp_3b_831
+	gen					d2_dwtp_3b_831 = wtp_3b_info_831 - wtp_1 ///
+							if day == 2 & !missing(wtp_3b_info_831, wtp_1)
+	label var			d2_dwtp_3b_831 ///
+							"Day 2: WTP change for 831 from baseline, taste-first final WTP"
+
+* 356, info-first path
+	capture drop		d2_dwtp_3a_356
+	gen					d2_dwtp_3a_356 = wtp_3a_356 - wtp_1 ///
+							if day == 2 & !missing(wtp_3a_356, wtp_1)
+	label var			d2_dwtp_3a_356 ///
+							"Day 2: WTP change for 356 from baseline, info-first final WTP"
+
+* 831, info-first path
+	capture drop		d2_dwtp_3a_831
+	gen					d2_dwtp_3a_831 = wtp_3a_831 - wtp_1 ///
+							if day == 2 & !missing(wtp_3a_831, wtp_1)
+	label var			d2_dwtp_3a_831 ///
+							"Day 2: WTP change for 831 from baseline, info-first final WTP"
+
+
+********************************************************************************
+**## Check dependent variables
+********************************************************************************
+
+	sum					d1_dwtp_3b_584 d1_dwtp_3b_793 ///
+							d1_dwtp_3a_584 d1_dwtp_3a_793 ///
+							d2_dwtp_3b_356 d2_dwtp_3b_831 ///
+							d2_dwtp_3a_356 d2_dwtp_3a_831, detail
+
+
+
+* Looks good. Let's consider what flavors someone from day 1 may
+* have an effect on their wtp of day 1
+
+
+* lemon lime would be the obvious choice for day 1
+
+********************************************************************************
+**## Day 1 - Lemon-Lime preferred flavor
+********************************************************************************
+
+* Lemon-Lime preferred flavor indicator
+	capture drop		d1_pref_lemon
+	gen					d1_pref_lemon = flavor_pref1_5 ///
+							if day == 1 & !missing(flavor_pref1_5)
+
+	label var			d1_pref_lemon ///
+							"Day 1: Selected Lemon-Lime as preferred flavor"
+
+	label values		d1_pref_lemon yesno_lbl
+
+* Check Lemon-Lime preference among Day 1 respondents
+	tab					d1_pref_lemon if day == 1, missing
+
+* Check Lemon-Lime preference by randomization path
+	tab					d1_pref_lemon randomizer if day == 1, missing
+
+********************************************************************************
+**## General flavor importance
+********************************************************************************
+
+* pref_flavor
+	label var			pref_flavor "Importance of flavor"
+	label values		pref_flavor imp5_lbl
+	tab					pref_flavor, missing
+
+* Check flavor importance among Day 1 respondents
+	tab					pref_flavor if day == 1, missing
+
+* Check flavor importance by Lemon-Lime preference among Day 1 respondents
+	tab					pref_flavor d1_pref_lemon if day == 1, missing
+
+
+********************************************************************************
+**## Flavor importance category
+********************************************************************************
+
+* lower flavor importance
+	capture drop		flavor_low
+	gen					flavor_low = pref_flavor == 3 ///
+							if !missing(pref_flavor)
+
+	label var			flavor_low ///
+							"Flavor importance is moderate rather than very/extremely important"
+
+	label values		flavor_low flavor_low_lbl
+
+	tab					flavor_low, missing
+	tab					pref_flavor flavor_low, missing
+
+* Check lower flavor importance among Day 1 respondents
+	tab					flavor_low if day == 1, missing
+
+* Check lower flavor importance by Lemon-Lime preference among Day 1 respondents
+	tab					flavor_low d1_pref_lemon if day == 1, missing
+	
+	
+	********************************************************************************
+**## General sweetness importance
+********************************************************************************
+
+* pref_sweet
+	label var			pref_sweet "Importance of sweetness"
+	label values		pref_sweet imp5_lbl
+	tab					pref_sweet, missing
+
+* Check sweetness importance among Day 1 respondents
+	tab					pref_sweet if day == 1, missing
+
+* Check sweetness importance by Lemon-Lime preference among Day 1 respondents
+	tab					pref_sweet d1_pref_lemon if day == 1, missing
+
+* Check sweetness importance by flavor importance category among Day 1 respondents
+	tab					pref_sweet flavor_low if day == 1, missing
+	
+	
+********************************************************************************
+**## General sweetness importance
+********************************************************************************
+
+* pref_sweet
+	label var			pref_sweet "Importance of sweetness"
+	label values		pref_sweet imp5_lbl
+	tab					pref_sweet, missing
+
+* high sweetness importance
+	capture drop		sweet_high
+	gen					sweet_high = inlist(pref_sweet, 4, 5) ///
+							if !missing(pref_sweet)
+
+	label var			sweet_high ///
+							"Sweetness is very or extremely important"
+
+	label values		sweet_high sweet_high_lbl
+
+	tab					sweet_high, missing
+	tab					pref_sweet sweet_high, missing
+	
+	
+********************************************************************************
+**## General sugar importance
+********************************************************************************
+
+* pref_sugar
+	label var			pref_sugar "Importance of sugar level"
+	label values		pref_sugar imp5_lbl
+	tab					pref_sugar, missing
+
+* high sugar importance
+	capture drop		sugar_high
+	gen					sugar_high = inlist(pref_sugar, 4, 5) ///
+							if !missing(pref_sugar)
+
+	label var			sugar_high ///
+							"Sugar level is very or extremely important"
+
+	label values		sugar_high sugar_high_lbl
+
+	tab					sugar_high, missing
+	tab					pref_sugar sugar_high, missing
+
+* Check sugar importance among Day 1 respondents
+	tab					pref_sugar if day == 1, missing
+
+* Check high sugar importance among Day 1 respondents
+	tab					sugar_high if day == 1, missing
+
+* Check high sugar importance by Lemon-Lime preference among Day 1 respondents
+	tab					sugar_high d1_pref_lemon if day == 1, missing
+
+* Check high sugar importance by sweetness importance among Day 1 respondents
+	tab					sugar_high sweet_high if day == 1, missing
+	
+
+********************************************************************************
+**## General functional ingredient importance
+********************************************************************************
+
+* pref_ingred
+	label var			pref_ingred "Importance of functional ingredients"
+	label values		pref_ingred imp5_lbl
+	tab					pref_ingred, missing
+
+* high functional ingredient importance
+	capture drop		ingred_high
+	gen					ingred_high = inlist(pref_ingred, 4, 5) ///
+							if !missing(pref_ingred)
+
+	label var			ingred_high ///
+							"Functional ingredients are very or extremely important"
+
+	label values		ingred_high ingred_high_lbl
+
+	tab					ingred_high, missing
+	tab					pref_ingred ingred_high, missing
+
+* Check functional ingredient importance among Day 1 respondents
+	tab					pref_ingred if day == 1, missing
+
+* Check high functional ingredient importance among Day 1 respondents
+	tab					ingred_high if day == 1, missing
+
+* Check high functional ingredient importance by Lemon-Lime preference among Day 1 respondents
+	tab					ingred_high d1_pref_lemon if day == 1, missing
+
+* Check high functional ingredient importance by sweetness importance among Day 1 respondents
+	tab					ingred_high sweet_high if day == 1, missing
+
+* Check high functional ingredient importance by sugar importance among Day 1 respondents
+	tab					ingred_high sugar_high if day == 1, missing
+	
+	
+	
+********************************************************************************
+**## General health claim importance
+********************************************************************************
+
+* pref_health
+	label var			pref_health "Importance of health claims"
+	label values		pref_health imp5_lbl
+	tab					pref_health, missing
+
+* Check health claim importance among Day 1 respondents
+	tab					pref_health if day == 1, missing
+
+* Check health claim importance by Lemon-Lime preference among Day 1 respondents
+	tab					pref_health d1_pref_lemon if day == 1, missing
+
+* Check health claim importance by sweetness importance among Day 1 respondents
+	tab					pref_health sweet_high if day == 1, missing
+
+* Check health claim importance by sugar importance among Day 1 respondents
+	tab					pref_health sugar_high if day == 1, missing
+
+* Check health claim importance by functional ingredient importance among Day 1 respondents
+	tab					pref_health ingred_high if day == 1, missing
+	
+********************************************************************************
+**## General health claim importance
+********************************************************************************
+
+* pref_health
+	label var			pref_health "Importance of health claims"
+	label values		pref_health imp5_lbl
+	tab					pref_health, missing
+
+* high health claim importance
+	capture drop		health_high
+	gen					health_high = inlist(pref_health, 4, 5) ///
+							if !missing(pref_health)
+
+	label var			health_high ///
+							"Health claims are very or extremely important"
+
+	label values		health_high health_high_lbl
+
+	tab					health_high, missing
+	tab					pref_health health_high, missing
+
+* Check health claim importance among Day 1 respondents
+	tab					pref_health if day == 1, missing
+
+* Check high health claim importance among Day 1 respondents
+	tab					health_high if day == 1, missing
+
+* Check high health claim importance by Lemon-Lime preference among Day 1 respondents
+	tab					health_high d1_pref_lemon if day == 1, missing
+
+* Check high health claim importance by sweetness importance among Day 1 respondents
+	tab					health_high sweet_high if day == 1, missing
+
+* Check high health claim importance by sugar importance among Day 1 respondents
+	tab					health_high sugar_high if day == 1, missing
+
+* Check high health claim importance by functional ingredient importance among Day 1 respondents
+	tab					health_high ingred_high if day == 1, missing
+	
+	
+********************************************************************************
+**## Prior magnesium knowledge
+********************************************************************************
+
+* preknow_magn
+	label var			preknow_magn "Prior knowledge of Magnesium"
+	label values		preknow_magn agree5_lbl
+	tab					preknow_magn, missing
+
+* high prior magnesium knowledge
+	capture drop		magn_know_high
+	gen					magn_know_high = inlist(preknow_magn, 4, 5) ///
+							if !missing(preknow_magn)
+
+	label var			magn_know_high ///
+							"Prior magnesium knowledge is agree or strongly agree"
+
+	label values		magn_know_high magn_know_high_lbl
+
+	tab					magn_know_high, missing
+	tab					preknow_magn magn_know_high, missing
+
+* Check prior magnesium knowledge among Day 1 respondents
+	tab					preknow_magn if day == 1, missing
+
+* Check high prior magnesium knowledge among Day 1 respondents
+	tab					magn_know_high if day == 1, missing
+
+* Check high prior magnesium knowledge by Lemon-Lime preference among Day 1 respondents
+	tab					magn_know_high d1_pref_lemon if day == 1, missing
+
+* Check high prior magnesium knowledge by sweetness importance among Day 1 respondents
+	tab					magn_know_high sweet_high if day == 1, missing
+
+* Check high prior magnesium knowledge by sugar importance among Day 1 respondents
+	tab					magn_know_high sugar_high if day == 1, missing
+
+* Check high prior magnesium knowledge by functional ingredient importance among Day 1 respondents
+	tab					magn_know_high ingred_high if day == 1, missing
+
+* Check high prior magnesium knowledge by health claim importance among Day 1 respondents
+	tab					magn_know_high health_high if day == 1, missing
+	
+* going to export all of these new tables to csv so that i can call to them /// 
+quickly and as necessary. They are found in reg_tables
+
+
+********************************************************************************
+**# first regs
+********************************************************************************
+
+**## dependent vars
+/*
+d1_dwtp_3b_584
+d1_dwtp_3b_793
+d1_dwtp_3a_584
+d1_dwtp_3a_793
+*/
+
+********************************************************************************
+**## Set H1 explanatory variables
+********************************************************************************
+
+	local h1_x			d1_pref_lemon ///
+						flavor_low ///
+						sweet_high ///
+						sugar_high ///
+						ingred_high ///
+						health_high ///
+						magn_know_high
+
+
+********************************************************************************
+**## Day 1 - 584, taste-first path
+********************************************************************************
+
+	reg					d1_dwtp_3b_584 ///
+							`h1_x', robust
+
+	estimates store		h1_d1_3b_584
+
+	esttab				h1_d1_3b_584 ///
+							using "$reg_tables/h1_d1_3b_584.csv", ///
+							replace csv label ///
+							cells("b(fmt(3)) se(fmt(3)) p(fmt(3))") ///
+							stats(N r2, ///
+								labels("Observations" "R-squared") ///
+								fmt(0 3)) ///
+							noobs nonumber nomtitle
+
+
+********************************************************************************
+**## Day 1 - 793, taste-first path
+********************************************************************************
+
+	reg					d1_dwtp_3b_793 ///
+							`h1_x', robust
+
+	estimates store		h1_d1_3b_793
+
+	esttab				h1_d1_3b_793 ///
+							using "$reg_tables/h1_d1_3b_793.csv", ///
+							replace csv label ///
+							cells("b(fmt(3)) se(fmt(3)) p(fmt(3))") ///
+							stats(N r2, ///
+								labels("Observations" "R-squared") ///
+								fmt(0 3)) ///
+							noobs nonumber nomtitle
+
+
+********************************************************************************
+**## Day 1 - 584, info-first path
+********************************************************************************
+
+	reg					d1_dwtp_3a_584 ///
+							`h1_x', robust
+
+	estimates store		h1_d1_3a_584
+
+	esttab				h1_d1_3a_584 ///
+							using "$reg_tables/h1_d1_3a_584.csv", ///
+							replace csv label ///
+							cells("b(fmt(3)) se(fmt(3)) p(fmt(3))") ///
+							stats(N r2, ///
+								labels("Observations" "R-squared") ///
+								fmt(0 3)) ///
+							noobs nonumber nomtitle
+
+
+********************************************************************************
+**## Day 1 - 793, info-first path
+********************************************************************************
+
+	reg					d1_dwtp_3a_793 ///
+							`h1_x', robust
+
+	estimates store		h1_d1_3a_793
+
+	esttab				h1_d1_3a_793 ///
+							using "$reg_tables/h1_d1_3a_793.csv", ///
+							replace csv label ///
+							cells("b(fmt(3)) se(fmt(3)) p(fmt(3))") ///
+							stats(N r2, ///
+								labels("Observations" "R-squared") ///
+								fmt(0 3)) ///
+							noobs nonumber nomtitle
