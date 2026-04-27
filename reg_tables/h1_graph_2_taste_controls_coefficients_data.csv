@@ -1,0 +1,25 @@
+model,model_label,coef_name,coef_label,coef_id,plot_order,y_plot,b,se,p,ci_lo,ci_hi
+d2_dwtp_3a_831,D2 831 3a,flavor_low,Flavor importance: moderate,1,1,1.18,.42302209,.37096944,.26416969,-.33814433,1.1841885
+d2_dwtp_3a_831,D2 831 3a,sweet_high,Sweetness: very/extremely important,2,1,1,-.12503512,.26854891,.64523911,-.67605197,.42598173
+d2_dwtp_3a_831,D2 831 3a,sugar_high,Sugar level: very/extremely important,3,1,.8200000000000001,.11124656,.40042862,.78326786,-.71036512,.93285823
+d2_dwtp_3a_356,D2 356 3a,flavor_low,Flavor importance: moderate,1,2,2.18,.021527361,.31705165,.94636667,-.62900889,.67206365
+d2_dwtp_3a_356,D2 356 3a,sweet_high,Sweetness: very/extremely important,2,2,2,-.22642601,.45066613,.61944181,-1.1511165,.69826454
+d2_dwtp_3a_356,D2 356 3a,sugar_high,Sugar level: very/extremely important,3,2,1.82,.1878178,.49919662,.70967877,-.83644909,1.2120847
+d2_dwtp_3b_831,D2 831 3b,flavor_low,Flavor importance: moderate,1,3,3.18,.17835364,.41159672,.66798753,-.66345614,1.0201634
+d2_dwtp_3b_831,D2 831 3b,sweet_high,Sweetness: very/extremely important,2,3,3,.097941637,.32158867,.76287949,-.55978101,.75566429
+d2_dwtp_3b_831,D2 831 3b,sugar_high,Sugar level: very/extremely important,3,3,2.82,-.48127812,.36658129,.1995175,-1.231021,.26846477
+d2_dwtp_3b_356,D2 356 3b,flavor_low,Flavor importance: moderate,1,4,4.18,.40422657,.49129641,.41735023,-.60058743,1.4090406
+d2_dwtp_3b_356,D2 356 3b,sweet_high,Sweetness: very/extremely important,2,4,4,-.55194211,.38252437,.15976557,-1.3342923,.23040807
+d2_dwtp_3b_356,D2 356 3b,sugar_high,Sugar level: very/extremely important,3,4,3.82,.12095013,.35594931,.73645902,-.60704798,.84894824
+d1_dwtp_3a_793,D1 793 3a,flavor_low,Flavor importance: moderate,1,5,5.18,.60355645,.20215192,.0058201132,.18946701,1.0176458
+d1_dwtp_3a_793,D1 793 3a,sweet_high,Sweetness: very/extremely important,2,5,5,-.065107375,.18502785,.72756368,-.44411978,.313905
+d1_dwtp_3a_793,D1 793 3a,sugar_high,Sugar level: very/extremely important,3,5,4.82,.091155186,.2016314,.65468836,-.321868,.5041784
+d1_dwtp_3a_584,D1 584 3a,flavor_low,Flavor importance: moderate,1,6,6.18,-.21890855,.49392495,.66102517,-1.2306679,.79285079
+d1_dwtp_3a_584,D1 584 3a,sweet_high,Sweetness: very/extremely important,2,6,6,-.43510517,.24493094,.086528823,-.93682343,.06661313
+d1_dwtp_3a_584,D1 584 3a,sugar_high,Sugar level: very/extremely important,3,6,5.82,.35729307,.24296436,.1525601,-.14039686,.85498297
+d1_dwtp_3b_793,D1 793 3b,flavor_low,Flavor importance: moderate,1,7,7.18,.097838201,.52807158,.85457057,-.99204791,1.1877244
+d1_dwtp_3b_793,D1 793 3b,sweet_high,Sweetness: very/extremely important,2,7,7,-.11700657,.41148695,.77858067,-.9662739,.73226076
+d1_dwtp_3b_793,D1 793 3b,sugar_high,Sugar level: very/extremely important,3,7,6.82,-.036841944,.28517574,.89828366,-.62541574,.55173182
+d1_dwtp_3b_584,D1 584 3b,flavor_low,Flavor importance: moderate,1,8,8.18,-.24896853,.33621815,.46618181,-.94288868,.44495165
+d1_dwtp_3b_584,D1 584 3b,sweet_high,Sweetness: very/extremely important,2,8,8,-.23268396,.25633687,.37304717,-.76173723,.29636931
+d1_dwtp_3b_584,D1 584 3b,sugar_high,Sugar level: very/extremely important,3,8,7.82,.243011,.30860817,.43873119,-.39392498,.87994701

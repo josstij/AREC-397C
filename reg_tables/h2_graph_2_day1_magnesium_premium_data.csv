@@ -1,0 +1,9 @@
+model,model_label,coef_name,coef_label,coef_id,plot_order,y_plot,b,se,p,ci_lo,ci_hi
+d1_mag_premium_3a,D1 584-793 3a,1.female,Female respondent,1,1,1.24,-.52551943,.52694416,.32817635,-1.6107812,.55974233
+d1_mag_premium_3a,D1 584-793 3a,1.exercise_hi,High exercise,2,1,1.08,-.63564664,.63556814,.32683328,-1.9446237,.67333037
+d1_mag_premium_3a,D1 584-793 3a,1.female#1.exercise_hi,Female x High exercise,3,1,.92,.65426773,.70443892,.36188537,-.79655135,2.1050868
+d1_mag_premium_3a,D1 584-793 3a,health_high,Health claims high,4,1,.76,-.87128299,.52587456,.11005341,-1.9543419,.21177594
+d1_mag_premium_3b,D1 584-793 3b,1.female,Female respondent,1,2,2.24,-.71052295,.78374046,.37491468,-2.3404005,.91935456
+d1_mag_premium_3b,D1 584-793 3b,1.exercise_hi,High exercise,2,2,2.08,-.78266042,.54301077,.16423656,-1.9119132,.34659225
+d1_mag_premium_3b,D1 584-793 3b,1.female#1.exercise_hi,Female x High exercise,3,2,1.92,.2021182,.90531093,.82549185,-1.6805789,2.0848153
+d1_mag_premium_3b,D1 584-793 3b,health_high,Health claims high,4,2,1.76,.12423331,.39891171,.75854391,-.70534903,.95381564

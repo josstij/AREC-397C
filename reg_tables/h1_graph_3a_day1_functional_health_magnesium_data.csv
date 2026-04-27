@@ -1,0 +1,13 @@
+model,model_label,coef_name,coef_label,coef_id,plot_order,y_plot,b,se,p,ci_lo,ci_hi
+d1_dwtp_3a_793,D1 793 3a,ingred_high,Functional ingredients high,1,1,1.18,-.12529889,.28297642,.66132027,-.7049498,.45435205
+d1_dwtp_3a_793,D1 793 3a,health_high,Health claims high,2,1,1,.11191166,.24118443,.64622897,-.38213226,.6059556
+d1_dwtp_3a_793,D1 793 3a,magn_know_high,Prior magnesium knowledge high,3,1,.8200000000000001,-.19453323,.1785742,.28527844,-.56032592,.17125945
+d1_dwtp_3a_584,D1 584 3a,ingred_high,Functional ingredients high,1,2,2.18,-.12660213,.36275107,.72969615,-.86966401,.61645973
+d1_dwtp_3a_584,D1 584 3a,health_high,Health claims high,2,2,2,-.77278888,.28802422,.012104691,-1.3627797,-.18279801
+d1_dwtp_3a_584,D1 584 3a,magn_know_high,Prior magnesium knowledge high,3,2,1.82,-.060595464,.24144062,.80366641,-.55516416,.43397325
+d1_dwtp_3b_793,D1 793 3b,ingred_high,Functional ingredients high,1,3,3.18,-.53349352,.31111029,.099267244,-1.1755936,.10860655
+d1_dwtp_3b_793,D1 793 3b,health_high,Health claims high,2,3,3,.12073016,.29356259,.68453217,-.48515326,.72661358
+d1_dwtp_3b_793,D1 793 3b,magn_know_high,Prior magnesium knowledge high,3,3,2.82,-.14589263,.37327176,.69935739,-.91628772,.62450242
+d1_dwtp_3b_584,D1 584 3b,ingred_high,Functional ingredients high,1,4,4.18,-.25832644,.27899778,.36371106,-.8341496,.31749669
+d1_dwtp_3b_584,D1 584 3b,health_high,Health claims high,2,4,4,.19744909,.24942797,.43634382,-.31734493,.71224314
+d1_dwtp_3b_584,D1 584 3b,magn_know_high,Prior magnesium knowledge high,3,4,3.82,.4597736,.44488379,.31168672,-.45842144,1.3779687

@@ -1,13 +1,13 @@
-="",="b",="se",="p"
-="Female respondent",="-0.129",="0.313",="0.684"
-="exercise_hi",="-0.193",="0.397",="0.631"
-="Day 1: Selected Lemon-Lime as preferred flavor",="-0.254",="0.291",="0.391"
-="Flavor importance is moderate rather than very/extremely important",="-0.848",="0.609",="0.176"
-="Sweetness is very or extremely important",="-0.326",="0.280",="0.254"
-="Sugar level is very or extremely important",="0.341",="0.348",="0.336"
-="Functional ingredients are very or extremely important",="-0.008",="0.467",="0.986"
-="Health claims are very or extremely important",="-0.822",="0.478",="0.098"
-="Prior magnesium knowledge is agree or strongly agree",="0.207",="0.323",="0.526"
-="Constant",="0.595",="0.329",="0.082"
-="Observations",="36",="",=""
-="R-squared",="0.376",="",=""
+H2_Prem_3b_Add,b,se,p
+Female respondent,-0.129,0.313,0.684
+exercise_hi,-0.193,0.397,0.631
+Day 1: Selected Lemon-Lime as preferred flavor,-0.254,0.291,0.391
+Flavor importance is moderate rather than very/extremely important,-0.848,0.609,0.176
+Sweetness is very or extremely important,-0.326,0.280,0.254
+Sugar level is very or extremely important,0.341,0.348,0.336
+Functional ingredients are very or extremely important,-0.008,0.467,0.986
+Health claims are very or extremely important,-0.822,0.478,0.098
+Prior magnesium knowledge is agree or strongly agree,0.207,0.323,0.526
+Constant,0.595,0.329,0.082
+Observations,36,,
+R-squared,0.376,,

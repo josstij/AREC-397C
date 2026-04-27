@@ -1,11 +1,11 @@
-"Day 2, Info first, Blueberry lab beverage",b,se,p
-Day 2: Selected Blueberry family as preferred flavor,-1.688,0.609,0.010
-Flavor importance is moderate rather than very/extremely important,0.039,0.380,0.918
-Sweetness is very or extremely important,-0.087,0.413,0.836
-Sugar level is very or extremely important,0.501,0.516,0.340
-Functional ingredients are very or extremely important,0.693,0.449,0.134
-Health claims are very or extremely important,-0.241,0.430,0.580
-Prior magnesium knowledge is agree or strongly agree,-0.271,0.361,0.459
-Constant,0.554,0.457,0.236
-Observations,35,,
-R-squared,0.235,,
+="",="b",="se",="p"
+="Day 2: Selected Blueberry family as preferred flavor",="-1.688",="0.609",="0.010"
+="Flavor importance is moderate rather than very/extremely important",="0.039",="0.380",="0.918"
+="Sweetness is very or extremely important",="-0.087",="0.413",="0.836"
+="Sugar level is very or extremely important",="0.501",="0.516",="0.340"
+="Functional ingredients are very or extremely important",="0.693",="0.449",="0.134"
+="Health claims are very or extremely important",="-0.241",="0.430",="0.580"
+="Prior magnesium knowledge is agree or strongly agree",="-0.271",="0.361",="0.459"
+="Constant",="0.554",="0.457",="0.236"
+="Observations",="35",="",=""
+="R-squared",="0.235",="",=""

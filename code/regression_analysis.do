@@ -3010,3 +3010,2711 @@ functional benefits like magnesium can influence choices different
 		dir					"$reg_tables\h2_context_comparison.csv"
 
 	restore
+	
+********************************************************************************
+**# regression checks
+********************************************************************************
+
+* I'm going to run some checks on the regressions* I'm a little worried that
+* there may be too many explanatory vars after looking at how little* stat signif
+* there is in these regressions. This may be the case but I think it's worht
+* running some checks.
+
+
+********************************************************************************
+**## check 1 - dependent variables are restricted to the correct day
+********************************************************************************
+
+* Day 1 outcomes should only exist for Day 1
+	foreach y in ///
+		d1_dwtp_3b_584 ///
+		d1_dwtp_3b_793 ///
+		d1_dwtp_3a_584 ///
+		d1_dwtp_3a_793 ///
+		d1_mag_premium_3b ///
+		d1_mag_premium_3a {
+
+		count			if day != 1 & !missing(`y')
+		display			"`y' nonmissing outside Day 1 = " r(N)
+
+		tab				day if !missing(`y'), missing
+	}
+
+
+* Day 2 outcomes should only exist for Day 2
+	foreach y in ///
+		d2_dwtp_3b_356 ///
+		d2_dwtp_3b_831 ///
+		d2_dwtp_3a_356 ///
+		d2_dwtp_3a_831 ///
+		d2_product_premium_3b ///
+		d2_product_premium_3a {
+
+		count			if day != 2 & !missing(`y')
+		display			"`y' nonmissing outside Day 2 = " r(N)
+
+		tab				day if !missing(`y'), missing
+	}
+
+* Audit result: Yes. The dependent variables are restricted to the correct day.
+
+
+********************************************************************************
+**## check 2 - dependent-variable sample sizes match the correct path
+********************************************************************************
+
+* Summarize Day 1 final WTP-change outcomes
+	sum					d1_dwtp_3b_584 ///
+						d1_dwtp_3b_793 ///
+						d1_dwtp_3a_584 ///
+						d1_dwtp_3a_793
+
+* Summarize Day 2 final WTP-change outcomes
+	sum					d2_dwtp_3b_356 ///
+						d2_dwtp_3b_831 ///
+						d2_dwtp_3a_356 ///
+						d2_dwtp_3a_831
+
+* Count Day 1 path-specific observations
+	count				if !missing(d1_dwtp_3b_584)
+	count				if !missing(d1_dwtp_3a_584)
+
+* Count Day 2 path-specific observations
+	count				if !missing(d2_dwtp_3b_356)
+	count				if !missing(d2_dwtp_3a_356)
+
+* Audit result: Yes. The sample sizes are restricted to their paths.
+
+
+********************************************************************************
+**## check 3 - product-specific flavor variables are restricted to the correct day
+********************************************************************************
+
+* Day 1 Lemon-Lime preference should only be defined for Day 1
+	tab					d1_pref_lemon if day == 1, missing
+	tab					d1_pref_lemon if day == 2, missing
+
+* Day 2 Blueberry preference should only be defined for Day 2
+	tab					d2_pref_blueberry if day == 1, missing
+	tab					d2_pref_blueberry if day == 2, missing
+
+* Day 2 Pineapple preference should only be defined for Day 2
+	tab					d2_pref_pineapple if day == 1, missing
+	tab					d2_pref_pineapple if day == 2, missing
+
+* Audit result: Yes. Product-specific flavor variables are restricted correctly.
+
+
+********************************************************************************
+**## check 4 - flavor importance category matches final table coding
+********************************************************************************
+
+* Keep flavor_low consistent with the final regression tables.
+* This identifies respondents who rated flavor as moderately important.
+	capture drop		flavor_low
+
+	gen					flavor_low = pref_flavor == 3 ///
+							if !missing(pref_flavor)
+
+	label var			flavor_low ///
+							"Flavor importance is moderate versus other reported levels"
+
+	label values		flavor_low flavor_low_lbl
+
+	tab					pref_flavor flavor_low, missing
+	tab					flavor_low, missing
+
+
+********************************************************************************
+**## check 5 - full model sample sizes are correct
+********************************************************************************
+
+********************************************************************************
+**### H1 Day 1 full model sample sizes
+********************************************************************************
+
+	foreach y in ///
+		d1_dwtp_3b_584 ///
+		d1_dwtp_3b_793 ///
+		d1_dwtp_3a_584 ///
+		d1_dwtp_3a_793 {
+
+		reg				`y' ///
+							d1_pref_lemon ///
+							flavor_low ///
+							sweet_high ///
+							sugar_high ///
+							ingred_high ///
+							health_high ///
+							magn_know_high, robust
+
+		display			"`y' full model N = " e(N)
+	}
+
+
+********************************************************************************
+**### H1 Day 2 full model sample sizes - 356
+********************************************************************************
+
+	foreach y in ///
+		d2_dwtp_3b_356 ///
+		d2_dwtp_3a_356 {
+
+		reg				`y' ///
+							d2_pref_blueberry ///
+							flavor_low ///
+							sweet_high ///
+							sugar_high ///
+							ingred_high ///
+							health_high ///
+							magn_know_high, robust
+
+		display			"`y' full model N = " e(N)
+	}
+
+
+********************************************************************************
+**### H1 Day 2 full model sample sizes - 831
+********************************************************************************
+
+	foreach y in ///
+		d2_dwtp_3b_831 ///
+		d2_dwtp_3a_831 {
+
+		reg				`y' ///
+							d2_pref_pineapple ///
+							flavor_low ///
+							sweet_high ///
+							sugar_high ///
+							ingred_high ///
+							health_high ///
+							magn_know_high, robust
+
+		display			"`y' full model N = " e(N)
+	}
+
+* Audit result: Yes. Full model sample sizes are consistent with path availability.
+
+
+********************************************************************************
+**## check 6 - H2 pooled models are not driven by over-control
+********************************************************************************
+
+	estimates clear
+
+	preserve
+
+		use				"$data/h2_long.dta", clear
+
+
+********************************************************************************
+**### H2 pooled audit - simple model
+********************************************************************************
+
+* Simple model: gender, exercise, gender-by-exercise, product, and path
+	reg					h2_dwtp ///
+							i.female##i.exercise_hi ///
+							i.h2_product ///
+							i.h2_path, ///
+							vce(cluster resp_id)
+
+	estimates store		h2_audit_simple
+
+
+********************************************************************************
+**### H2 pooled audit - core model
+********************************************************************************
+
+* Core model: simple model plus product-specific flavor, flavor importance, and sweetness
+	reg					h2_dwtp ///
+							i.female##i.exercise_hi ///
+							h2_product_pref ///
+							flavor_low ///
+							sweet_high ///
+							i.h2_product ///
+							i.h2_path, ///
+							vce(cluster resp_id)
+
+	estimates store		h2_audit_core
+
+
+********************************************************************************
+**### H2 pooled audit - full model
+********************************************************************************
+
+* Full model: core model plus sugar, functional ingredients, health claims, and magnesium knowledge
+	reg					h2_dwtp ///
+							i.female##i.exercise_hi ///
+							h2_product_pref ///
+							flavor_low ///
+							sweet_high ///
+							sugar_high ///
+							ingred_high ///
+							health_high ///
+							magn_know_high ///
+							i.h2_product ///
+							i.h2_path, ///
+							vce(cluster resp_id)
+
+	estimates store		h2_audit_full
+
+	restore
+
+
+********************************************************************************
+**### export H2 specification audit table
+********************************************************************************
+
+	esttab				h2_audit_simple ///
+						h2_audit_core ///
+						h2_audit_full ///
+							using "$reg_tables/h2_specification_audit.csv", ///
+							replace csv label ///
+							mtitles("Simple" ///
+									"Core" ///
+									"Full") ///
+							cells("b(fmt(3)) se(fmt(3)) p(fmt(3))") ///
+							stats(N r2, ///
+								labels("Observations" "R-squared") ///
+								fmt(0 3)) ///
+							nobaselevels noomitted ///
+							noobs nonumber
+
+* Audit result: H2 gender and exercise results are stable across simple, core, and full specifications.
+
+
+********************************************************************************
+**## check 7 - H1 models are not driven by over-control
+********************************************************************************
+
+	estimates clear
+
+********************************************************************************
+**### Day 1 - 584, taste-first
+********************************************************************************
+
+	reg					d1_dwtp_3b_584 ///
+							d1_pref_lemon, robust
+
+	estimates store		h1audit_d1_3b_584_simple
+
+
+	reg					d1_dwtp_3b_584 ///
+							d1_pref_lemon ///
+							flavor_low ///
+							sweet_high, robust
+
+	estimates store		h1audit_d1_3b_584_core
+
+
+	reg					d1_dwtp_3b_584 ///
+							d1_pref_lemon ///
+							flavor_low ///
+							sweet_high ///
+							sugar_high ///
+							ingred_high ///
+							health_high ///
+							magn_know_high, robust
+
+	estimates store		h1audit_d1_3b_584_full
+
+
+********************************************************************************
+**### Day 1 - 793, taste-first
+********************************************************************************
+
+	reg					d1_dwtp_3b_793 ///
+							d1_pref_lemon, robust
+
+	estimates store		h1audit_d1_3b_793_simple
+
+
+	reg					d1_dwtp_3b_793 ///
+							d1_pref_lemon ///
+							flavor_low ///
+							sweet_high, robust
+
+	estimates store		h1audit_d1_3b_793_core
+
+
+	reg					d1_dwtp_3b_793 ///
+							d1_pref_lemon ///
+							flavor_low ///
+							sweet_high ///
+							sugar_high ///
+							ingred_high ///
+							health_high ///
+							magn_know_high, robust
+
+	estimates store		h1audit_d1_3b_793_full
+
+
+********************************************************************************
+**### Day 1 - 584, info-first
+********************************************************************************
+
+	reg					d1_dwtp_3a_584 ///
+							d1_pref_lemon, robust
+
+	estimates store		h1audit_d1_3a_584_simple
+
+
+	reg					d1_dwtp_3a_584 ///
+							d1_pref_lemon ///
+							flavor_low ///
+							sweet_high, robust
+
+	estimates store		h1audit_d1_3a_584_core
+
+
+	reg					d1_dwtp_3a_584 ///
+							d1_pref_lemon ///
+							flavor_low ///
+							sweet_high ///
+							sugar_high ///
+							ingred_high ///
+							health_high ///
+							magn_know_high, robust
+
+	estimates store		h1audit_d1_3a_584_full
+
+
+********************************************************************************
+**### Day 1 - 793, info-first
+********************************************************************************
+
+	reg					d1_dwtp_3a_793 ///
+							d1_pref_lemon, robust
+
+	estimates store		h1audit_d1_3a_793_simple
+
+
+	reg					d1_dwtp_3a_793 ///
+							d1_pref_lemon ///
+							flavor_low ///
+							sweet_high, robust
+
+	estimates store		h1audit_d1_3a_793_core
+
+
+	reg					d1_dwtp_3a_793 ///
+							d1_pref_lemon ///
+							flavor_low ///
+							sweet_high ///
+							sugar_high ///
+							ingred_high ///
+							health_high ///
+							magn_know_high, robust
+
+	estimates store		h1audit_d1_3a_793_full
+
+
+********************************************************************************
+**### Day 2 - 356, taste-first
+********************************************************************************
+
+	reg					d2_dwtp_3b_356 ///
+							d2_pref_blueberry, robust
+
+	estimates store		h1audit_d2_3b_356_simple
+
+
+	reg					d2_dwtp_3b_356 ///
+							d2_pref_blueberry ///
+							flavor_low ///
+							sweet_high, robust
+
+	estimates store		h1audit_d2_3b_356_core
+
+
+	reg					d2_dwtp_3b_356 ///
+							d2_pref_blueberry ///
+							flavor_low ///
+							sweet_high ///
+							sugar_high ///
+							ingred_high ///
+							health_high ///
+							magn_know_high, robust
+
+	estimates store		h1audit_d2_3b_356_full
+
+
+********************************************************************************
+**### Day 2 - 831, taste-first
+********************************************************************************
+
+	reg					d2_dwtp_3b_831 ///
+							d2_pref_pineapple, robust
+
+	estimates store		h1audit_d2_3b_831_simple
+
+
+	reg					d2_dwtp_3b_831 ///
+							d2_pref_pineapple ///
+							flavor_low ///
+							sweet_high, robust
+
+	estimates store		h1audit_d2_3b_831_core
+
+
+	reg					d2_dwtp_3b_831 ///
+							d2_pref_pineapple ///
+							flavor_low ///
+							sweet_high ///
+							sugar_high ///
+							ingred_high ///
+							health_high ///
+							magn_know_high, robust
+
+	estimates store		h1audit_d2_3b_831_full
+
+
+********************************************************************************
+**### Day 2 - 356, info-first
+********************************************************************************
+
+	reg					d2_dwtp_3a_356 ///
+							d2_pref_blueberry, robust
+
+	estimates store		h1audit_d2_3a_356_simple
+
+
+	reg					d2_dwtp_3a_356 ///
+							d2_pref_blueberry ///
+							flavor_low ///
+							sweet_high, robust
+
+	estimates store		h1audit_d2_3a_356_core
+
+
+	reg					d2_dwtp_3a_356 ///
+							d2_pref_blueberry ///
+							flavor_low ///
+							sweet_high ///
+							sugar_high ///
+							ingred_high ///
+							health_high ///
+							magn_know_high, robust
+
+	estimates store		h1audit_d2_3a_356_full
+
+
+********************************************************************************
+**### Day 2 - 831, info-first
+********************************************************************************
+
+	reg					d2_dwtp_3a_831 ///
+							d2_pref_pineapple, robust
+
+	estimates store		h1audit_d2_3a_831_simple
+
+
+	reg					d2_dwtp_3a_831 ///
+							d2_pref_pineapple ///
+							flavor_low ///
+							sweet_high, robust
+
+	estimates store		h1audit_d2_3a_831_core
+
+
+	reg					d2_dwtp_3a_831 ///
+							d2_pref_pineapple ///
+							flavor_low ///
+							sweet_high ///
+							sugar_high ///
+							ingred_high ///
+							health_high ///
+							magn_know_high, robust
+
+	estimates store		h1audit_d2_3a_831_full
+	
+	
+********************************************************************************
+**# Graphs - Hyp 1
+********************************************************************************
+
+********************************************************************************
+**# H1 graph 1 - product-specific flavor preference coefficients
+********************************************************************************
+
+* This graph shows the coefficient on the product-specific preferred flavor variable
+* across all eight H1 product/path models.
+*
+* The graph answers:
+* Does preferring the product's matching flavor predict final WTP change?
+
+* Day 1 product-specific flavor variable:
+*		d1_pref_lemon
+
+* Day 2 product-specific flavor variables:
+*		d2_pref_blueberry
+*		d2_pref_pineapple
+
+*  H1 controls:
+*		flavor_low
+*		sweet_high
+*		sugar_high
+*		ingred_high
+*		health_high
+*		magn_know_high
+
+
+********************************************************************************
+**## Build graphing dataset
+********************************************************************************
+
+preserve
+
+	tempfile			h1_flavor_coef
+	tempname			memhold
+
+	postfile			`memhold' ///
+							str30 model ///
+							str60 model_label ///
+							int plot_order ///
+							double b se p ci_lo ci_hi ///
+							using `h1_flavor_coef', replace
+
+
+********************************************************************************
+**## Run full H1 models and store product-specific flavor coefficients
+********************************************************************************
+
+* Each line below identifies:
+*		1. dependent variable
+*		2. product-specific flavor preference variable
+*		3. graph order
+*		4. graph label
+
+	foreach spec in ///
+		`"d1_dwtp_3b_584 d1_pref_lemon     8 "D1 584 3b: Taste-first""' ///
+		`"d1_dwtp_3b_793 d1_pref_lemon     7 "D1 793 3b: Taste-first""' ///
+		`"d1_dwtp_3a_584 d1_pref_lemon     6 "D1 584 3a: Info-first""' ///
+		`"d1_dwtp_3a_793 d1_pref_lemon     5 "D1 793 3a: Info-first""' ///
+		`"d2_dwtp_3b_356 d2_pref_blueberry 4 "D2 356 3b: Taste-first""' ///
+		`"d2_dwtp_3b_831 d2_pref_pineapple 3 "D2 831 3b: Taste-first""' ///
+		`"d2_dwtp_3a_356 d2_pref_blueberry 2 "D2 356 3a: Info-first""' ///
+		`"d2_dwtp_3a_831 d2_pref_pineapple 1 "D2 831 3a: Info-first""' {
+
+		tokenize		`"`spec'"'
+
+		local y			"`1'"
+		local pref		"`2'"
+		local order		"`3'"
+		local label		`"`4'"'
+
+
+		********************************************************************************
+**### Run full H1 model
+		********************************************************************************
+
+		reg				`y' ///
+							`pref' ///
+							flavor_low ///
+							sweet_high ///
+							sugar_high ///
+							ingred_high ///
+							health_high ///
+							magn_know_high, robust
+
+
+		********************************************************************************
+**### Store coefficient, standard error, p-value, and 95 percent confidence interval
+		********************************************************************************
+
+		post			`memhold' ///
+							("`y'") ///
+							(`"`label'"') ///
+							(`order') ///
+							(_b[`pref']) ///
+							(_se[`pref']) ///
+							(2 * ttail(e(df_r), abs(_b[`pref'] / _se[`pref']))) ///
+							(_b[`pref'] - invttail(e(df_r), .025) * _se[`pref']) ///
+							(_b[`pref'] + invttail(e(df_r), .025) * _se[`pref'])
+	}
+
+
+********************************************************************************
+**## Save graphing dataset
+********************************************************************************
+
+	postclose			`memhold'
+
+	use					`h1_flavor_coef', clear
+
+	sort				plot_order
+
+	list				model_label b se p ci_lo ci_hi, clean noobs
+
+	export delimited	using "$reg_tables/h1_graph_1_product_flavor_coefficients_data.csv", ///
+							replace
+
+
+********************************************************************************
+**## Create coefficient plot
+********************************************************************************
+
+	graph twoway ///
+		(rcap ci_hi ci_lo plot_order, horizontal) ///
+		(scatter plot_order b), ///
+		xline(0, lpattern(dash)) ///
+		ylabel(1 "D2 831 3a" ///
+			   2 "D2 356 3a" ///
+			   3 "D2 831 3b" ///
+			   4 "D2 356 3b" ///
+			   5 "D1 793 3a" ///
+			   6 "D1 584 3a" ///
+			   7 "D1 793 3b" ///
+			   8 "D1 584 3b", ///
+			   angle(0) labsize(small) noticks) ///
+		xlabel(, labsize(small)) ///
+		xtitle("Coefficient on product-specific preferred flavor", ///
+			   size(small) margin(medsmall)) ///
+		ytitle("") ///
+		title("H1: Product-specific flavor preference and WTP change", ///
+			  size(medsmall) span justification(center)) ///
+		subtitle("Full H1 models with 95% confidence intervals", ///
+				 size(small) span justification(center)) ///
+		note("Model key: D1/D2 = survey day; 3a = info-first; 3b = taste-first.", ///
+			 size(vsmall) span justification(center)) ///
+		legend(off) ///
+		graphregion(margin(l+30 r+20 t+10 b+10)) ///
+		plotregion(margin(l+2 r+4 t+2 b+2)) ///
+		xsize(14) ///
+		ysize(6)
+
+
+********************************************************************************
+**## Export coefficient plot
+********************************************************************************
+
+	graph export		"$reg_tables/h1_graph_1_product_flavor_coefficients.png", ///
+							replace width(3200)
+							
+	restore
+	
+********************************************************************************
+**# H1 graph 2A - Day 1 taste-related control coefficients
+********************************************************************************
+
+********************************************************************************
+**## Purpose
+********************************************************************************
+
+* This graph shows the Day 1 coefficients on the main taste-related controls
+* across the four Day 1 H1 models.
+*
+* The graph answers:
+* On Day 1, are WTP changes related to flavor importance,
+* sweetness importance, or sugar importance?
+*
+* Day 1 models:
+*		d1_dwtp_3b_584
+*		d1_dwtp_3b_793
+*		d1_dwtp_3a_584
+*		d1_dwtp_3a_793
+
+
+********************************************************************************
+**## Build graphing dataset
+********************************************************************************
+
+preserve
+
+	tempfile			h1_day1_taste_coef
+	tempname			memhold
+
+	postfile			`memhold' ///
+							str30 model ///
+							str40 model_label ///
+							str30 coef_name ///
+							str80 coef_label ///
+							int coef_id ///
+							int plot_order ///
+							double y_plot b se p ci_lo ci_hi ///
+							using `h1_day1_taste_coef', replace
+
+
+********************************************************************************
+**## Run Day 1 full H1 models and store taste-related coefficients
+********************************************************************************
+
+	foreach spec in ///
+		`"d1_dwtp_3b_584 d1_pref_lemon 4 "D1 584 3b""' ///
+		`"d1_dwtp_3b_793 d1_pref_lemon 3 "D1 793 3b""' ///
+		`"d1_dwtp_3a_584 d1_pref_lemon 2 "D1 584 3a""' ///
+		`"d1_dwtp_3a_793 d1_pref_lemon 1 "D1 793 3a""' {
+
+		tokenize		`"`spec'"'
+
+		local y			"`1'"
+		local pref		"`2'"
+		local order		"`3'"
+		local label		`"`4'"'
+
+
+********************************************************************************
+**### Run full H1 model
+********************************************************************************
+
+		reg				`y' ///
+							`pref' ///
+							flavor_low ///
+							sweet_high ///
+							sugar_high ///
+							ingred_high ///
+							health_high ///
+							magn_know_high, robust
+
+
+********************************************************************************
+**### Store flavor importance coefficient
+********************************************************************************
+
+		post			`memhold' ///
+							("`y'") ///
+							(`"`label'"') ///
+							("flavor_low") ///
+							("Flavor: moderate") ///
+							(1) ///
+							(`order') ///
+							(`order' + .18) ///
+							(_b[flavor_low]) ///
+							(_se[flavor_low]) ///
+							(2 * ttail(e(df_r), abs(_b[flavor_low] / _se[flavor_low]))) ///
+							(_b[flavor_low] - invttail(e(df_r), .025) * _se[flavor_low]) ///
+							(_b[flavor_low] + invttail(e(df_r), .025) * _se[flavor_low])
+
+
+********************************************************************************
+**### Store sweetness importance coefficient
+********************************************************************************
+
+		post			`memhold' ///
+							("`y'") ///
+							(`"`label'"') ///
+							("sweet_high") ///
+							("Sweetness high") ///
+							(2) ///
+							(`order') ///
+							(`order') ///
+							(_b[sweet_high]) ///
+							(_se[sweet_high]) ///
+							(2 * ttail(e(df_r), abs(_b[sweet_high] / _se[sweet_high]))) ///
+							(_b[sweet_high] - invttail(e(df_r), .025) * _se[sweet_high]) ///
+							(_b[sweet_high] + invttail(e(df_r), .025) * _se[sweet_high])
+
+
+********************************************************************************
+**### Store sugar importance coefficient
+********************************************************************************
+
+		post			`memhold' ///
+							("`y'") ///
+							(`"`label'"') ///
+							("sugar_high") ///
+							("Sugar high") ///
+							(3) ///
+							(`order') ///
+							(`order' - .18) ///
+							(_b[sugar_high]) ///
+							(_se[sugar_high]) ///
+							(2 * ttail(e(df_r), abs(_b[sugar_high] / _se[sugar_high]))) ///
+							(_b[sugar_high] - invttail(e(df_r), .025) * _se[sugar_high]) ///
+							(_b[sugar_high] + invttail(e(df_r), .025) * _se[sugar_high])
+	}
+
+
+********************************************************************************
+**## Save graphing dataset
+********************************************************************************
+
+	postclose			`memhold'
+
+	use					`h1_day1_taste_coef', clear
+
+	sort				plot_order coef_id
+
+	list				model_label coef_label b se p ci_lo ci_hi, clean noobs
+
+	export delimited	using ///
+							"$reg_tables/h1_graph_2a_day1_taste_controls_data.csv", ///
+							replace
+
+
+********************************************************************************
+**## Create coefficient plot
+********************************************************************************
+
+	graph twoway ///
+		(rcap ci_hi ci_lo y_plot if coef_id == 1, horizontal) ///
+		(scatter y_plot b if coef_id == 1, msymbol(circle) mcolor(navy)) ///
+		(rcap ci_hi ci_lo y_plot if coef_id == 2, horizontal) ///
+		(scatter y_plot b if coef_id == 2, msymbol(triangle) mcolor(orange)) ///
+		(rcap ci_hi ci_lo y_plot if coef_id == 3, horizontal) ///
+		(scatter y_plot b if coef_id == 3, msymbol(square) mcolor(forest green)) ///
+		, ///
+		xline(0, lpattern(dash)) ///
+		ylabel(1 "D1 793 3a" ///
+			   2 "D1 584 3a" ///
+			   3 "D1 793 3b" ///
+			   4 "D1 584 3b", ///
+			   angle(0) labsize(small) noticks) ///
+		xlabel(, labsize(small)) ///
+		xtitle("Coefficient on taste-related controls", ///
+			   size(small) margin(medsmall)) ///
+		ytitle("") ///
+		title("H1 Day 1: Taste-related controls and WTP change", ///
+			  size(medsmall) span justification(center)) ///
+		subtitle("Full Day 1 H1 models with 95% confidence intervals", ///
+				 size(small) span justification(center)) ///
+		note("3a = info-first; 3b = taste-first.", ///
+			 size(vsmall) span justification(center)) ///
+		legend(order(2 "Flavor: moderate" ///
+					 4 "Sweetness high" ///
+					 6 "Sugar high") ///
+			   rows(1) size(small) position(6)) ///
+		graphregion(margin(l+30 r+20 t+10 b+10)) ///
+		plotregion(margin(l+2 r+4 t+2 b+2)) ///
+		xsize(14) ///
+		ysize(6)
+
+
+********************************************************************************
+**## Export coefficient plot
+********************************************************************************
+
+	graph export		"$reg_tables/h1_graph_2a_day1_taste_controls.png", ///
+							replace width(4000)
+
+restore
+
+
+********************************************************************************
+**# H1 graph 2B - Day 2 taste-related control coefficients
+********************************************************************************
+
+********************************************************************************
+**## Purpose
+********************************************************************************
+
+* This graph shows the Day 2 coefficients on the main taste-related controls
+* across the four Day 2 H1 models.
+*
+* The graph answers:
+* On Day 2, are WTP changes related to flavor importance,
+* sweetness importance, or sugar importance?
+*
+* Day 2 models:
+*		d2_dwtp_3b_356
+*		d2_dwtp_3b_831
+*		d2_dwtp_3a_356
+*		d2_dwtp_3a_831
+
+
+********************************************************************************
+**## Build graphing dataset
+********************************************************************************
+
+preserve
+
+	tempfile			h1_day2_taste_coef
+	tempname			memhold
+
+	postfile			`memhold' ///
+							str30 model ///
+							str40 model_label ///
+							str30 coef_name ///
+							str80 coef_label ///
+							int coef_id ///
+							int plot_order ///
+							double y_plot b se p ci_lo ci_hi ///
+							using `h1_day2_taste_coef', replace
+
+
+********************************************************************************
+**## Run Day 2 full H1 models and store taste-related coefficients
+********************************************************************************
+
+	foreach spec in ///
+		`"d2_dwtp_3b_356 d2_pref_blueberry 4 "D2 356 3b""' ///
+		`"d2_dwtp_3b_831 d2_pref_pineapple 3 "D2 831 3b""' ///
+		`"d2_dwtp_3a_356 d2_pref_blueberry 2 "D2 356 3a""' ///
+		`"d2_dwtp_3a_831 d2_pref_pineapple 1 "D2 831 3a""' {
+
+		tokenize		`"`spec'"'
+
+		local y			"`1'"
+		local pref		"`2'"
+		local order		"`3'"
+		local label		`"`4'"'
+
+
+********************************************************************************
+**### Run full H1 model
+********************************************************************************
+
+		reg				`y' ///
+							`pref' ///
+							flavor_low ///
+							sweet_high ///
+							sugar_high ///
+							ingred_high ///
+							health_high ///
+							magn_know_high, robust
+
+
+********************************************************************************
+**### Store flavor importance coefficient
+********************************************************************************
+
+		post			`memhold' ///
+							("`y'") ///
+							(`"`label'"') ///
+							("flavor_low") ///
+							("Flavor: moderate") ///
+							(1) ///
+							(`order') ///
+							(`order' + .18) ///
+							(_b[flavor_low]) ///
+							(_se[flavor_low]) ///
+							(2 * ttail(e(df_r), abs(_b[flavor_low] / _se[flavor_low]))) ///
+							(_b[flavor_low] - invttail(e(df_r), .025) * _se[flavor_low]) ///
+							(_b[flavor_low] + invttail(e(df_r), .025) * _se[flavor_low])
+
+
+********************************************************************************
+**### Store sweetness importance coefficient
+********************************************************************************
+
+		post			`memhold' ///
+							("`y'") ///
+							(`"`label'"') ///
+							("sweet_high") ///
+							("Sweetness high") ///
+							(2) ///
+							(`order') ///
+							(`order') ///
+							(_b[sweet_high]) ///
+							(_se[sweet_high]) ///
+							(2 * ttail(e(df_r), abs(_b[sweet_high] / _se[sweet_high]))) ///
+							(_b[sweet_high] - invttail(e(df_r), .025) * _se[sweet_high]) ///
+							(_b[sweet_high] + invttail(e(df_r), .025) * _se[sweet_high])
+
+
+********************************************************************************
+**### Store sugar importance coefficient
+********************************************************************************
+
+		post			`memhold' ///
+							("`y'") ///
+							(`"`label'"') ///
+							("sugar_high") ///
+							("Sugar high") ///
+							(3) ///
+							(`order') ///
+							(`order' - .18) ///
+							(_b[sugar_high]) ///
+							(_se[sugar_high]) ///
+							(2 * ttail(e(df_r), abs(_b[sugar_high] / _se[sugar_high]))) ///
+							(_b[sugar_high] - invttail(e(df_r), .025) * _se[sugar_high]) ///
+							(_b[sugar_high] + invttail(e(df_r), .025) * _se[sugar_high])
+	}
+
+
+********************************************************************************
+**## Save graphing dataset
+********************************************************************************
+
+	postclose			`memhold'
+
+	use					`h1_day2_taste_coef', clear
+
+	sort				plot_order coef_id
+
+	list				model_label coef_label b se p ci_lo ci_hi, clean noobs
+
+	export delimited	using ///
+							"$reg_tables/h1_graph_2b_day2_taste_controls_data.csv", ///
+							replace
+
+
+********************************************************************************
+**## Create coefficient plot
+********************************************************************************
+
+	graph twoway ///
+		(rcap ci_hi ci_lo y_plot if coef_id == 1, horizontal) ///
+		(scatter y_plot b if coef_id == 1, msymbol(circle) mcolor(navy)) ///
+		(rcap ci_hi ci_lo y_plot if coef_id == 2, horizontal) ///
+		(scatter y_plot b if coef_id == 2, msymbol(triangle) mcolor(orange)) ///
+		(rcap ci_hi ci_lo y_plot if coef_id == 3, horizontal) ///
+		(scatter y_plot b if coef_id == 3, msymbol(square) mcolor(forest green)) ///
+		, ///
+		xline(0, lpattern(dash)) ///
+		ylabel(1 "D2 831 3a" ///
+			   2 "D2 356 3a" ///
+			   3 "D2 831 3b" ///
+			   4 "D2 356 3b", ///
+			   angle(0) labsize(small) noticks) ///
+		xlabel(, labsize(small)) ///
+		xtitle("Coefficient on taste-related controls", ///
+			   size(small) margin(medsmall)) ///
+		ytitle("") ///
+		title("H1 Day 2: Taste-related controls and WTP change", ///
+			  size(medsmall) span justification(center)) ///
+		subtitle("Full Day 2 H1 models with 95% confidence intervals", ///
+				 size(small) span justification(center)) ///
+		note("3a = info-first; 3b = taste-first.", ///
+			 size(vsmall) span justification(center)) ///
+		legend(order(2 "Flavor: moderate" ///
+					 4 "Sweetness high" ///
+					 6 "Sugar high") ///
+			   rows(1) size(small) position(6)) ///
+		graphregion(margin(l+30 r+20 t+10 b+10)) ///
+		plotregion(margin(l+2 r+4 t+2 b+2)) ///
+		xsize(14) ///
+		ysize(6)
+
+********************************************************************************
+**## Export coefficient plot
+********************************************************************************
+
+	graph export		"$reg_tables/h1_graph_2b_day2_taste_controls.png", ///
+							replace width(4000)
+
+restore
+
+
+********************************************************************************
+**# H1 graph 3A - Day 1 functional, health, and magnesium coefficients
+********************************************************************************
+
+********************************************************************************
+**## Purpose
+********************************************************************************
+
+* This graph shows the Day 1 coefficients on functional ingredients,
+* health claims, and prior magnesium knowledge across the four Day 1 H1 models.
+*
+* The graph answers:
+* On Day 1, are WTP changes related to functional ingredient importance,
+* health claim importance, or prior magnesium knowledge?
+*
+* Day 1 models:
+*		d1_dwtp_3b_584
+*		d1_dwtp_3b_793
+*		d1_dwtp_3a_584
+*		d1_dwtp_3a_793
+*
+* Functional / health / magnesium controls:
+*		ingred_high
+*		health_high
+*		magn_know_high
+*
+* Full H1 model controls:
+*		product-specific preferred flavor
+*		flavor_low
+*		sweet_high
+*		sugar_high
+*		ingred_high
+*		health_high
+*		magn_know_high
+
+
+********************************************************************************
+**## Build graphing dataset
+********************************************************************************
+
+preserve
+
+	tempfile			h1_day1_fhm_coef
+	tempname			memhold
+
+	postfile			`memhold' ///
+							str30 model ///
+							str40 model_label ///
+							str30 coef_name ///
+							str80 coef_label ///
+							int coef_id ///
+							int plot_order ///
+							double y_plot b se p ci_lo ci_hi ///
+							using `h1_day1_fhm_coef', replace
+
+
+********************************************************************************
+**## Run Day 1 full H1 models and store functional / health / magnesium coefficients
+********************************************************************************
+
+	foreach spec in ///
+		`"d1_dwtp_3b_584 d1_pref_lemon 4 "D1 584 3b""' ///
+		`"d1_dwtp_3b_793 d1_pref_lemon 3 "D1 793 3b""' ///
+		`"d1_dwtp_3a_584 d1_pref_lemon 2 "D1 584 3a""' ///
+		`"d1_dwtp_3a_793 d1_pref_lemon 1 "D1 793 3a""' {
+
+		tokenize		`"`spec'"'
+
+		local y			"`1'"
+		local pref		"`2'"
+		local order		"`3'"
+		local label		`"`4'"'
+
+
+********************************************************************************
+**### Run full H1 model
+********************************************************************************
+
+		reg				`y' ///
+							`pref' ///
+							flavor_low ///
+							sweet_high ///
+							sugar_high ///
+							ingred_high ///
+							health_high ///
+							magn_know_high, robust
+
+
+********************************************************************************
+**### Store functional ingredient importance coefficient
+********************************************************************************
+
+		post			`memhold' ///
+							("`y'") ///
+							(`"`label'"') ///
+							("ingred_high") ///
+							("Functional ingredients high") ///
+							(1) ///
+							(`order') ///
+							(`order' + .18) ///
+							(_b[ingred_high]) ///
+							(_se[ingred_high]) ///
+							(2 * ttail(e(df_r), abs(_b[ingred_high] / _se[ingred_high]))) ///
+							(_b[ingred_high] - invttail(e(df_r), .025) * _se[ingred_high]) ///
+							(_b[ingred_high] + invttail(e(df_r), .025) * _se[ingred_high])
+
+
+********************************************************************************
+**### Store health claim importance coefficient
+********************************************************************************
+
+		post			`memhold' ///
+							("`y'") ///
+							(`"`label'"') ///
+							("health_high") ///
+							("Health claims high") ///
+							(2) ///
+							(`order') ///
+							(`order') ///
+							(_b[health_high]) ///
+							(_se[health_high]) ///
+							(2 * ttail(e(df_r), abs(_b[health_high] / _se[health_high]))) ///
+							(_b[health_high] - invttail(e(df_r), .025) * _se[health_high]) ///
+							(_b[health_high] + invttail(e(df_r), .025) * _se[health_high])
+
+
+********************************************************************************
+**### Store prior magnesium knowledge coefficient
+********************************************************************************
+
+		post			`memhold' ///
+							("`y'") ///
+							(`"`label'"') ///
+							("magn_know_high") ///
+							("Prior magnesium knowledge high") ///
+							(3) ///
+							(`order') ///
+							(`order' - .18) ///
+							(_b[magn_know_high]) ///
+							(_se[magn_know_high]) ///
+							(2 * ttail(e(df_r), abs(_b[magn_know_high] / _se[magn_know_high]))) ///
+							(_b[magn_know_high] - invttail(e(df_r), .025) * _se[magn_know_high]) ///
+							(_b[magn_know_high] + invttail(e(df_r), .025) * _se[magn_know_high])
+	}
+
+
+********************************************************************************
+**## Save graphing dataset
+********************************************************************************
+
+	postclose			`memhold'
+
+	use					`h1_day1_fhm_coef', clear
+
+	sort				plot_order coef_id
+
+	list				model_label coef_label b se p ci_lo ci_hi, clean noobs
+
+	export delimited	using ///
+							"$reg_tables/h1_graph_3a_day1_functional_health_magnesium_data.csv", ///
+							replace
+
+
+********************************************************************************
+**## Create coefficient plot
+********************************************************************************
+
+* Each model has three nearby points:
+*		ingred_high			= slightly above model line
+*		health_high			= centered on model line
+*		magn_know_high		= slightly below model line
+*
+* Use short y-axis labels so text does not get cut off.
+* Use span so titles and notes are centered across the full graph region.
+
+	graph twoway ///
+		(rcap ci_hi ci_lo y_plot if coef_id == 1, horizontal) ///
+		(scatter y_plot b if coef_id == 1, msymbol(circle) mcolor(navy)) ///
+		(rcap ci_hi ci_lo y_plot if coef_id == 2, horizontal) ///
+		(scatter y_plot b if coef_id == 2, msymbol(triangle) mcolor(orange)) ///
+		(rcap ci_hi ci_lo y_plot if coef_id == 3, horizontal) ///
+		(scatter y_plot b if coef_id == 3, msymbol(square) mcolor(forest green)) ///
+		, ///
+		xline(0, lpattern(dash)) ///
+		ylabel(1 "D1 793 3a" ///
+			   2 "D1 584 3a" ///
+			   3 "D1 793 3b" ///
+			   4 "D1 584 3b", ///
+			   angle(0) labsize(small) noticks) ///
+		xlabel(, labsize(small)) ///
+		xtitle("Coefficient on functional, health, and magnesium controls", ///
+			   size(small) margin(medsmall)) ///
+		ytitle("") ///
+		title("H1 Day 1: Functional, health, and magnesium controls", ///
+			  size(medsmall) span justification(center)) ///
+		subtitle("Full Day 1 H1 models with 95% confidence intervals", ///
+				 size(small) span justification(center)) ///
+		note("3a = info-first; 3b = taste-first.", ///
+			 size(vsmall) span justification(center)) ///
+		legend(order(2 "Functional ingredients high" ///
+					 4 "Health claims high" ///
+					 6 "Prior magnesium knowledge high") ///
+			   rows(2) size(small) position(6)) ///
+		graphregion(margin(l+30 r+20 t+10 b+10)) ///
+		plotregion(margin(l+2 r+4 t+2 b+2)) ///
+		xsize(14) ///
+		ysize(6)
+
+
+********************************************************************************
+**## Export coefficient plot
+********************************************************************************
+
+	graph export		"$reg_tables/h1_graph_3a_day1_functional_health_magnesium.png", ///
+							replace width(4000)
+
+restore
+
+
+********************************************************************************
+**# H1 graph 3B - Day 2 functional, health, and magnesium coefficients
+********************************************************************************
+
+********************************************************************************
+**## Purpose
+********************************************************************************
+
+* This graph shows the Day 2 coefficients on functional ingredients,
+* health claims, and prior magnesium knowledge across the four Day 2 H1 models.
+*
+* The graph answers:
+* On Day 2, are WTP changes related to functional ingredient importance,
+* health claim importance, or prior magnesium knowledge?
+*
+* Day 2 models:
+*		d2_dwtp_3b_356
+*		d2_dwtp_3b_831
+*		d2_dwtp_3a_356
+*		d2_dwtp_3a_831
+*
+* Functional / health / magnesium controls:
+*		ingred_high
+*		health_high
+*		magn_know_high
+*
+* Full H1 model controls:
+*		product-specific preferred flavor
+*		flavor_low
+*		sweet_high
+*		sugar_high
+*		ingred_high
+*		health_high
+*		magn_know_high
+
+
+********************************************************************************
+**## Build graphing dataset
+********************************************************************************
+
+preserve
+
+	tempfile			h1_day2_fhm_coef
+	tempname			memhold
+
+	postfile			`memhold' ///
+							str30 model ///
+							str40 model_label ///
+							str30 coef_name ///
+							str80 coef_label ///
+							int coef_id ///
+							int plot_order ///
+							double y_plot b se p ci_lo ci_hi ///
+							using `h1_day2_fhm_coef', replace
+
+
+********************************************************************************
+**## Run Day 2 full H1 models and store functional / health / magnesium coefficients
+********************************************************************************
+
+	foreach spec in ///
+		`"d2_dwtp_3b_356 d2_pref_blueberry 4 "D2 356 3b""' ///
+		`"d2_dwtp_3b_831 d2_pref_pineapple 3 "D2 831 3b""' ///
+		`"d2_dwtp_3a_356 d2_pref_blueberry 2 "D2 356 3a""' ///
+		`"d2_dwtp_3a_831 d2_pref_pineapple 1 "D2 831 3a""' {
+
+		tokenize		`"`spec'"'
+
+		local y			"`1'"
+		local pref		"`2'"
+		local order		"`3'"
+		local label		`"`4'"'
+
+
+********************************************************************************
+**### Run full H1 model
+********************************************************************************
+
+		reg				`y' ///
+							`pref' ///
+							flavor_low ///
+							sweet_high ///
+							sugar_high ///
+							ingred_high ///
+							health_high ///
+							magn_know_high, robust
+
+
+********************************************************************************
+**### Store functional ingredient importance coefficient
+********************************************************************************
+
+		post			`memhold' ///
+							("`y'") ///
+							(`"`label'"') ///
+							("ingred_high") ///
+							("Functional ingredients high") ///
+							(1) ///
+							(`order') ///
+							(`order' + .18) ///
+							(_b[ingred_high]) ///
+							(_se[ingred_high]) ///
+							(2 * ttail(e(df_r), abs(_b[ingred_high] / _se[ingred_high]))) ///
+							(_b[ingred_high] - invttail(e(df_r), .025) * _se[ingred_high]) ///
+							(_b[ingred_high] + invttail(e(df_r), .025) * _se[ingred_high])
+
+
+********************************************************************************
+**### Store health claim importance coefficient
+********************************************************************************
+
+		post			`memhold' ///
+							("`y'") ///
+							(`"`label'"') ///
+							("health_high") ///
+							("Health claims high") ///
+							(2) ///
+							(`order') ///
+							(`order') ///
+							(_b[health_high]) ///
+							(_se[health_high]) ///
+							(2 * ttail(e(df_r), abs(_b[health_high] / _se[health_high]))) ///
+							(_b[health_high] - invttail(e(df_r), .025) * _se[health_high]) ///
+							(_b[health_high] + invttail(e(df_r), .025) * _se[health_high])
+
+
+********************************************************************************
+**### Store prior magnesium knowledge coefficient
+********************************************************************************
+
+		post			`memhold' ///
+							("`y'") ///
+							(`"`label'"') ///
+							("magn_know_high") ///
+							("Prior magnesium knowledge high") ///
+							(3) ///
+							(`order') ///
+							(`order' - .18) ///
+							(_b[magn_know_high]) ///
+							(_se[magn_know_high]) ///
+							(2 * ttail(e(df_r), abs(_b[magn_know_high] / _se[magn_know_high]))) ///
+							(_b[magn_know_high] - invttail(e(df_r), .025) * _se[magn_know_high]) ///
+							(_b[magn_know_high] + invttail(e(df_r), .025) * _se[magn_know_high])
+	}
+
+
+********************************************************************************
+**## Save graphing dataset
+********************************************************************************
+
+	postclose			`memhold'
+
+	use					`h1_day2_fhm_coef', clear
+
+	sort				plot_order coef_id
+
+	list				model_label coef_label b se p ci_lo ci_hi, clean noobs
+
+	export delimited	using ///
+							"$reg_tables/h1_graph_3b_day2_functional_health_magnesium_data.csv", ///
+							replace
+
+
+********************************************************************************
+**## Create coefficient plot
+********************************************************************************
+
+* Each model has three nearby points:
+*		ingred_high			= slightly above model line
+*		health_high			= centered on model line
+*		magn_know_high		= slightly below model line
+*
+* Use short y-axis labels so text does not get cut off.
+* Use span so titles and notes are centered across the full graph region.
+
+	graph twoway ///
+		(rcap ci_hi ci_lo y_plot if coef_id == 1, horizontal) ///
+		(scatter y_plot b if coef_id == 1, msymbol(circle) mcolor(navy)) ///
+		(rcap ci_hi ci_lo y_plot if coef_id == 2, horizontal) ///
+		(scatter y_plot b if coef_id == 2, msymbol(triangle) mcolor(orange)) ///
+		(rcap ci_hi ci_lo y_plot if coef_id == 3, horizontal) ///
+		(scatter y_plot b if coef_id == 3, msymbol(square) mcolor(forest green)) ///
+		, ///
+		xline(0, lpattern(dash)) ///
+		ylabel(1 "D2 831 3a" ///
+			   2 "D2 356 3a" ///
+			   3 "D2 831 3b" ///
+			   4 "D2 356 3b", ///
+			   angle(0) labsize(small) noticks) ///
+		xlabel(, labsize(small)) ///
+		xtitle("Coefficient on functional, health, and magnesium controls", ///
+			   size(small) margin(medsmall)) ///
+		ytitle("") ///
+		title("H1 Day 2: Functional, health, and magnesium controls", ///
+			  size(medsmall) span justification(center)) ///
+		subtitle("Full Day 2 H1 models with 95% confidence intervals", ///
+				 size(small) span justification(center)) ///
+		note("3a = info-first; 3b = taste-first.", ///
+			 size(vsmall) span justification(center)) ///
+		legend(order(2 "Functional ingredients high" ///
+					 4 "Health claims high" ///
+					 6 "Prior magnesium knowledge high") ///
+			   rows(2) size(small) position(6)) ///
+		graphregion(margin(l+30 r+20 t+10 b+10)) ///
+		plotregion(margin(l+2 r+4 t+2 b+2)) ///
+		xsize(14) ///
+		ysize(6)
+
+
+********************************************************************************
+**## Export coefficient plot
+********************************************************************************
+
+	graph export		"$reg_tables/h1_graph_3b_day2_functional_health_magnesium.png", ///
+							replace width(4000)
+
+restore
+
+
+********************************************************************************
+**# H1 graph 5 - exact versus family flavor preference coefficients
+********************************************************************************
+
+********************************************************************************
+**## Purpose
+********************************************************************************
+
+* This graph compares exact product-specific flavor preference coefficients
+* against broader flavor-family preference coefficients.
+*
+* The graph answers:
+* Did broader flavor families explain WTP change better than exact flavor preference?
+*
+* Exact flavor variables:
+*		Day 1: d1_pref_lemon
+*		Day 2 356: d2_pref_blueberry
+*		Day 2 831: d2_pref_pineapple
+*
+* Family flavor variables:
+*		Day 1 Lemon-Lime family
+*		Day 2 Blueberry family
+*		Day 2 Pineapple family
+
+
+********************************************************************************
+**## Set family flavor variable names
+********************************************************************************
+
+* Family flavor variables already created in the H1 family block.
+	local d1_family_var			d1_pref_lemon_family
+	local d2_blue_family_var		d2_pref_blueberry_family
+	local d2_pine_family_var		d2_pref_pineapple_family
+
+
+********************************************************************************
+**## Confirm family flavor variables exist
+********************************************************************************
+
+	confirm variable			`d1_family_var'
+	confirm variable			`d2_blue_family_var'
+	confirm variable			`d2_pine_family_var'
+
+********************************************************************************
+**## Build graphing dataset
+********************************************************************************
+
+preserve
+
+	tempfile			h1_exact_family_coef
+	tempname			memhold
+
+	postfile			`memhold' ///
+							str30 model ///
+							str40 model_label ///
+							str20 flavor_type ///
+							int flavor_id ///
+							int plot_order ///
+							double y_plot b se p ci_lo ci_hi ///
+							using `h1_exact_family_coef', replace
+
+
+********************************************************************************
+**## Run exact and family flavor models
+********************************************************************************
+
+	foreach spec in ///
+		`"d1_dwtp_3b_584 d1_pref_lemon     `d1_family_var'       8 "D1 584 3b""' ///
+		`"d1_dwtp_3b_793 d1_pref_lemon     `d1_family_var'       7 "D1 793 3b""' ///
+		`"d1_dwtp_3a_584 d1_pref_lemon     `d1_family_var'       6 "D1 584 3a""' ///
+		`"d1_dwtp_3a_793 d1_pref_lemon     `d1_family_var'       5 "D1 793 3a""' ///
+		`"d2_dwtp_3b_356 d2_pref_blueberry `d2_blue_family_var'  4 "D2 356 3b""' ///
+		`"d2_dwtp_3b_831 d2_pref_pineapple `d2_pine_family_var'  3 "D2 831 3b""' ///
+		`"d2_dwtp_3a_356 d2_pref_blueberry `d2_blue_family_var'  2 "D2 356 3a""' ///
+		`"d2_dwtp_3a_831 d2_pref_pineapple `d2_pine_family_var'  1 "D2 831 3a""' {
+
+		tokenize		`"`spec'"'
+
+		local y			"`1'"
+		local exact		"`2'"
+		local family	"`3'"
+		local order		"`4'"
+		local label		`"`5'"'
+
+
+********************************************************************************
+**### Exact flavor model
+********************************************************************************
+
+		reg				`y' ///
+							`exact' ///
+							flavor_low ///
+							sweet_high ///
+							sugar_high ///
+							ingred_high ///
+							health_high ///
+							magn_know_high, robust
+
+		post			`memhold' ///
+							("`y'") ///
+							(`"`label'"') ///
+							("Exact flavor") ///
+							(1) ///
+							(`order') ///
+							(`order' + .12) ///
+							(_b[`exact']) ///
+							(_se[`exact']) ///
+							(2 * ttail(e(df_r), abs(_b[`exact'] / _se[`exact']))) ///
+							(_b[`exact'] - invttail(e(df_r), .025) * _se[`exact']) ///
+							(_b[`exact'] + invttail(e(df_r), .025) * _se[`exact'])
+
+
+********************************************************************************
+**### Flavor-family model
+********************************************************************************
+
+		reg				`y' ///
+							`family' ///
+							flavor_low ///
+							sweet_high ///
+							sugar_high ///
+							ingred_high ///
+							health_high ///
+							magn_know_high, robust
+
+		post			`memhold' ///
+							("`y'") ///
+							(`"`label'"') ///
+							("Flavor family") ///
+							(2) ///
+							(`order') ///
+							(`order' - .12) ///
+							(_b[`family']) ///
+							(_se[`family']) ///
+							(2 * ttail(e(df_r), abs(_b[`family'] / _se[`family']))) ///
+							(_b[`family'] - invttail(e(df_r), .025) * _se[`family']) ///
+							(_b[`family'] + invttail(e(df_r), .025) * _se[`family'])
+	}
+
+
+********************************************************************************
+**## Save graphing dataset
+********************************************************************************
+
+	postclose			`memhold'
+
+	use					`h1_exact_family_coef', clear
+
+	sort				plot_order flavor_id
+
+	list				model_label flavor_type b se p ci_lo ci_hi, clean noobs
+
+	export delimited	using "$reg_tables/h1_graph_5_exact_vs_family_flavor_data.csv", ///
+							replace
+
+
+********************************************************************************
+**## Create coefficient plot
+********************************************************************************
+
+	graph twoway ///
+		(rcap ci_hi ci_lo y_plot if flavor_id == 1, horizontal) ///
+		(scatter y_plot b if flavor_id == 1, msymbol(circle) mcolor(navy) msize(small)) ///
+		(rcap ci_hi ci_lo y_plot if flavor_id == 2, horizontal) ///
+		(scatter y_plot b if flavor_id == 2, msymbol(triangle) mcolor(maroon) msize(small)) ///
+		, ///
+		xline(0, lpattern(dash)) ///
+		ylabel(1 "D2 831 3a" ///
+			   2 "D2 356 3a" ///
+			   3 "D2 831 3b" ///
+			   4 "D2 356 3b" ///
+			   5 "D1 793 3a" ///
+			   6 "D1 584 3a" ///
+			   7 "D1 793 3b" ///
+			   8 "D1 584 3b", ///
+			   angle(0) labsize(small) noticks) ///
+		xlabel(, labsize(small)) ///
+		xtitle("Flavor coefficient estimate", ///
+			   size(small) margin(small)) ///
+		ytitle("") ///
+		title("H1: Exact flavor vs. flavor-family preference", ///
+			  size(small) span justification(center)) ///
+		subtitle("Full H1 models with 95% confidence intervals", ///
+				 size(vsmall) span justification(center)) ///
+		note("Exact = product-specific flavor. Family = broader flavor-family grouping.", ///
+			 size(vsmall) span justification(center)) ///
+		legend(order(2 "Exact flavor" ///
+					 4 "Flavor family") ///
+			   rows(1) size(small) position(6) ///
+			   region(lstyle(none))) ///
+		graphregion(margin(l+30 r+20 t+10 b+10)) ///
+		plotregion(margin(l+2 r+4 t+2 b+2)) ///
+		xsize(14) ///
+		ysize(6)
+
+
+********************************************************************************
+**## Export coefficient plot
+********************************************************************************
+
+	graph export		"$reg_tables/h1_graph_5_exact_vs_family_flavor.png", ///
+							replace width(4800)
+							
+	restore
+	
+********************************************************************************
+**# H2 graph 1 - gender and exercise across products
+********************************************************************************
+
+********************************************************************************
+**## Purpose
+********************************************************************************
+
+* This graph shows the main H2 pooled interaction model.
+*
+* The graph answers:
+* Across the main H2 product/path observations, do female respondents,
+* high-exercise respondents, or high-exercise females show different WTP changes?
+*
+* The graph also includes the info-first path coefficient because it is the
+* strongest and most stable result in the H2 pooled models.
+*
+* Dependent variable:
+*		h2_dwtp
+*
+* Main H2 variables:
+*		female
+*		exercise_hi
+*		female x exercise_hi
+*
+* Product and path controls:
+*		i.h2_product
+*		i.h2_path
+*
+* Full H2 controls:
+*		h2_product_pref
+*		flavor_low
+*		sweet_high
+*		sugar_high
+*		ingred_high
+*		health_high
+*		magn_know_high
+
+
+********************************************************************************
+**## Build graphing dataset
+********************************************************************************
+
+preserve
+
+	use					"$data/h2_long.dta", clear
+
+	tempfile			h2_pool_coef
+	tempname			memhold
+
+	postfile			`memhold' ///
+							str40 coef_name ///
+							str60 coef_label ///
+							int plot_order ///
+							double b se p ci_lo ci_hi ///
+							using `h2_pool_coef', replace
+
+
+********************************************************************************
+**## Run main pooled H2 interaction model
+********************************************************************************
+
+* This is the main H2 pooled interaction model.
+* Standard errors are clustered by respondent because respondents can appear
+* more than once in the long H2 dataset.
+
+	reg					h2_dwtp ///
+							i.female##i.exercise_hi ///
+							h2_product_pref ///
+							flavor_low ///
+							sweet_high ///
+							sugar_high ///
+							ingred_high ///
+							health_high ///
+							magn_know_high ///
+							i.h2_product ///
+							i.h2_path, ///
+							vce(cluster resp_id)
+
+
+********************************************************************************
+**## Store female respondent coefficient
+********************************************************************************
+
+* Female respondent:
+* Difference between low-exercise females and low-exercise males.
+
+	post				`memhold' ///
+							("1.female") ///
+							("Female respondent") ///
+							(4) ///
+							(_b[1.female]) ///
+							(_se[1.female]) ///
+							(2 * ttail(e(df_r), abs(_b[1.female] / _se[1.female]))) ///
+							(_b[1.female] - invttail(e(df_r), .025) * _se[1.female]) ///
+							(_b[1.female] + invttail(e(df_r), .025) * _se[1.female])
+
+
+********************************************************************************
+**## Store high exercise coefficient
+********************************************************************************
+
+* High exercise:
+* Difference between high-exercise males and low-exercise males.
+
+	post				`memhold' ///
+							("1.exercise_hi") ///
+							("High exercise") ///
+							(3) ///
+							(_b[1.exercise_hi]) ///
+							(_se[1.exercise_hi]) ///
+							(2 * ttail(e(df_r), abs(_b[1.exercise_hi] / _se[1.exercise_hi]))) ///
+							(_b[1.exercise_hi] - invttail(e(df_r), .025) * _se[1.exercise_hi]) ///
+							(_b[1.exercise_hi] + invttail(e(df_r), .025) * _se[1.exercise_hi])
+
+
+********************************************************************************
+**## Store female by high exercise interaction coefficient
+********************************************************************************
+
+* Female x High exercise:
+* Extra difference for high-exercise females, beyond the separate female
+* and high-exercise effects.
+
+	post				`memhold' ///
+							("1.female#1.exercise_hi") ///
+							("Female x High exercise") ///
+							(2) ///
+							(_b[1.female#1.exercise_hi]) ///
+							(_se[1.female#1.exercise_hi]) ///
+							(2 * ttail(e(df_r), abs(_b[1.female#1.exercise_hi] / _se[1.female#1.exercise_hi]))) ///
+							(_b[1.female#1.exercise_hi] - invttail(e(df_r), .025) * _se[1.female#1.exercise_hi]) ///
+							(_b[1.female#1.exercise_hi] + invttail(e(df_r), .025) * _se[1.female#1.exercise_hi])
+
+
+********************************************************************************
+**## Store info-first path coefficient
+********************************************************************************
+
+* Info-first path:
+* Difference between info-first and taste-first respondents.
+* Taste-first is the reference path.
+
+	post				`memhold' ///
+							("2.h2_path") ///
+							("Info-first path") ///
+							(1) ///
+							(_b[2.h2_path]) ///
+							(_se[2.h2_path]) ///
+							(2 * ttail(e(df_r), abs(_b[2.h2_path] / _se[2.h2_path]))) ///
+							(_b[2.h2_path] - invttail(e(df_r), .025) * _se[2.h2_path]) ///
+							(_b[2.h2_path] + invttail(e(df_r), .025) * _se[2.h2_path])
+
+
+********************************************************************************
+**## Save graphing dataset
+********************************************************************************
+
+	postclose			`memhold'
+
+	use					`h2_pool_coef', clear
+
+	sort				plot_order
+
+	list				coef_label b se p ci_lo ci_hi, clean noobs
+
+	export delimited	using "$reg_tables/h2_graph_1_gender_exercise_across_products_data.csv", ///
+							replace
+
+
+********************************************************************************
+**## Create coefficient plot
+********************************************************************************
+
+* Dots show coefficient estimates.
+* Horizontal lines show 95 percent confidence intervals.
+* The vertical zero line represents no estimated effect.
+* A confidence interval crossing zero is not statistically clear at the 95 percent level.
+
+	graph twoway ///
+		(rcap ci_hi ci_lo plot_order, horizontal) ///
+		(scatter plot_order b, msymbol(circle) mcolor(navy) msize(medsmall)) ///
+		, ///
+		xline(0, lpattern(dash)) ///
+		ylabel(1 "Info-first path" ///
+			   2 "Female x High exercise" ///
+			   3 "High exercise" ///
+			   4 "Female respondent", ///
+			   angle(0) labsize(small) noticks) ///
+		xlabel(, labsize(small)) ///
+		xtitle("Coefficient estimate", ///
+			   size(small) margin(small)) ///
+		ytitle("") ///
+		title("H2: Gender and exercise across products", ///
+			  size(medsmall) span justification(center)) ///
+		subtitle("Main pooled interaction model with 95% confidence intervals", ///
+				 size(small) span justification(center)) ///
+		note("Dependent variable is final WTP change from baseline. Product and path controls included.", ///
+			 size(vsmall) span justification(center)) ///
+		legend(off) ///
+		graphregion(margin(l+30 r+20 t+10 b+10)) ///
+		plotregion(margin(l+2 r+4 t+2 b+2)) ///
+		xsize(14) ///
+		ysize(6)
+
+
+********************************************************************************
+**## Export coefficient plot
+********************************************************************************
+
+	graph export		"$reg_tables/h2_graph_1_gender_exercise_across_products.png", ///
+							replace width(4000)
+
+restore
+
+
+********************************************************************************
+**# H2 graph 2 - Day 1 magnesium premium interaction models
+********************************************************************************
+
+********************************************************************************
+**## Purpose
+********************************************************************************
+
+* This graph shows the H2 Day 1 magnesium premium interaction models.
+*
+* The graph answers:
+* On Day 1, do female respondents, high-exercise respondents,
+* or high-exercise females show a different WTP premium for 584 over 793?
+*
+* Day 1 premium outcomes:
+*		d1_mag_premium_3b = final WTP for 584 - final WTP for 793, taste-first
+*		d1_mag_premium_3a = final WTP for 584 - final WTP for 793, info-first
+*
+* Main H2 variables:
+*		female
+*		exercise_hi
+*		female x exercise_hi
+*
+* Additional coefficient shown:
+*		health_high
+*
+* Full premium model controls:
+*		d1_pref_lemon
+*		flavor_low
+*		sweet_high
+*		sugar_high
+*		ingred_high
+*		health_high
+*		magn_know_high
+
+
+********************************************************************************
+**## Build graphing dataset
+********************************************************************************
+
+preserve
+
+	tempfile			h2_d1_premium_coef
+	tempname			memhold
+
+	postfile			`memhold' ///
+							str30 model ///
+							str40 model_label ///
+							str40 coef_name ///
+							str60 coef_label ///
+							int coef_id ///
+							int plot_order ///
+							double y_plot b se p ci_lo ci_hi ///
+							using `h2_d1_premium_coef', replace
+
+
+********************************************************************************
+**## Run Day 1 premium interaction models and store selected coefficients
+********************************************************************************
+
+* Each line below identifies:
+*		1. dependent variable
+*		2. graph order
+*		3. graph label
+*
+* 3b = taste-first
+* 3a = info-first
+
+	foreach spec in ///
+		`"d1_mag_premium_3b 2 "D1 584-793 3b""' ///
+		`"d1_mag_premium_3a 1 "D1 584-793 3a""' {
+
+		tokenize		`"`spec'"'
+
+		local y			"`1'"
+		local order		"`2'"
+		local label		`"`3'"'
+
+
+********************************************************************************
+**### Run Day 1 premium interaction model
+********************************************************************************
+
+		reg				`y' ///
+							i.female##i.exercise_hi ///
+							d1_pref_lemon ///
+							flavor_low ///
+							sweet_high ///
+							sugar_high ///
+							ingred_high ///
+							health_high ///
+							magn_know_high, robust
+
+
+********************************************************************************
+**### Store female respondent coefficient
+********************************************************************************
+
+* Female respondent:
+* Difference between low-exercise females and low-exercise males.
+
+		post			`memhold' ///
+							("`y'") ///
+							(`"`label'"') ///
+							("1.female") ///
+							("Female respondent") ///
+							(1) ///
+							(`order') ///
+							(`order' + .24) ///
+							(_b[1.female]) ///
+							(_se[1.female]) ///
+							(2 * ttail(e(df_r), abs(_b[1.female] / _se[1.female]))) ///
+							(_b[1.female] - invttail(e(df_r), .025) * _se[1.female]) ///
+							(_b[1.female] + invttail(e(df_r), .025) * _se[1.female])
+
+
+********************************************************************************
+**### Store high exercise coefficient
+********************************************************************************
+
+* High exercise:
+* Difference between high-exercise males and low-exercise males.
+
+		post			`memhold' ///
+							("`y'") ///
+							(`"`label'"') ///
+							("1.exercise_hi") ///
+							("High exercise") ///
+							(2) ///
+							(`order') ///
+							(`order' + .08) ///
+							(_b[1.exercise_hi]) ///
+							(_se[1.exercise_hi]) ///
+							(2 * ttail(e(df_r), abs(_b[1.exercise_hi] / _se[1.exercise_hi]))) ///
+							(_b[1.exercise_hi] - invttail(e(df_r), .025) * _se[1.exercise_hi]) ///
+							(_b[1.exercise_hi] + invttail(e(df_r), .025) * _se[1.exercise_hi])
+
+
+********************************************************************************
+**### Store female by high exercise interaction coefficient
+********************************************************************************
+
+* Female x High exercise:
+* Extra difference for high-exercise females, beyond the separate female
+* and high-exercise effects.
+
+		post			`memhold' ///
+							("`y'") ///
+							(`"`label'"') ///
+							("1.female#1.exercise_hi") ///
+							("Female x High exercise") ///
+							(3) ///
+							(`order') ///
+							(`order' - .08) ///
+							(_b[1.female#1.exercise_hi]) ///
+							(_se[1.female#1.exercise_hi]) ///
+							(2 * ttail(e(df_r), abs(_b[1.female#1.exercise_hi] / _se[1.female#1.exercise_hi]))) ///
+							(_b[1.female#1.exercise_hi] - invttail(e(df_r), .025) * _se[1.female#1.exercise_hi]) ///
+							(_b[1.female#1.exercise_hi] + invttail(e(df_r), .025) * _se[1.female#1.exercise_hi])
+
+
+********************************************************************************
+**### Store health-claim importance coefficient
+********************************************************************************
+
+* Health claims high:
+* Difference for respondents who rated health claims as very or extremely important.
+
+		post			`memhold' ///
+							("`y'") ///
+							(`"`label'"') ///
+							("health_high") ///
+							("Health claims high") ///
+							(4) ///
+							(`order') ///
+							(`order' - .24) ///
+							(_b[health_high]) ///
+							(_se[health_high]) ///
+							(2 * ttail(e(df_r), abs(_b[health_high] / _se[health_high]))) ///
+							(_b[health_high] - invttail(e(df_r), .025) * _se[health_high]) ///
+							(_b[health_high] + invttail(e(df_r), .025) * _se[health_high])
+	}
+
+
+********************************************************************************
+**## Save graphing dataset
+********************************************************************************
+
+	postclose			`memhold'
+
+	use					`h2_d1_premium_coef', clear
+
+	sort				plot_order coef_id
+
+	list				model_label coef_label b se p ci_lo ci_hi, clean noobs
+
+	export delimited	using "$reg_tables/h2_graph_2_day1_magnesium_premium_data.csv", ///
+							replace
+
+
+********************************************************************************
+**## Create coefficient plot
+********************************************************************************
+
+* Dots show coefficient estimates.
+* Horizontal lines show 95 percent confidence intervals.
+* The vertical zero line represents no estimated effect.
+* A confidence interval crossing zero is not statistically clear at the 95 percent level.
+*
+* Positive coefficients mean higher WTP premium for 584 over 793.
+* Negative coefficients mean lower WTP premium for 584 over 793.
+
+	graph twoway ///
+		(rcap ci_hi ci_lo y_plot if coef_id == 1, horizontal lcolor(gs8)) ///
+		(scatter y_plot b if coef_id == 1, msymbol(circle) msize(medsmall) mcolor(navy)) ///
+		(rcap ci_hi ci_lo y_plot if coef_id == 2, horizontal lcolor(gs8)) ///
+		(scatter y_plot b if coef_id == 2, msymbol(triangle) msize(medsmall) mcolor(maroon)) ///
+		(rcap ci_hi ci_lo y_plot if coef_id == 3, horizontal lcolor(gs8)) ///
+		(scatter y_plot b if coef_id == 3, msymbol(square) msize(medsmall) mcolor(forest_green)) ///
+		(rcap ci_hi ci_lo y_plot if coef_id == 4, horizontal lcolor(gs8)) ///
+		(scatter y_plot b if coef_id == 4, msymbol(diamond) msize(medsmall) mcolor(orange)) ///
+		, ///
+		xline(0, lpattern(dash)) ///
+		ylabel(1 "Info-first: 3a" ///
+			   2 "Taste-first: 3b", ///
+			   angle(0) labsize(small) noticks) ///
+		xlabel(, labsize(small)) ///
+		xtitle("Coefficient estimate for 584-over-793 premium", ///
+			   size(small) margin(small)) ///
+		ytitle("") ///
+		title("H2 Day 1: 584 vs. 793 magnesium premium", ///
+			  size(medsmall) span justification(center)) ///
+		subtitle("Interaction models with 95% confidence intervals", ///
+				 size(small) span justification(center)) ///
+		note("Positive values indicate a higher WTP premium for 584 over 793.", ///
+			 size(vsmall) span justification(center)) ///
+		legend(order(2 "Female" ///
+					 4 "High exercise" ///
+					 6 "Female x High exercise" ///
+					 8 "Health claims high") ///
+			   rows(2) size(small) position(6) ///
+			   region(lstyle(none))) ///
+		graphregion(margin(l+30 r+20 t+10 b+10)) ///
+		plotregion(margin(l+2 r+4 t+2 b+2)) ///
+		xsize(14) ///
+		ysize(6)
+
+
+********************************************************************************
+**## Export coefficient plot
+********************************************************************************
+
+	graph export		"$reg_tables/h2_graph_2_day1_magnesium_premium.png", ///
+							replace width(4000)
+
+restore
+
+
+********************************************************************************
+**# H2 graph 3 - Day 2 product premium interaction models
+********************************************************************************
+
+********************************************************************************
+**## Purpose
+********************************************************************************
+
+* This graph shows the H2 Day 2 product premium interaction models.
+*
+* The graph answers:
+* On Day 2, do female respondents, high-exercise respondents,
+* or high-exercise females show a different WTP premium for 356 over 831?
+*
+* Day 2 product premium outcomes:
+*		d2_product_premium_3b = final WTP for 356 - final WTP for 831, taste-first
+*		d2_product_premium_3a = final WTP for 356 - final WTP for 831, info-first
+*
+* Main H2 variables:
+*		female
+*		exercise_hi
+*		female x exercise_hi
+*
+* Product preference controls:
+*		d2_pref_blueberry
+*		d2_pref_pineapple
+*
+* Full premium model controls:
+*		flavor_low
+*		sweet_high
+*		sugar_high
+*		ingred_high
+*		health_high
+*		magn_know_high
+*
+* Note:
+* This is a Day 2 product comparison, not a clean magnesium-versus-competitor
+* comparison. Positive coefficients indicate a higher WTP premium for 356 over 831.
+
+
+********************************************************************************
+**## Build graphing dataset
+********************************************************************************
+
+preserve
+
+	tempfile			h2_d2_product_premium_coef
+	tempname			memhold
+
+	postfile			`memhold' ///
+							str30 model ///
+							str40 model_label ///
+							str40 coef_name ///
+							str60 coef_label ///
+							int coef_id ///
+							int plot_order ///
+							double y_plot b se p ci_lo ci_hi ///
+							using `h2_d2_product_premium_coef', replace
+
+
+********************************************************************************
+**## Run Day 2 product premium interaction models and store selected coefficients
+********************************************************************************
+
+* Each line below identifies:
+*		1. dependent variable
+*		2. graph order
+*		3. graph label
+*
+* 3b = taste-first
+* 3a = info-first
+
+	foreach spec in ///
+		`"d2_product_premium_3b 2 "Taste-first: 3b""' ///
+		`"d2_product_premium_3a 1 "Info-first: 3a""' {
+
+		tokenize		`"`spec'"'
+
+		local y			"`1'"
+		local order		"`2'"
+		local label		`"`3'"'
+
+
+********************************************************************************
+**### Run Day 2 product premium interaction model
+********************************************************************************
+
+		reg				`y' ///
+							i.female##i.exercise_hi ///
+							d2_pref_blueberry ///
+							d2_pref_pineapple ///
+							flavor_low ///
+							sweet_high ///
+							sugar_high ///
+							ingred_high ///
+							health_high ///
+							magn_know_high, robust
+
+
+********************************************************************************
+**### Store female respondent coefficient
+********************************************************************************
+
+* Female respondent:
+* Difference between low-exercise females and low-exercise males.
+
+		post			`memhold' ///
+							("`y'") ///
+							(`"`label'"') ///
+							("1.female") ///
+							("Female respondent") ///
+							(1) ///
+							(`order') ///
+							(`order' + .16) ///
+							(_b[1.female]) ///
+							(_se[1.female]) ///
+							(2 * ttail(e(df_r), abs(_b[1.female] / _se[1.female]))) ///
+							(_b[1.female] - invttail(e(df_r), .025) * _se[1.female]) ///
+							(_b[1.female] + invttail(e(df_r), .025) * _se[1.female])
+
+
+********************************************************************************
+**### Store high exercise coefficient
+********************************************************************************
+
+* High exercise:
+* Difference between high-exercise males and low-exercise males.
+
+		post			`memhold' ///
+							("`y'") ///
+							(`"`label'"') ///
+							("1.exercise_hi") ///
+							("High exercise") ///
+							(2) ///
+							(`order') ///
+							(`order') ///
+							(_b[1.exercise_hi]) ///
+							(_se[1.exercise_hi]) ///
+							(2 * ttail(e(df_r), abs(_b[1.exercise_hi] / _se[1.exercise_hi]))) ///
+							(_b[1.exercise_hi] - invttail(e(df_r), .025) * _se[1.exercise_hi]) ///
+							(_b[1.exercise_hi] + invttail(e(df_r), .025) * _se[1.exercise_hi])
+
+
+********************************************************************************
+**### Store female by high exercise interaction coefficient
+********************************************************************************
+
+* Female x High exercise:
+* Extra difference for high-exercise females, beyond the separate female
+* and high-exercise effects.
+
+		post			`memhold' ///
+							("`y'") ///
+							(`"`label'"') ///
+							("1.female#1.exercise_hi") ///
+							("Female x High exercise") ///
+							(3) ///
+							(`order') ///
+							(`order' - .16) ///
+							(_b[1.female#1.exercise_hi]) ///
+							(_se[1.female#1.exercise_hi]) ///
+							(2 * ttail(e(df_r), abs(_b[1.female#1.exercise_hi] / _se[1.female#1.exercise_hi]))) ///
+							(_b[1.female#1.exercise_hi] - invttail(e(df_r), .025) * _se[1.female#1.exercise_hi]) ///
+							(_b[1.female#1.exercise_hi] + invttail(e(df_r), .025) * _se[1.female#1.exercise_hi])
+	}
+
+
+********************************************************************************
+**## Save graphing dataset
+********************************************************************************
+
+	postclose			`memhold'
+
+	use					`h2_d2_product_premium_coef', clear
+
+	sort				plot_order coef_id
+
+	list				model_label coef_label b se p ci_lo ci_hi, clean noobs
+
+	export delimited	using "$reg_tables/h2_graph_3_day2_product_premium_data.csv", ///
+							replace
+
+
+********************************************************************************
+**## Create coefficient plot
+********************************************************************************
+
+* Dots show coefficient estimates.
+* Horizontal lines show 95 percent confidence intervals.
+* The vertical zero line represents no estimated effect.
+* A confidence interval crossing zero is not statistically clear at the 95 percent level.
+*
+* Positive coefficients mean higher WTP premium for 356 over 831.
+* Negative coefficients mean lower WTP premium for 356 over 831.
+
+	graph twoway ///
+		(rcap ci_hi ci_lo y_plot if coef_id == 1, horizontal lcolor(gs8)) ///
+		(scatter y_plot b if coef_id == 1, msymbol(circle) msize(medsmall) mcolor(navy)) ///
+		(rcap ci_hi ci_lo y_plot if coef_id == 2, horizontal lcolor(gs8)) ///
+		(scatter y_plot b if coef_id == 2, msymbol(triangle) msize(medsmall) mcolor(maroon)) ///
+		(rcap ci_hi ci_lo y_plot if coef_id == 3, horizontal lcolor(gs8)) ///
+		(scatter y_plot b if coef_id == 3, msymbol(square) msize(medsmall) mcolor(forest_green)) ///
+		, ///
+		xline(0, lpattern(dash)) ///
+		ylabel(1 "Info-first: 3a" ///
+			   2 "Taste-first: 3b", ///
+			   angle(0) labsize(small) noticks) ///
+		xlabel(, labsize(small)) ///
+		xtitle("Coefficient estimate for 356-over-831 premium", ///
+			   size(small) margin(small)) ///
+		ytitle("") ///
+		title("H2 Day 2: 356 vs. 831 product premium", ///
+			  size(medsmall) span justification(center)) ///
+		subtitle("Interaction models with 95% confidence intervals", ///
+				 size(small) span justification(center)) ///
+		note("Positive values indicate a higher WTP premium for 356 over 831. This is a product comparison, not a magnesium premium.", ///
+			 size(vsmall) span justification(center)) ///
+		legend(order(2 "Female" ///
+					 4 "High exercise" ///
+					 6 "Female x High exercise") ///
+			   rows(1) size(small) position(6) ///
+			   region(lstyle(none))) ///
+		graphregion(margin(l+30 r+20 t+10 b+10)) ///
+		plotregion(margin(l+2 r+4 t+2 b+2)) ///
+		xsize(14) ///
+		ysize(6)
+
+
+********************************************************************************
+**## Export coefficient plot
+********************************************************************************
+
+	graph export		"$reg_tables/h2_graph_3_day2_product_premium.png", ///
+							replace width(4000)
+
+restore
+
+********************************************************************************
+**# H2 graph 4 - consumption-context robustness
+********************************************************************************
+
+********************************************************************************
+**## Purpose
+********************************************************************************
+
+* This graph shows the H2 pooled interaction model with consumption-context
+* controls added.
+*
+* The graph answers:
+* Do the H2 gender and exercise results change after controlling for whether
+* respondents consume sports beverages before, during, or after exercise?
+*
+* Dependent variable:
+*		h2_dwtp
+*
+* Main H2 variables:
+*		female
+*		exercise_hi
+*		female x exercise_hi
+*
+* Consumption-context controls:
+*		con_situation_1
+*		con_situation_2
+*		con_situation_3
+*
+* Product and path controls:
+*		i.h2_product
+*		i.h2_path
+*
+* Full H2 controls:
+*		h2_product_pref
+*		flavor_low
+*		sweet_high
+*		sugar_high
+*		ingred_high
+*		health_high
+*		magn_know_high
+
+
+********************************************************************************
+**## Build graphing dataset
+********************************************************************************
+
+preserve
+
+	use					"$data/h2_long_context.dta", clear
+
+	tempfile			h2_context_coef
+	tempname			memhold
+
+	postfile			`memhold' ///
+							str40 coef_name ///
+							str70 coef_label ///
+							int plot_order ///
+							double b se p ci_lo ci_hi ///
+							using `h2_context_coef', replace
+
+
+********************************************************************************
+**## Run H2 pooled interaction model with consumption-context controls
+********************************************************************************
+
+* This model adds before/during/after-exercise consumption controls.
+* Standard errors are clustered by respondent because respondents can appear
+* more than once in the long H2 dataset.
+
+	reg					h2_dwtp ///
+							i.female##i.exercise_hi ///
+							con_situation_1 ///
+							con_situation_2 ///
+							con_situation_3 ///
+							h2_product_pref ///
+							flavor_low ///
+							sweet_high ///
+							sugar_high ///
+							ingred_high ///
+							health_high ///
+							magn_know_high ///
+							i.h2_product ///
+							i.h2_path, ///
+							vce(cluster resp_id)
+
+
+********************************************************************************
+**## Store female respondent coefficient
+********************************************************************************
+
+* Female respondent:
+* Difference between low-exercise females and low-exercise males.
+
+	post				`memhold' ///
+							("1.female") ///
+							("Female respondent") ///
+							(7) ///
+							(_b[1.female]) ///
+							(_se[1.female]) ///
+							(2 * ttail(e(df_r), abs(_b[1.female] / _se[1.female]))) ///
+							(_b[1.female] - invttail(e(df_r), .025) * _se[1.female]) ///
+							(_b[1.female] + invttail(e(df_r), .025) * _se[1.female])
+
+
+********************************************************************************
+**## Store high exercise coefficient
+********************************************************************************
+
+* High exercise:
+* Difference between high-exercise males and low-exercise males.
+
+	post				`memhold' ///
+							("1.exercise_hi") ///
+							("High exercise") ///
+							(6) ///
+							(_b[1.exercise_hi]) ///
+							(_se[1.exercise_hi]) ///
+							(2 * ttail(e(df_r), abs(_b[1.exercise_hi] / _se[1.exercise_hi]))) ///
+							(_b[1.exercise_hi] - invttail(e(df_r), .025) * _se[1.exercise_hi]) ///
+							(_b[1.exercise_hi] + invttail(e(df_r), .025) * _se[1.exercise_hi])
+
+
+********************************************************************************
+**## Store female by high exercise interaction coefficient
+********************************************************************************
+
+* Female x High exercise:
+* Extra difference for high-exercise females, beyond the separate female
+* and high-exercise effects.
+
+	post				`memhold' ///
+							("1.female#1.exercise_hi") ///
+							("Female x High exercise") ///
+							(5) ///
+							(_b[1.female#1.exercise_hi]) ///
+							(_se[1.female#1.exercise_hi]) ///
+							(2 * ttail(e(df_r), abs(_b[1.female#1.exercise_hi] / _se[1.female#1.exercise_hi]))) ///
+							(_b[1.female#1.exercise_hi] - invttail(e(df_r), .025) * _se[1.female#1.exercise_hi]) ///
+							(_b[1.female#1.exercise_hi] + invttail(e(df_r), .025) * _se[1.female#1.exercise_hi])
+
+
+********************************************************************************
+**## Store before-exercise consumption coefficient
+********************************************************************************
+
+* Consumes before exercise:
+* Difference for respondents who report consuming sports beverages before exercise.
+
+	post				`memhold' ///
+							("con_situation_1") ///
+							("Consumes before exercise") ///
+							(4) ///
+							(_b[con_situation_1]) ///
+							(_se[con_situation_1]) ///
+							(2 * ttail(e(df_r), abs(_b[con_situation_1] / _se[con_situation_1]))) ///
+							(_b[con_situation_1] - invttail(e(df_r), .025) * _se[con_situation_1]) ///
+							(_b[con_situation_1] + invttail(e(df_r), .025) * _se[con_situation_1])
+
+
+********************************************************************************
+**## Store during-exercise consumption coefficient
+********************************************************************************
+
+* Consumes during exercise:
+* Difference for respondents who report consuming sports beverages during exercise.
+
+	post				`memhold' ///
+							("con_situation_2") ///
+							("Consumes during exercise") ///
+							(3) ///
+							(_b[con_situation_2]) ///
+							(_se[con_situation_2]) ///
+							(2 * ttail(e(df_r), abs(_b[con_situation_2] / _se[con_situation_2]))) ///
+							(_b[con_situation_2] - invttail(e(df_r), .025) * _se[con_situation_2]) ///
+							(_b[con_situation_2] + invttail(e(df_r), .025) * _se[con_situation_2])
+
+
+********************************************************************************
+**## Store after-exercise consumption coefficient
+********************************************************************************
+
+* Consumes after exercise:
+* Difference for respondents who report consuming sports beverages after exercise.
+
+	post				`memhold' ///
+							("con_situation_3") ///
+							("Consumes after exercise") ///
+							(2) ///
+							(_b[con_situation_3]) ///
+							(_se[con_situation_3]) ///
+							(2 * ttail(e(df_r), abs(_b[con_situation_3] / _se[con_situation_3]))) ///
+							(_b[con_situation_3] - invttail(e(df_r), .025) * _se[con_situation_3]) ///
+							(_b[con_situation_3] + invttail(e(df_r), .025) * _se[con_situation_3])
+
+
+********************************************************************************
+**## Store info-first path coefficient
+********************************************************************************
+
+* Info-first path:
+* Difference between info-first and taste-first respondents.
+* Taste-first is the reference path.
+
+	post				`memhold' ///
+							("2.h2_path") ///
+							("Info-first path") ///
+							(1) ///
+							(_b[2.h2_path]) ///
+							(_se[2.h2_path]) ///
+							(2 * ttail(e(df_r), abs(_b[2.h2_path] / _se[2.h2_path]))) ///
+							(_b[2.h2_path] - invttail(e(df_r), .025) * _se[2.h2_path]) ///
+							(_b[2.h2_path] + invttail(e(df_r), .025) * _se[2.h2_path])
+
+
+********************************************************************************
+**## Save graphing dataset
+********************************************************************************
+
+	postclose			`memhold'
+
+	use					`h2_context_coef', clear
+
+	sort				plot_order
+
+	list				coef_label b se p ci_lo ci_hi, clean noobs
+
+	export delimited	using "$reg_tables/h2_graph_4_consumption_context_robustness_data.csv", ///
+							replace
+
+
+********************************************************************************
+**## Create coefficient plot
+********************************************************************************
+
+* Dots show coefficient estimates.
+* Horizontal lines show 95 percent confidence intervals.
+* The vertical zero line represents no estimated effect.
+* A confidence interval crossing zero is not statistically clear at the 95 percent level.
+
+	graph twoway ///
+		(rcap ci_hi ci_lo plot_order, horizontal lcolor(gs8)) ///
+		(scatter plot_order b, msymbol(circle) msize(medsmall) mcolor(navy)) ///
+		, ///
+		xline(0, lpattern(dash)) ///
+		ylabel(1 "Info-first path" ///
+			   2 "Consumes after exercise" ///
+			   3 "Consumes during exercise" ///
+			   4 "Consumes before exercise" ///
+			   5 "Female x High exercise" ///
+			   6 "High exercise" ///
+			   7 "Female respondent", ///
+			   angle(0) labsize(small) noticks) ///
+		xlabel(, labsize(small)) ///
+		xtitle("Coefficient estimate", ///
+			   size(small) margin(small)) ///
+		ytitle("") ///
+		title("H2: Consumption-context robustness", ///
+			  size(medsmall) span justification(center)) ///
+		subtitle("Pooled interaction model with 95% confidence intervals", ///
+				 size(small) span justification(center)) ///
+		note("Consumption context controls added. Product and path controls included.", ///
+			 size(vsmall) span justification(center)) ///
+		legend(off) ///
+		graphregion(margin(l+30 r+20 t+10 b+10)) ///
+		plotregion(margin(l+2 r+4 t+2 b+2)) ///
+		xsize(14) ///
+		ysize(6)
+
+
+
+********************************************************************************
+**## Export coefficient plot
+********************************************************************************
+
+	graph export		"$reg_tables/h2_graph_4_consumption_context_robustness.png", ///
+							replace width(4000)
+
+restore
