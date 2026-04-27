@@ -1,11 +1,11 @@
-="",="b",="se",="p"
-="Day 2: Selected Pineapple as preferred flavor",="-0.049",="0.367",="0.895"
-="Flavor importance is moderate rather than very/extremely important",="0.178",="0.412",="0.668"
-="Sweetness is very or extremely important",="0.098",="0.322",="0.763"
-="Sugar level is very or extremely important",="-0.481",="0.367",="0.200"
-="Functional ingredients are very or extremely important",="0.997",="0.593",="0.104"
-="Health claims are very or extremely important",="0.198",="0.490",="0.689"
-="Prior magnesium knowledge is agree or strongly agree",="-1.116",="0.362",="0.004"
-="Constant",="0.305",="0.358",="0.401"
-="Observations",="37",="",=""
-="R-squared",="0.341",="",=""
+"Day 2, Taste first, Pineapple lab beverage",b,se,p
+Day 2: Selected Pineapple as preferred flavor,-0.049,0.367,0.895
+Flavor importance is moderate rather than very/extremely important,0.178,0.412,0.668
+Sweetness is very or extremely important,0.098,0.322,0.763
+Sugar level is very or extremely important,-0.481,0.367,0.200
+Functional ingredients are very or extremely important,0.997,0.593,0.104
+Health claims are very or extremely important,0.198,0.490,0.689
+Prior magnesium knowledge is agree or strongly agree,-1.116,0.362,0.004
+Constant,0.305,0.358,0.401
+Observations,37,,
+R-squared,0.341,,
