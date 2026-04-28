@@ -1,0 +1,18 @@
+variable,mean,sd,min,max,n,cv
+Baseline WTP before product info,3.0428572,.69804519,2,4.5,70,.22940452
+Path B: WTP 584 after tasting,2.6176472,.76186401,.75,4.5,34,.29104915
+Path B: WTP 584 after magnesium info,2.8088236,.8002339,0,4.5,34,.28490004
+Path B: WTP 793 after tasting,2.7573528,.80830276,1.25,4.5,34,.29314446
+Path B: WTP 793 after magnesium info,2.4705882,.86987615,0,4.5,34,.35209271
+Path A: WTP 584 after magnesium info,3.0416667,.60207975,2,4.75,36,.19794402
+Path A: WTP 793 after magnesium info,2.3958333,.82672977,0,4,36,.34506983
+diffB_584,.19117647,.47297746,-1,1.25,34,2.474036
+diffB_793,-.28676471,.65172368,-2.5,.75,34,-2.2726774
+diffA_584,-.097222224,.58942401,-1.5,1.75,36,-6.0626469
+diffA_793,-.74305558,.74278939,-3,.25,36,-.99964184
+Change in WTP for 584 due to magnesium info (A & B,.042857144,.55163038,-1.5,1.75,70,12.871375
+Change in WTP for 793 due to magnesium info (A & B,-.52142859,.73196042,-3,.75,70,-1.4037597
+Prior knowledge of magnesium,3.5714285,.92582011,1,5,70,.25922963
+Exercise frequency,2.8142858,.88943648,1,4,70,.31604344
+Sports drink consumption frequency,2.0714285,1.1711684,0,5,70,.56539166
+age,25.671429,10.90801,18.5,55,70,.42490858

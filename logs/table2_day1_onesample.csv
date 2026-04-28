@@ -1,0 +1,5 @@
+variable,mean,tstat,pvalue,ci_low,ci_high
+Path B: WTP 584 after magnesium info,2.8088236,2.2502608,.031219276,2.5296087,3.0880384
+Path B: WTP 793 after magnesium info,2.4705882,-.19715288,.84491718,2.1670742,2.7741024
+Path A: WTP 584 after magnesium info,3.0416667,5.3979564,4.8046036e-06,2.8379521,3.2453811
+Path A: WTP 793 after magnesium info,2.3958333,-.75599068,.45471317,2.1161082,2.6755586

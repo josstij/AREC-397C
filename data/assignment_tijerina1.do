@@ -2,7 +2,7 @@
 * assignment: 1
 * created on: 7 april 2026
 * created by: jmt
-* edited on: 20 april 2026
+* edited on: 27 april 2026
 * edited by: jmt
 * Stata v.19.5
 
@@ -52,1094 +52,510 @@
 
 
 **********************************************************************
-**# 1.1 - Load data
+**# 1 - Load data and basic cleaning
 **********************************************************************
+
+* clear memory
+clear all
+
+* close any open logs
+cap log close
+
+* start log file
+log using "$logs/regression_assignment_day1", replace
+
 * import data from CSV
-	import delimited		using "$data/spors_bev_data_use_me.csv", clear
-	describe
+import delimited using "$data/spors_bev_data_use_me.csv", clear
 
-**## 1.2 - drop unfinished responses
-	drop 					if finished != 1
+* inspect data
+describe
 
-**## 1.3 - adjust display settings	
-	set						linesize 200 
-	
-**## 1.4 - replace specific -999 missing codes 
-	foreach	var 			of varlist age edu income { 
-								replace `var' = . if `var' == -999
-	}
-		*** 26 changes made to income
-	
-**## 1.5 - inspect day variable
-	tab						day
-	
-/*
-    Day |      Freq.     Percent        Cum.
-------------+-----------------------------------
-          1 |         70       48.95       48.95
-          2 |         73       51.05      100.00
-------------+-----------------------------------
-      Total |        143      100.00
+* drop unfinished responses
+drop if finished != 1
 
-*/
+* adjust display settings
+set linesize 200
+
+* replace -999 missing codes
+foreach var of varlist age edu income {
+    replace `var' = . if `var' == -999
+}
+
+* check survey day
+tab day
 
 
 **********************************************************************
-**# 2 - Generate variables and clean
+**# 2 - Generate variables and clean: Day 1 only, 584 vs 793
 **********************************************************************
+
 **## 2.1 - inspect WTP variables
-	describe				wtp_*
-	*** all WTP variables are aready numeric (float)
+describe wtp_*
 
-	
-* keep only the variables needed
-	keep 					wtp_2b_584 wtp_3b_info_584 ///
-							wtp_2b_793 wtp_3b_info_793 ///
-							wtp_2b_356 wtp_3b_info_356 ///
-							wtp_2b_831 wtp_3b_info_831 ///
-							preknow_5_magn day ///
-							age gender income exercise con_freq
-							
-* Change in willingness to pay caused after magnesium information
-	gen 					diff_584 = wtp_3b_info_584 - wtp_2b_584
-	gen 					diff_793 = wtp_3b_info_793 - wtp_2b_793
-	gen						diff_356 = wtp_3b_info_356 - wtp_2b_356
-	gen						diff_831 = wtp_3b_info_831 - wtp_2b_831
-	
-**## 2.2 - create deviation from market price ($2.50)
-* 584
-	gen 					dev_584_taste = wtp_2b_584 - 2.5
-	gen 					dev_584_info  = wtp_3b_info_584 - 2.5
-	
-* 793
-	gen 					dev_793_taste = wtp_2b_793 - 2.5
-	gen 					dev_793_info  = wtp_3b_info_793 - 2.5
+* keep Day 1 only
+keep if day == 1
 
-* 356
-	gen 					dev_356_taste = wtp_2b_356 - 2.5
-	gen						dev_356_info = wtp_3b_info_356 - 2.5
-	
-* 831
-	gen 					dev_831_taste = wtp_2b_831 - 2.5
-	gen						dev_831_info = wtp_3b_info_831 - 2.5
-	
-**## 2.4 - label variables	
-	label variable day                  "Survey day"
+* keep only variables needed for Day 1 regression analysis
+keep wtp_1 ///
+     wtp_2b_584 wtp_3b_info_584 ///
+     wtp_2b_793 wtp_3b_info_793 ///
+     wtp_2a_info_584 wtp_2a_info_793 ///
+     after_info_3b_d1_useful after_info_2a_d1_useful ///
+     mag_benefit_3b_d1_musle mag_benefit_3b_d1_cramps ///
+     mag_benefit_3b_d1_sugar mag_benefit_3b_d1_bone ///
+     mag_benefit_3b_d1_sleep ///
+     mag_benefit_2a_d1_muscle mag_benefit_2a_d1_cramps ///
+     mag_benefit_2a_d1_sugar mag_benefit_2a_d1_bone ///
+     mag_benefit_2a_d1_sleep ///
+     preknow_5_magn day randomizer ///
+     age gender income exercise con_freq
 
-	label variable wtp_2b_584           "WTP 584 before magnesium info"
-	label variable wtp_3b_info_584      "WTP 584 after magnesium info"
-	label variable wtp_2b_793           "WTP 793 before magnesium info"
-	label variable wtp_3b_info_793      "WTP 793 after magnesium info"
+**## 2.2 - create pathway-specific WTP change variables
 
-	label variable wtp_2b_356           "WTP 356 before magnesium info"
-	label variable wtp_3b_info_356      "WTP 356 after magnesium info"
-	label variable wtp_2b_831           "WTP 831 before magnesium info"
-	label variable wtp_3b_info_831      "WTP 831 after magnesium info"
+* Path B: taste first, then magnesium information
+gen diffB_584 = wtp_3b_info_584 - wtp_2b_584
+gen diffB_793 = wtp_3b_info_793 - wtp_2b_793
 
-	label variable diff_584             "Change in WTP for 584 after magnesium info"
-	label variable diff_793             "Change in WTP for 793 after magnesium info"
-	label variable diff_356             "Change in WTP for 356 after magnesium info"
-	label variable diff_831             "Change in WTP for 831 after magnesium info"
+* Path A: magnesium information first
+gen diffA_584 = wtp_2a_info_584 - wtp_1
+gen diffA_793 = wtp_2a_info_793 - wtp_1
 
-	label variable dev_584_taste        "584 deviation from $2.50 before info"
-	label variable dev_584_info         "584 deviation from $2.50 after info"
-	label variable dev_793_taste        "793 deviation from $2.50 before info"
-	label variable dev_793_info         "793 deviation from $2.50 after info"
+**## 2.3 - combine Path A and Path B into one outcome variable
 
-	label variable dev_356_taste        "356 deviation from $2.50 before info"
-	label variable dev_356_info         "356 deviation from $2.50 after info"
-	label variable dev_831_taste        "831 deviation from $2.50 before info"
-	label variable dev_831_info         "831 deviation from $2.50 after info"
+gen diff_584 = diffB_584
+replace diff_584 = diffA_584 if missing(diff_584)
 
-	label variable preknow_5_magn       "Prior knowledge of magnesium benefits"
-	label variable exercise             "Days of moderate/vigorous exercise"
-	label variable con_freq             "Sports drink consumption frequency"
-	
-	save						"$logs/clean_data.dta", replace
+gen diff_793 = diffB_793
+replace diff_793 = diffA_793 if missing(diff_793)
 
-**********************************************************************
-**# 3 - Descriptive statistics table
-**********************************************************************
-	summarize 				wtp_2b_584 wtp_3b_info_584 ///
-							wtp_2b_793 wtp_3b_info_793 ///
-							wtp_2b_356 wtp_3b_info_356 ///
-							wtp_2b_831 wtp_3b_info_831 ///
-							preknow_5_magn ///
-							age exercise con_freq
-							
-/*
-    Variable |        Obs        Mean    Std. dev.       Min        Max
--------------+---------------------------------------------------------
-  wtp_2b_584 |         34    2.617647     .761864        .75        4.5
-wtp_3b_i~584 |         34    2.808824    .8002339          0        4.5
-  wtp_2b_793 |         34    2.757353    .8083028       1.25        4.5
-wtp_3b_i~793 |         34    2.470588    .8698761          0        4.5
-  wtp_2b_356 |         38    2.776316    .8458753          0        4.5
--------------+---------------------------------------------------------
-wtp_3b_i~356 |         38    3.006579    .8805075          0        4.5
-  wtp_2b_831 |         38    2.552632    .7378701          0          4
-wtp_3b_i~831 |         38    2.789474    .8728764          0       4.75
-preknow_5_~n |        143    3.692308    .9437024          1          5
-         age |        143    25.08392    10.02988       18.5         55
--------------+---------------------------------------------------------
-    exercise |        143     2.79021     .878965          1          4
-    con_freq |        143    2.160839    1.214063          0          5
-*/
+**## 2.4 - create deviation from market price ($2.50)
 
-	tabstat 				wtp_2b_584 wtp_3b_info_584 ///
-							wtp_2b_793 wtp_3b_info_793 ///
-							wtp_2b_356 wtp_3b_info_356 ///
-							wtp_2b_831 wtp_3b_info_831 ///
-							diff_584 diff_793 diff_356 diff_831 ///
-							preknow_5_magn ///
-							age exercise con_freq, ///
-							stats(mean sd min max n) columns(statistics)
-							
-/*
-    Variable |      Mean        SD       Min       Max         N
--------------+--------------------------------------------------
-  wtp_2b_584 |  2.617647   .761864       .75       4.5        34
-wtp_3b_i~584 |  2.808824  .8002339         0       4.5        34
-  wtp_2b_793 |  2.757353  .8083028      1.25       4.5        34
-wtp_3b_i~793 |  2.470588  .8698761         0       4.5        34
-  wtp_2b_356 |  2.776316  .8458753         0       4.5        38
-wtp_3b_i~356 |  3.006579  .8805075         0       4.5        38
-  wtp_2b_831 |  2.552632  .7378701         0         4        38
-wtp_3b_i~831 |  2.789474  .8728764         0      4.75        38
-    diff_584 |  .1911765  .4729774        -1      1.25        34
-    diff_793 | -.2867647  .6517237      -2.5       .75        34
-    diff_356 |  .2302632  .4206718       -.5       1.5        38
-    diff_831 |  .2368421  .4148729         0      1.75        38
-preknow_5_~n |  3.692308  .9437024         1         5       143
-         age |  25.08392  10.02988      18.5        55       143
-    exercise |   2.79021   .878965         1         4       143
-    con_freq |  2.160839  1.214063         0         5       143
-----------------------------------------------------------------	
-*/
+gen devB_584_taste = wtp_2b_584 - 2.5
+gen devB_584_info  = wtp_3b_info_584 - 2.5
 
-* standard error 
-	foreach var 			of varlist wtp_2b_584 wtp_3b_info_584 ///
-							wtp_2b_793 wtp_3b_info_793 ///
-							wtp_2b_356 wtp_3b_info_356 ///
-							wtp_2b_831 wtp_3b_info_831 {
+gen devB_793_taste = wtp_2b_793 - 2.5
+gen devB_793_info  = wtp_3b_info_793 - 2.5
 
-	summarize 				`var'
-	display 				"`var' SE = " r(sd)/sqrt(r(N))
-	}
-
-/*
-    Variable |        Obs        Mean    Std. dev.       Min        Max
--------------+---------------------------------------------------------
-  wtp_2b_584 |         34    2.617647     .761864        .75        4.5
-wtp_2b_584 SE = .13065859
-
-    Variable |        Obs        Mean    Std. dev.       Min        Max
--------------+---------------------------------------------------------
-wtp_3b_i~584 |         34    2.808824    .8002339          0        4.5
-wtp_3b_info_584 SE = .13723899
-
-    Variable |        Obs        Mean    Std. dev.       Min        Max
--------------+---------------------------------------------------------
-  wtp_2b_793 |         34    2.757353    .8083028       1.25        4.5
-wtp_2b_793 SE = .13862278
-
-    Variable |        Obs        Mean    Std. dev.       Min        Max
--------------+---------------------------------------------------------
-wtp_3b_i~793 |         34    2.470588    .8698761          0        4.5
-wtp_3b_info_793 SE = .14918253
-
-    Variable |        Obs        Mean    Std. dev.       Min        Max
--------------+---------------------------------------------------------
-  wtp_2b_356 |         38    2.776316    .8458753          0        4.5
-wtp_2b_356 SE = .13721909
-
-    Variable |        Obs        Mean    Std. dev.       Min        Max
--------------+---------------------------------------------------------
-wtp_3b_i~356 |         38    3.006579    .8805075          0        4.5
-wtp_3b_info_356 SE = .14283717
-
-    Variable |        Obs        Mean    Std. dev.       Min        Max
--------------+---------------------------------------------------------
-  wtp_2b_831 |         38    2.552632    .7378701          0          4
-wtp_2b_831 SE = .11969834
-
-    Variable |        Obs        Mean    Std. dev.       Min        Max
--------------+---------------------------------------------------------
-wtp_3b_i~831 |         38    2.789474    .8728764          0       4.75
-wtp_3b_info_831 SE = .14159925
-*/
+gen devA_584_info  = wtp_2a_info_584 - 2.5
+gen devA_793_info  = wtp_2a_info_793 - 2.5
+gen dev_baseline   = wtp_1 - 2.5
 
 
 **********************************************************************
-**# 4 - Paired t-tests
+**# 3 - Label variables and save clean dataset
 **********************************************************************
-**## 4.1 - Day 1 magnesium product (584)
-	ttest					wtp_3b_info_584 == wtp_2b_584
 
-/*
-Paired t test
-------------------------------------------------------------------------------
-Variable |     Obs        Mean    Std. err.   Std. dev.   [95% conf. interval]
----------+--------------------------------------------------------------------
-wtp_3b~4 |      34    2.808824     .137239    .8002339    2.529609    3.088038
-wtp_2b~4 |      34    2.617647    .1306586     .761864     2.35182    2.883474
----------+--------------------------------------------------------------------
-    diff |      34    .1911765     .081115    .4729774    .0261468    .3562061
-------------------------------------------------------------------------------
-     mean(diff) = mean(wtp_3b_info_584 - wtp_2b_584)              t =   2.3569
- H0: mean(diff) = 0                              Degrees of freedom =       33
+**## 3.1 - label key variables clearly
 
- Ha: mean(diff) < 0           Ha: mean(diff) != 0           Ha: mean(diff) > 0
- Pr(T < t) = 0.9877         Pr(|T| > |t|) = 0.0245          Pr(T > t) = 0.0123
-	*** Product 584: WTP increased significantly (p = 0.0245)
-*/
+label variable wtp_1              "Baseline WTP before product info"
 
-**## 4.2 - Day 1 non-magnesium product (793)
-	ttest 					wtp_3b_info_793 == wtp_2b_793
+label variable wtp_2b_584         "Path B: WTP 584 after tasting"
+label variable wtp_3b_info_584    "Path B: WTP 584 after magnesium info"
 
-/*
-Paired t test
-------------------------------------------------------------------------------
-Variable |     Obs        Mean    Std. err.   Std. dev.   [95% conf. interval]
----------+--------------------------------------------------------------------
-wtp_3b~3 |      34    2.470588    .1491825    .8698761    2.167074    2.774102
-wtp_2b~3 |      34    2.757353    .1386228    .8083028    2.475323    3.039383
----------+--------------------------------------------------------------------
-    diff |      34   -.2867647    .1117697    .6517237   -.5141618   -.0593676
-------------------------------------------------------------------------------
-     mean(diff) = mean(wtp_3b_info_793 - wtp_2b_793)              t =  -2.5657
- H0: mean(diff) = 0                              Degrees of freedom =       33
+label variable wtp_2b_793         "Path B: WTP 793 after tasting"
+label variable wtp_3b_info_793    "Path B: WTP 793 after magnesium info"
 
- Ha: mean(diff) < 0           Ha: mean(diff) != 0           Ha: mean(diff) > 0
- Pr(T < t) = 0.0075         Pr(|T| > |t|) = 0.0150          Pr(T > t) = 0.9925
+label variable wtp_2a_info_584    "Path A: WTP 584 after magnesium info"
+label variable wtp_2a_info_793    "Path A: WTP 793 after magnesium info"
 
-*/
-	*** product 793: WTP decreased significantly (p = 0.0150)
+label variable diff_584           "Change in WTP for 584 due to magnesium info (A & B)"
+label variable diff_793           "Change in WTP for 793 due to magnesium info (A & B)"
 
-**## 4.3 - Day 2 magnesium product (356)
-	ttest					wtp_3b_info_356 == wtp_2b_356
+label variable preknow_5_magn     "Prior knowledge of magnesium"
+label variable exercise           "Exercise frequency"
+label variable con_freq           "Sports drink consumption frequency"
+label variable randomizer         "Randomization pathway"
 
-/*
-Paired t test
-------------------------------------------------------------------------------
-Variable |     Obs        Mean    Std. err.   Std. dev.   [95% conf. interval]
----------+--------------------------------------------------------------------
-wtp_3b~6 |      38    3.006579    .1428372    .8805075    2.717163    3.295995
-wtp_2b~6 |      38    2.776316    .1372191    .8458753    2.498284    3.054348
----------+--------------------------------------------------------------------
-    diff |      38    .2302632     .068242    .4206718    .0919918    .3685345
-------------------------------------------------------------------------------
-     mean(diff) = mean(wtp_3b_info_356 - wtp_2b_356)              t =   3.3742
- H0: mean(diff) = 0                              Degrees of freedom =       37
+**## 3.2 - save clean dataset for regression
 
- Ha: mean(diff) < 0           Ha: mean(diff) != 0           Ha: mean(diff) > 0
- Pr(T < t) = 0.9991         Pr(|T| > |t|) = 0.0017          Pr(T > t) = 0.0009
-*/
-	*** product 356: WTP increases significantly (p = 0.0017)
-	
-**## 4.4 - Day 2 magnesium product (831)
-	ttest					wtp_3b_info_831 == wtp_2b_831
-	
-/*
-Paired t test
-------------------------------------------------------------------------------
-Variable |     Obs        Mean    Std. err.   Std. dev.   [95% conf. interval]
----------+--------------------------------------------------------------------
-wtp_3b~1 |      38    2.789474    .1415993    .8728764    2.502566    3.076381
-wtp_2b~1 |      38    2.552632    .1196983    .7378701      2.3101    2.795163
----------+--------------------------------------------------------------------
-    diff |      38    .2368421    .0673013    .4148729    .1004768    .3732074
-------------------------------------------------------------------------------
-     mean(diff) = mean(wtp_3b_info_831 - wtp_2b_831)              t =   3.5191
- H0: mean(diff) = 0                              Degrees of freedom =       37
-
- Ha: mean(diff) < 0           Ha: mean(diff) != 0           Ha: mean(diff) > 0
- Pr(T < t) = 0.9994         Pr(|T| > |t|) = 0.0012          Pr(T > t) = 0.0006
-*/
-	*** product 831: WTP increases significantly (p = 0.0012)
-	
-**## 4.5 - magnesium vs non-magnesium effect (Day 1)
-	ttest					diff_584 == diff_793
-	
-/*
-Paired t test
-------------------------------------------------------------------------------
-Variable |     Obs        Mean    Std. err.   Std. dev.   [95% conf. interval]
----------+--------------------------------------------------------------------
-diff_584 |      34    .1911765     .081115    .4729774    .0261468    .3562061
-diff_793 |      34   -.2867647    .1117697    .6517237   -.5141618   -.0593676
----------+--------------------------------------------------------------------
-    diff |      34    .4779412    .1294302    .7547015    .2146134     .741269
-------------------------------------------------------------------------------
-     mean(diff) = mean(diff_584 - diff_793)                       t =   3.6927
- H0: mean(diff) = 0                              Degrees of freedom =       33
-
- Ha: mean(diff) < 0           Ha: mean(diff) != 0           Ha: mean(diff) > 0
- Pr(T < t) = 0.9996         Pr(|T| > |t|) = 0.0008          Pr(T > t) = 0.0004
-*/
+save "$logs/clean_data_day1_584_793.dta", replace
 
 	
 **********************************************************************
-**# 5 - One-sample t-tests (benchmark price = $2.50)
+**# 4 - Regression models
 **********************************************************************
-**## 5.1 - Day 1 magnesium product (584)
-	ttest					wtp_3b_info_584 == 2.5
-	ttest wtp_3b_info_584 == 2.5
-return list
+
+* install estout if needed
+cap which esttab
+if _rc ssc install estout, replace
+
+* clear stored models
+eststo clear
+
+**## 4.1 - Model 1: Magnesium product 584
+eststo m1: reg diff_584 ///
+    preknow_5_magn ///
+    exercise ///
+    con_freq ///
+    age ///
+    i.gender ///
+    i.randomizer
+
+**## 4.2 - Model 2: Non-magnesium product 793
+eststo m2: reg diff_793 ///
+    preknow_5_magn ///
+    exercise ///
+    con_freq ///
+    age ///
+    i.gender ///
+    i.randomizer
+	
+
+**********************************************************************
+**# 5 - Extended regression models (include baseline WTP)
+**********************************************************************
+
+**## 5.1 - Model 3: 584 with baseline control
+eststo m3: reg diff_584 ///
+    wtp_1 ///
+    preknow_5_magn ///
+    exercise ///
+    con_freq ///
+    age ///
+    i.gender ///
+    i.randomizer
+
+**## 5.2 - Model 4: 793 with baseline control
+eststo m4: reg diff_793 ///
+    wtp_1 ///
+    preknow_5_magn ///
+    exercise ///
+    con_freq ///
+    age ///
+    i.gender ///
+    i.randomizer
+	
+
+**********************************************************************
+**# 6 - Export regression results table
+**********************************************************************
+
+esttab m1 m2 m3 m4 using "$logs/regression_results_day1.rtf", ///
+    replace ///
+    b(3) se(3) ///
+    star(* 0.10 ** 0.05 *** 0.01) ///
+    label ///
+    title("Regression Results for Change in Willingness to Pay")
+	
+
+**********************************************************************
+**# 7 - Summary statistics table
+**********************************************************************
+
+**## 7.1 - summarize key variables
+
+summarize wtp_1 ///
+          wtp_2b_584 wtp_3b_info_584 ///
+          wtp_2b_793 wtp_3b_info_793 ///
+          wtp_2a_info_584 wtp_2a_info_793 ///
+          diffA_584 diffA_793 ///
+          diffB_584 diffB_793 ///
+          diff_584 diff_793 ///
+          preknow_5_magn exercise con_freq age
+
+**## 7.2 - formatted summary table
+
+tabstat wtp_1 ///
+        wtp_2b_584 wtp_3b_info_584 ///
+        wtp_2b_793 wtp_3b_info_793 ///
+        wtp_2a_info_584 wtp_2a_info_793 ///
+        diffA_584 diffA_793 ///
+        diffB_584 diffB_793 ///
+        diff_584 diff_793 ///
+        preknow_5_magn exercise con_freq age, ///
+        stats(mean sd min max n) columns(statistics)
+		
+		
+**********************************************************************
+**# 8 - Hypothesis testing (paired t-tests, Day 1 only)
+**********************************************************************
+
+**## H1: Magnesium information changes WTP for product 584 (Path B)
+ttest wtp_3b_info_584 == wtp_2b_584
 
 /*
-One-sample t test
-------------------------------------------------------------------------------
-Variable |     Obs        Mean    Std. err.   Std. dev.   [95% conf. interval]
----------+--------------------------------------------------------------------
-wtp_3b~4 |      34    2.808824     .137239    .8002339    2.529609    3.088038
-------------------------------------------------------------------------------
-    mean = mean(wtp_3b_info_584)                                  t =   2.2503
-H0: mean = 2.5                                   Degrees of freedom =       33
-
-   Ha: mean < 2.5               Ha: mean != 2.5               Ha: mean > 2.5
- Pr(T < t) = 0.9844         Pr(|T| > |t|) = 0.0312          Pr(T > t) = 0.0156
+H0: mean(WTP after info - WTP after taste) = 0
+H1: ≠ 0
 */
 
-**## 5.2 - Day 1 non-magnesium product (793)
-	ttest					wtp_3b_info_793 == 2.5
-	
-/*
-One-sample t test
-------------------------------------------------------------------------------
-Variable |     Obs        Mean    Std. err.   Std. dev.   [95% conf. interval]
----------+--------------------------------------------------------------------
-wtp_3b~3 |      34    2.470588    .1491825    .8698761    2.167074    2.774102
-------------------------------------------------------------------------------
-    mean = mean(wtp_3b_info_793)                                  t =  -0.1972
-H0: mean = 2.5                                   Degrees of freedom =       33
+**## H2: Magnesium information changes WTP for product 793 (Path B)
+ttest wtp_3b_info_793 == wtp_2b_793
 
-   Ha: mean < 2.5               Ha: mean != 2.5               Ha: mean > 2.5
- Pr(T < t) = 0.4225         Pr(|T| > |t|) = 0.8449          Pr(T > t) = 0.5775
+/*
+H0: mean(WTP after info - WTP after taste) = 0
+H1: ≠ 0
 */
 
-**## 5.3 - Day 2 magnesium product (356)
-	ttest					wtp_3b_info_356 == 2.5
-	
-/*
-One-sample t test
-------------------------------------------------------------------------------
-Variable |     Obs        Mean    Std. err.   Std. dev.   [95% conf. interval]
----------+--------------------------------------------------------------------
-wtp_3b~6 |      38    3.006579    .1428372    .8805075    2.717163    3.295995
-------------------------------------------------------------------------------
-    mean = mean(wtp_3b_info_356)                                  t =   3.5465
-H0: mean = 2.5                                   Degrees of freedom =       37
 
-   Ha: mean < 2.5               Ha: mean != 2.5               Ha: mean > 2.5
- Pr(T < t) = 0.9995         Pr(|T| > |t|) = 0.0011          Pr(T > t) = 0.0005
+
+**## H3: Magnesium information changes WTP for product 584 (Path A)
+ttest wtp_2a_info_584 == wtp_1
+
+/*
+H0: mean(WTP after info - baseline) = 0
+H1: ≠ 0
 */
 
-**## 5.4 - Day 2 magnesium product (831)
-	ttest					wtp_3b_info_831 == 2.5
-	
-/*
-One-sample t test
-------------------------------------------------------------------------------
-Variable |     Obs        Mean    Std. err.   Std. dev.   [95% conf. interval]
----------+--------------------------------------------------------------------
-wtp_3b~1 |      38    2.789474    .1415993    .8728764    2.502566    3.076381
-------------------------------------------------------------------------------
-    mean = mean(wtp_3b_info_831)                                  t =   2.0443
-H0: mean = 2.5                                   Degrees of freedom =       37
+**## H4: Magnesium information changes WTP for product 793 (Path A)
+ttest wtp_2a_info_793 == wtp_1
 
-   Ha: mean < 2.5               Ha: mean != 2.5               Ha: mean > 2.5
- Pr(T < t) = 0.9760         Pr(|T| > |t|) = 0.0481          Pr(T > t) = 0.0240
+/*
+H0: mean(WTP after info - baseline) = 0
+H1: ≠ 0
 */
 
 
 **********************************************************************
-**# 6 - Coefficient of variation (CV)
+**# 9 - Compare magnesium vs non-magnesium effect (Day 1)
 **********************************************************************
-* CV = sd / mean
 
-	foreach var of varlist	wtp_2b_584 wtp_3b_info_584 ///
-							wtp_2b_793 wtp_3b_info_793 ///
-							wtp_2b_356 wtp_3b_info_356 ///
-							wtp_2b_831 wtp_3b_info_831 {
-								
-	summarize `var'
-	display	"`var' CV = " r(sd)/r(mean)
-							}
-							
+ttest diff_584 == diff_793
+
 /*
-   Variable |        Obs        Mean    Std. dev.       Min        Max
--------------+---------------------------------------------------------
-  wtp_2b_584 |         34    2.617647     .761864        .75        4.5
-wtp_2b_584 CV = .29104916
-
-    Variable |        Obs        Mean    Std. dev.       Min        Max
--------------+---------------------------------------------------------
-wtp_3b_i~584 |         34    2.808824    .8002339          0        4.5
-wtp_3b_info_584 CV = .28490004
-
-    Variable |        Obs        Mean    Std. dev.       Min        Max
--------------+---------------------------------------------------------
-  wtp_2b_793 |         34    2.757353    .8083028       1.25        4.5
-wtp_2b_793 CV = .29314448
-
-    Variable |        Obs        Mean    Std. dev.       Min        Max
--------------+---------------------------------------------------------
-wtp_3b_i~793 |         34    2.470588    .8698761          0        4.5
-wtp_3b_info_793 CV = .35209272
-
-    Variable |        Obs        Mean    Std. dev.       Min        Max
--------------+---------------------------------------------------------
-  wtp_2b_356 |         38    2.776316    .8458753          0        4.5
-wtp_2b_356 CV = .30467545
-
-    Variable |        Obs        Mean    Std. dev.       Min        Max
--------------+---------------------------------------------------------
-wtp_3b_i~356 |         38    3.006579    .8805075          0        4.5
-wtp_3b_info_356 CV = .29286025
-
-    Variable |        Obs        Mean    Std. dev.       Min        Max
--------------+---------------------------------------------------------
-  wtp_2b_831 |         38    2.552632    .7378701          0          4
-wtp_2b_831 CV = .28906253
-
-    Variable |        Obs        Mean    Std. dev.       Min        Max
--------------+---------------------------------------------------------
-wtp_3b_i~831 |         38    2.789474    .8728764          0       4.75
-wtp_3b_info_831 CV = .31291796
+H0: Change in WTP for magnesium product = Change in WTP for non-magnesium product
+H1: They are different
 */
 
-	
-**********************************************************************
-**# 7 - Correlation coefficients
-**********************************************************************
-* correlation between before and after WTP
-	pwcorr 					wtp_2b_584 wtp_3b_info_584, sig
-	*** correlation coefficient (r) = 0.8177, positive and strong
-	* people who had higher WTP before also tend to have higher WTP after
-	* p = 0.000, statistically significant, not due to random chance
-	
-	pwcorr	 				wtp_2b_793 wtp_3b_info_793, sig
-	*** correlation coefficient (r) = 0.7007, positive and strong
-	* people who had higher WTP before also tend to have higher WTP after
-	* p = 0.000, statistically significant, not due to random chance
-	
-	pwcorr 					wtp_2b_356 wtp_3b_info_356, sig
-	*** correlation coefficient (r) = 0.8820, positive and strong
-	* people who had higher WTP before also tend to have higher WTP after
-	* p = 0.000, statistically significant, not due to random chance
-	
-	pwcorr 					wtp_2b_831 wtp_3b_info_831, sig
-	*** correlation coefficient (r) = 0.8805, positive and strong
-	* people who had higher WTP before also tend to have higher WTP after
-	* p = 0.000, statistically significant, not due to random chance
-	
-* correlation between changes in WTP
-	pwcorr 					diff_584 diff_793 diff_356 diff_831, sig
-	*** diff_584 vs 793: correlation coefficient (r) = 0.1279 p = 0.4709
-	* very weak and not statistically significant
-	* changes in wtp for mag product are not related to changes for non mag
-	*** diff_356 vs 831: correlation coefficient (r) = 0.7534 p = 0.000
-	* strong positive and statistically significant
-	* people who increased WTP for 356 also increased WTP for product 831
-	
-	
-**********************************************************************
-**# 8 - Table 1: Summary Statistics
-**********************************************************************
-	tempname 				memhold
-	postfile `memhold' 		str20 variable mean sd n cv using "$logs/table1_sumstats.dta", replace
-
-	foreach var of varlist 	wtp_2b_584 wtp_3b_info_584 ///
-							wtp_2b_793 wtp_3b_info_793 ///
-							wtp_2b_356 wtp_3b_info_356 ///
-							wtp_2b_831 wtp_3b_info_831 {
-
-		summarize `var'
-		local mean = r(mean)
-		local sd   = r(sd)
-		local n    = r(N)
-		local cv   = r(sd)/r(mean)
-
-		post `memhold' ("`var'") (`mean') (`sd') (`n') (`cv')
-	}
-
-	postclose `memhold'
-
-	use "$logs/table1_sumstats.dta", clear
-
-	label variable variable "Variable"
-	label variable mean     "Mean"
-	label variable sd       "Std. Dev."
-	label variable n        "N"
-	label variable cv       "Coefficient of Variation"
-
-	list, clean noobs
-
-	export delimited using "$logs/table1_sumstats.csv", replace
-	
 
 **********************************************************************
-**# 9 - Table 2: One-sample t-tests
+**# 10 - Table 1: Summary Statistics Output
 **********************************************************************
-	use "$logs/clean_data.dta", clear
 
-	tempname memhold
-	postfile `memhold' str20 variable mean tstat pvalue ci_low ci_high tcrit me using "$logs/table2_onesample.dta", replace
-
-	foreach var of varlist 	wtp_3b_info_584 ///
-							wtp_3b_info_793 ///
-							wtp_3b_info_356 ///
-							wtp_3b_info_831 {
-
-		ttest `var' == 2.5
-
-		local mean    = r(mu_1)
-		local tstat   = r(t)
-		local pvalue  = r(p)
-		local ci_low  = r(lb_1)
-		local ci_high = r(ub_1)
-		local df      = r(df_t)
-		local se      = r(se)
-		local tcrit   = invttail(`df', 0.025)
-		local me      = `tcrit' * `se'
-
-		post `memhold' ("`var'") (`mean') (`tstat') (`pvalue') (`ci_low') (`ci_high') (`tcrit') (`me')
-	}
-
-	postclose `memhold'
-
-	use "$logs/table2_onesample.dta", clear
-
-	label variable variable "Variable"
-	label variable mean     "Mean WTP"
-	label variable tstat    "t-stat"
-	label variable pvalue   "p-value"
-	label variable ci_low   "95% CI Lower"
-	label variable ci_high  "95% CI Upper"
-	label variable tcrit    "t-critical"
-	label variable me       "Margin of Error"
-
-	list, clean noobs
-
-	
-**********************************************************************
-**# 10 - Table 3: Paired t-tests
-**********************************************************************
-	use "$logs/clean_data.dta", clear
-
-	tempname memhold
-	postfile `memhold' str12 product mean_before mean_after diff pvalue ci_low ci_high tcrit me using "$logs/table3_paired.dta", replace
-
-	**## 10.1 - product 584
-	ttest wtp_3b_info_584 == wtp_2b_584
-	local df    = r(df_t)
-	local se    = r(se)
-	local tcrit = invttail(`df', 0.025)
-	local me    = `tcrit' * `se'
-	post `memhold' ("584") (r(mu_2)) (r(mu_1)) (r(mu_1)-r(mu_2)) (r(p)) (r(lb_diff)) (r(ub_diff)) (`tcrit') (`me')
-
-	**## 10.2 - product 793
-	ttest wtp_3b_info_793 == wtp_2b_793
-	local df    = r(df_t)
-	local se    = r(se)
-	local tcrit = invttail(`df', 0.025)
-	local me    = `tcrit' * `se'
-	post `memhold' ("793") (r(mu_2)) (r(mu_1)) (r(mu_1)-r(mu_2)) (r(p)) (r(lb_diff)) (r(ub_diff)) (`tcrit') (`me')
-
-	**## 10.3 - product 356
-	ttest wtp_3b_info_356 == wtp_2b_356
-	local df    = r(df_t)
-	local se    = r(se)
-	local tcrit = invttail(`df', 0.025)
-	local me    = `tcrit' * `se'
-	post `memhold' ("356") (r(mu_2)) (r(mu_1)) (r(mu_1)-r(mu_2)) (r(p)) (r(lb_diff)) (r(ub_diff)) (`tcrit') (`me')
-
-	**## 10.4 - product 831
-	ttest wtp_3b_info_831 == wtp_2b_831
-	local df    = r(df_t)
-	local se    = r(se)
-	local tcrit = invttail(`df', 0.025)
-	local me    = `tcrit' * `se'
-	post `memhold' ("831") (r(mu_2)) (r(mu_1)) (r(mu_1)-r(mu_2)) (r(p)) (r(lb_diff)) (r(ub_diff)) (`tcrit') (`me')
-
-	postclose `memhold'
-
-	use "$logs/table3_paired.dta", clear
-
-	label variable product     "Product"
-	label variable mean_before "Mean Before"
-	label variable mean_after  "Mean After"
-	label variable diff        "Difference"
-	label variable pvalue      "p-value"
-	label variable ci_low      "95% CI Lower"
-	label variable ci_high     "95% CI Upper"
-	label variable tcrit       "t-critical"
-	label variable me          "Margin of Error"
-
-	list, clean noobs
-
-	
-**********************************************************************
-**# 11 - drivers of WTP change (all magnesium products)
-**********************************************************************
-	import delimited using "$data/spors_bev_data_use_me.csv", clear
-	drop if finished != 1
-
-	keep wtp_2b_584 wtp_3b_info_584 ///
-		 wtp_2b_356 wtp_3b_info_356 ///
-		 wtp_2b_831 wtp_3b_info_831 ///
-		 after_info_3b_d1_useful after_info_3b_d2_useful ///
-		 mag_benefit_3b_d1_musle mag_benefit_3b_d1_cramps ///
-		 mag_benefit_3b_d1_sugar mag_benefit_3b_d1_bone ///
-		 mag_benefit_3b_d1_sleep ///
-		 mag_benefit_3b_d2_muscle mag_benefit_3b_d2_cramps ///
-		 mag_benefit_3b_d2_sugar mag_benefit_3b_d2_bone ///
-		 mag_benefit_3b_d2_sleep
-
-	* generate WTP changes
-	gen diff_584 = wtp_3b_info_584 - wtp_2b_584
-	gen diff_356 = wtp_3b_info_356 - wtp_2b_356
-	gen diff_831 = wtp_3b_info_831 - wtp_2b_831
-
-	tempname memhold
-	postfile `memhold' str30 driver ///
-		corr_584 p_584 ///
-		corr_356 p_356 ///
-		corr_831 p_831 ///
-		using "$logs/table4_drivers_all.dta", replace
-
-	* info useful
-	quietly pwcorr diff_584 after_info_3b_d1_useful, sig
-	matrix M1 = r(C)
-	matrix P1 = r(sig)
-	local c1 = M1[1,2]
-	local p1 = P1[1,2]
-
-	quietly pwcorr diff_356 after_info_3b_d2_useful, sig
-	matrix M2 = r(C)
-	matrix P2 = r(sig)
-	local c2 = M2[1,2]
-	local p2 = P2[1,2]
-
-	quietly pwcorr diff_831 after_info_3b_d2_useful, sig
-	matrix M3 = r(C)
-	matrix P3 = r(sig)
-	local c3 = M3[1,2]
-	local p3 = P3[1,2]
-
-	post `memhold' ("Info useful") (`c1') (`p1') (`c2') (`p2') (`c3') (`p3')
-
-	* muscle recovery
-	quietly pwcorr diff_584 mag_benefit_3b_d1_musle, sig
-	matrix M1 = r(C)
-	matrix P1 = r(sig)
-	local c1 = M1[1,2]
-	local p1 = P1[1,2]
-
-	quietly pwcorr diff_356 mag_benefit_3b_d2_muscle, sig
-	matrix M2 = r(C)
-	matrix P2 = r(sig)
-	local c2 = M2[1,2]
-	local p2 = P2[1,2]
-
-	quietly pwcorr diff_831 mag_benefit_3b_d2_muscle, sig
-	matrix M3 = r(C)
-	matrix P3 = r(sig)
-	local c3 = M3[1,2]
-	local p3 = P3[1,2]
-
-	post `memhold' ("Muscle recovery") (`c1') (`p1') (`c2') (`p2') (`c3') (`p3')
-
-	* reduce cramps
-	quietly pwcorr diff_584 mag_benefit_3b_d1_cramps, sig
-	matrix M1 = r(C)
-	matrix P1 = r(sig)
-	local c1 = M1[1,2]
-	local p1 = P1[1,2]
-
-	quietly pwcorr diff_356 mag_benefit_3b_d2_cramps, sig
-	matrix M2 = r(C)
-	matrix P2 = r(sig)
-	local c2 = M2[1,2]
-	local p2 = P2[1,2]
-
-	quietly pwcorr diff_831 mag_benefit_3b_d2_cramps, sig
-	matrix M3 = r(C)
-	matrix P3 = r(sig)
-	local c3 = M3[1,2]
-	local p3 = P3[1,2]
-
-	post `memhold' ("Reduce cramps") (`c1') (`p1') (`c2') (`p2') (`c3') (`p3')
-
-	* blood sugar support
-	quietly pwcorr diff_584 mag_benefit_3b_d1_sugar, sig
-	matrix M1 = r(C)
-	matrix P1 = r(sig)
-	local c1 = M1[1,2]
-	local p1 = P1[1,2]
-
-	quietly pwcorr diff_356 mag_benefit_3b_d2_sugar, sig
-	matrix M2 = r(C)
-	matrix P2 = r(sig)
-	local c2 = M2[1,2]
-	local p2 = P2[1,2]
-
-	quietly pwcorr diff_831 mag_benefit_3b_d2_sugar, sig
-	matrix M3 = r(C)
-	matrix P3 = r(sig)
-	local c3 = M3[1,2]
-	local p3 = P3[1,2]
-
-	post `memhold' ("Blood sugar support") (`c1') (`p1') (`c2') (`p2') (`c3') (`p3')
-
-	* bone health
-	quietly pwcorr diff_584 mag_benefit_3b_d1_bone, sig
-	matrix M1 = r(C)
-	matrix P1 = r(sig)
-	local c1 = M1[1,2]
-	local p1 = P1[1,2]
-
-	quietly pwcorr diff_356 mag_benefit_3b_d2_bone, sig
-	matrix M2 = r(C)
-	matrix P2 = r(sig)
-	local c2 = M2[1,2]
-	local p2 = P2[1,2]
-
-	quietly pwcorr diff_831 mag_benefit_3b_d2_bone, sig
-	matrix M3 = r(C)
-	matrix P3 = r(sig)
-	local c3 = M3[1,2]
-	local p3 = P3[1,2]
-
-	post `memhold' ("Bone health") (`c1') (`p1') (`c2') (`p2') (`c3') (`p3')
-
-	* relaxation / sleep
-	quietly pwcorr diff_584 mag_benefit_3b_d1_sleep, sig
-	matrix M1 = r(C)
-	matrix P1 = r(sig)
-	local c1 = M1[1,2]
-	local p1 = P1[1,2]
-
-	quietly pwcorr diff_356 mag_benefit_3b_d2_sleep, sig
-	matrix M2 = r(C)
-	matrix P2 = r(sig)
-	local c2 = M2[1,2]
-	local p2 = P2[1,2]
-
-	quietly pwcorr diff_831 mag_benefit_3b_d2_sleep, sig
-	matrix M3 = r(C)
-	matrix P3 = r(sig)
-	local c3 = M3[1,2]
-	local p3 = P3[1,2]
-
-	post `memhold' ("Relaxation / sleep") (`c1') (`p1') (`c2') (`p2') (`c3') (`p3')
-
-	postclose `memhold'
-
-	use "$logs/table4_drivers_all.dta", clear
-
-	label variable driver   "Attribute"
-	label variable corr_584 "Corr (584)"
-	label variable p_584    "p-value"
-	label variable corr_356 "Corr (356)"
-	label variable p_356    "p-value"
-	label variable corr_831 "Corr (831)"
-	label variable p_831    "p-value"
-
-	list, clean noobs
-	
-	
-**********************************************************************
-**# 12 - Group comparisons: high vs low benefit importance
-**********************************************************************
-	import delimited using "$data/spors_bev_data_use_me.csv", clear
-	drop if finished != 1
-
-	keep wtp_2b_584 wtp_3b_info_584 ///
-		 mag_benefit_3b_d1_sleep ///
-		 mag_benefit_3b_d1_musle ///
-		 mag_benefit_3b_d1_cramps ///
-		 mag_benefit_3b_d1_sugar ///
-		 mag_benefit_3b_d1_bone ///
-		 after_info_3b_d1_useful
-
-	gen diff_584 = wtp_3b_info_584 - wtp_2b_584
-
-	local drivers ///
-		mag_benefit_3b_d1_sleep ///
-		mag_benefit_3b_d1_musle ///
-		mag_benefit_3b_d1_cramps ///
-		mag_benefit_3b_d1_sugar ///
-		mag_benefit_3b_d1_bone ///
-		after_info_3b_d1_useful
-
-	foreach var of local drivers {
-
-		summarize `var', detail
-		gen high_`var' = `var' > r(p50)
-
-		display "----------------------------------------"
-		display "`var' (High vs Low)"
-
-		ttest diff_584, by(high_`var')
-
-		drop high_`var'
-	}
-	
-	
-**********************************************************************
-**# 13 - Table 5: Group comparisons for magnesium drivers (Day 1 and 2)
-**********************************************************************
-	import delimited using "$data/spors_bev_data_use_me.csv", clear
-	drop if finished != 1
-
-	keep wtp_2b_584 wtp_3b_info_584 ///
-		 wtp_2b_356 wtp_3b_info_356 ///
-		 wtp_2b_831 wtp_3b_info_831 ///
-		 after_info_3b_d1_useful after_info_3b_d2_useful ///
-		 mag_benefit_3b_d1_sleep mag_benefit_3b_d1_musle ///
-		 mag_benefit_3b_d1_cramps mag_benefit_3b_d1_sugar ///
-		 mag_benefit_3b_d1_bone ///
-		 mag_benefit_3b_d2_sleep mag_benefit_3b_d2_muscle ///
-		 mag_benefit_3b_d2_cramps mag_benefit_3b_d2_sugar ///
-		 mag_benefit_3b_d2_bone
-
-	gen diff_584 = wtp_3b_info_584 - wtp_2b_584
-	gen diff_356 = wtp_3b_info_356 - wtp_2b_356
-	gen diff_831 = wtp_3b_info_831 - wtp_2b_831
-
-	tempname memhold
-	postfile `memhold' str30 driver ///
-		low_584 high_584 p_584 ///
-		low_356 high_356 p_356 ///
-		low_831 high_831 p_831 ///
-		using "$logs/table5_groups_allmag.dta", replace
-
-	* 1. info useful
-	summarize after_info_3b_d1_useful, detail
-	gen high_d1 = after_info_3b_d1_useful > r(p50)
-	quietly summarize diff_584 if high_d1 == 0
-	local low584 = r(mean)
-	quietly summarize diff_584 if high_d1 == 1
-	local high584 = r(mean)
-	quietly ttest diff_584, by(high_d1)
-	local p584 = r(p)
-	drop high_d1
-
-	summarize after_info_3b_d2_useful, detail
-	gen high_d2 = after_info_3b_d2_useful > r(p50)
-	quietly summarize diff_356 if high_d2 == 0
-	local low356 = r(mean)
-	quietly summarize diff_356 if high_d2 == 1
-	local high356 = r(mean)
-	quietly ttest diff_356, by(high_d2)
-	local p356 = r(p)
-
-	quietly summarize diff_831 if high_d2 == 0
-	local low831 = r(mean)
-	quietly summarize diff_831 if high_d2 == 1
-	local high831 = r(mean)
-	quietly ttest diff_831, by(high_d2)
-	local p831 = r(p)
-	drop high_d2
-
-	post `memhold' ("Info useful") ///
-		(`low584') (`high584') (`p584') ///
-		(`low356') (`high356') (`p356') ///
-		(`low831') (`high831') (`p831')
-
-	* 2. muscle recovery
-	summarize mag_benefit_3b_d1_musle, detail
-	gen high_d1 = mag_benefit_3b_d1_musle > r(p50)
-	quietly summarize diff_584 if high_d1 == 0
-	local low584 = r(mean)
-	quietly summarize diff_584 if high_d1 == 1
-	local high584 = r(mean)
-	quietly ttest diff_584, by(high_d1)
-	local p584 = r(p)
-	drop high_d1
-
-	summarize mag_benefit_3b_d2_muscle, detail
-	gen high_d2 = mag_benefit_3b_d2_muscle > r(p50)
-	quietly summarize diff_356 if high_d2 == 0
-	local low356 = r(mean)
-	quietly summarize diff_356 if high_d2 == 1
-	local high356 = r(mean)
-	quietly ttest diff_356, by(high_d2)
-	local p356 = r(p)
-
-	quietly summarize diff_831 if high_d2 == 0
-	local low831 = r(mean)
-	quietly summarize diff_831 if high_d2 == 1
-	local high831 = r(mean)
-	quietly ttest diff_831, by(high_d2)
-	local p831 = r(p)
-	drop high_d2
-
-	post `memhold' ("Muscle recovery") ///
-		(`low584') (`high584') (`p584') ///
-		(`low356') (`high356') (`p356') ///
-		(`low831') (`high831') (`p831')
-
-	* 3. reduce cramps
-	summarize mag_benefit_3b_d1_cramps, detail
-	gen high_d1 = mag_benefit_3b_d1_cramps > r(p50)
-	quietly summarize diff_584 if high_d1 == 0
-	local low584 = r(mean)
-	quietly summarize diff_584 if high_d1 == 1
-	local high584 = r(mean)
-	quietly ttest diff_584, by(high_d1)
-	local p584 = r(p)
-	drop high_d1
-
-	summarize mag_benefit_3b_d2_cramps, detail
-	gen high_d2 = mag_benefit_3b_d2_cramps > r(p50)
-	quietly summarize diff_356 if high_d2 == 0
-	local low356 = r(mean)
-	quietly summarize diff_356 if high_d2 == 1
-	local high356 = r(mean)
-	quietly ttest diff_356, by(high_d2)
-	local p356 = r(p)
-
-	quietly summarize diff_831 if high_d2 == 0
-	local low831 = r(mean)
-	quietly summarize diff_831 if high_d2 == 1
-	local high831 = r(mean)
-	quietly ttest diff_831, by(high_d2)
-	local p831 = r(p)
-	drop high_d2
-
-	post `memhold' ("Reduce cramps") ///
-		(`low584') (`high584') (`p584') ///
-		(`low356') (`high356') (`p356') ///
-		(`low831') (`high831') (`p831')
-
-	* 4. blood sugar support
-	summarize mag_benefit_3b_d1_sugar, detail
-	gen high_d1 = mag_benefit_3b_d1_sugar > r(p50)
-	quietly summarize diff_584 if high_d1 == 0
-	local low584 = r(mean)
-	quietly summarize diff_584 if high_d1 == 1
-	local high584 = r(mean)
-	quietly ttest diff_584, by(high_d1)
-	local p584 = r(p)
-	drop high_d1
-
-	summarize mag_benefit_3b_d2_sugar, detail
-	gen high_d2 = mag_benefit_3b_d2_sugar > r(p50)
-	quietly summarize diff_356 if high_d2 == 0
-	local low356 = r(mean)
-	quietly summarize diff_356 if high_d2 == 1
-	local high356 = r(mean)
-	quietly ttest diff_356, by(high_d2)
-	local p356 = r(p)
-
-	quietly summarize diff_831 if high_d2 == 0
-	local low831 = r(mean)
-	quietly summarize diff_831 if high_d2 == 1
-	local high831 = r(mean)
-	quietly ttest diff_831, by(high_d2)
-	local p831 = r(p)
-	drop high_d2
-
-	post `memhold' ("Blood sugar support") ///
-		(`low584') (`high584') (`p584') ///
-		(`low356') (`high356') (`p356') ///
-		(`low831') (`high831') (`p831')
-
-	* 5. bone health
-	summarize mag_benefit_3b_d1_bone, detail
-	gen high_d1 = mag_benefit_3b_d1_bone > r(p50)
-	quietly summarize diff_584 if high_d1 == 0
-	local low584 = r(mean)
-	quietly summarize diff_584 if high_d1 == 1
-	local high584 = r(mean)
-	quietly ttest diff_584, by(high_d1)
-	local p584 = r(p)
-	drop high_d1
-
-	summarize mag_benefit_3b_d2_bone, detail
-	gen high_d2 = mag_benefit_3b_d2_bone > r(p50)
-	quietly summarize diff_356 if high_d2 == 0
-	local low356 = r(mean)
-	quietly summarize diff_356 if high_d2 == 1
-	local high356 = r(mean)
-	quietly ttest diff_356, by(high_d2)
-	local p356 = r(p)
-
-	quietly summarize diff_831 if high_d2 == 0
-	local low831 = r(mean)
-	quietly summarize diff_831 if high_d2 == 1
-	local high831 = r(mean)
-	quietly ttest diff_831, by(high_d2)
-	local p831 = r(p)
-	drop high_d2
-
-	post `memhold' ("Bone health") ///
-		(`low584') (`high584') (`p584') ///
-		(`low356') (`high356') (`p356') ///
-		(`low831') (`high831') (`p831')
-
-	* 6. relaxation / sleep
-	summarize mag_benefit_3b_d1_sleep, detail
-	gen high_d1 = mag_benefit_3b_d1_sleep > r(p50)
-	quietly summarize diff_584 if high_d1 == 0
-	local low584 = r(mean)
-	quietly summarize diff_584 if high_d1 == 1
-	local high584 = r(mean)
-	quietly ttest diff_584, by(high_d1)
-	local p584 = r(p)
-	drop high_d1
-
-	summarize mag_benefit_3b_d2_sleep, detail
-	gen high_d2 = mag_benefit_3b_d2_sleep > r(p50)
-	quietly summarize diff_356 if high_d2 == 0
-	local low356 = r(mean)
-	quietly summarize diff_356 if high_d2 == 1
-	local high356 = r(mean)
-	quietly ttest diff_356, by(high_d2)
-	local p356 = r(p)
-
-	quietly summarize diff_831 if high_d2 == 0
-	local low831 = r(mean)
-	quietly summarize diff_831 if high_d2 == 1
-	local high831 = r(mean)
-	quietly ttest diff_831, by(high_d2)
-	local p831 = r(p)
-	drop high_d2
-
-	post `memhold' ("Relaxation / sleep") ///
-		(`low584') (`high584') (`p584') ///
-		(`low356') (`high356') (`p356') ///
-		(`low831') (`high831') (`p831')
-
-	postclose `memhold'
-
-	use "$logs/table5_groups_allmag.dta", clear
-
-	label variable driver   "Driver"
-	label variable low_584  "Low (584)"
-	label variable high_584 "High (584)"
-	label variable p_584    "p-value"
-	label variable low_356  "Low (356)"
-	label variable high_356 "High (356)"
-	label variable p_356    "p-value"
-	label variable low_831  "Low (831)"
-	label variable high_831 "High (831)"
-	label variable p_831    "p-value"
-
-	list, clean noobs
+use "$logs/clean_data_day1_584_793.dta", clear
+
+tempname memhold
+postfile `memhold' str50 variable mean sd min max n cv ///
+    using "$logs/table1_day1_sumstats.dta", replace
+
+foreach var of varlist ///
+    wtp_1 ///
+    wtp_2b_584 wtp_3b_info_584 ///
+    wtp_2b_793 wtp_3b_info_793 ///
+    wtp_2a_info_584 wtp_2a_info_793 ///
+    diffB_584 diffB_793 ///
+    diffA_584 diffA_793 ///
+    diff_584 diff_793 ///
+    preknow_5_magn exercise con_freq age {
+
+    quietly summarize `var'
+
+    local lab : variable label `var'
+    if "`lab'" == "" local lab "`var'"
+
+    post `memhold' ///
+        ("`lab'") ///
+        (r(mean)) ///
+        (r(sd)) ///
+        (r(min)) ///
+        (r(max)) ///
+        (r(N)) ///
+        (r(sd)/r(mean))
+}
+
+postclose `memhold'
+
+use "$logs/table1_day1_sumstats.dta", clear
+
+label variable variable "Variable"
+label variable mean "Mean"
+label variable sd "Std. Dev."
+label variable min "Min"
+label variable max "Max"
+label variable n "N"
+label variable cv "Coefficient of Variation"
+
+list, clean noobs
+
+export delimited using "$logs/table1_day1_sumstats.csv", replace
 
 
 **********************************************************************
-**# 14 - close log
+**# 11 - Table 2: One-sample t-tests (Day 1, benchmark = $2.50)
 **********************************************************************
-	log 					close
+
+use "$logs/clean_data_day1_584_793.dta", clear
+
+tempname memhold
+postfile `memhold' str50 variable mean tstat pvalue ci_low ci_high ///
+    using "$logs/table2_day1_onesample.dta", replace
+
+foreach var of varlist ///
+    wtp_3b_info_584 ///
+    wtp_3b_info_793 ///
+    wtp_2a_info_584 ///
+    wtp_2a_info_793 {
+
+    quietly ttest `var' == 2.5
+
+    local lab : variable label `var'
+    if "`lab'" == "" local lab "`var'"
+
+    post `memhold' ///
+        ("`lab'") ///
+        (r(mu_1)) ///
+        (r(t)) ///
+        (r(p)) ///
+        (r(lb_1)) ///
+        (r(ub_1))
+}
+
+postclose `memhold'
+
+use "$logs/table2_day1_onesample.dta", clear
+
+label variable variable "Variable"
+label variable mean "Mean WTP"
+label variable tstat "t-statistic"
+label variable pvalue "p-value"
+label variable ci_low "95% CI (Lower)"
+label variable ci_high "95% CI (Upper)"
+
+list, clean noobs
+
+export delimited using "$logs/table2_day1_onesample.csv", replace
 
 
+**********************************************************************
+**# 12 - Table 3: Paired t-tests (Day 1, Path A and Path B)
+**********************************************************************
+
+use "$logs/clean_data_day1_584_793.dta", clear
+
+tempname memhold
+postfile `memhold' str15 pathway str10 product str40 comparison ///
+    mean_before mean_after diff pvalue ci_low ci_high ///
+    using "$logs/table3_day1_paired.dta", replace
+
+*--------------------------------------------------------------------
+* Path B: Taste → Info
+*--------------------------------------------------------------------
+
+quietly ttest wtp_3b_info_584 == wtp_2b_584
+post `memhold' ///
+    ("Path B") ("584") ("After info minus after tasting") ///
+    (r(mu_2)) (r(mu_1)) (r(mu_1)-r(mu_2)) (r(p)) (r(lb_diff)) (r(ub_diff))
+
+quietly ttest wtp_3b_info_793 == wtp_2b_793
+post `memhold' ///
+    ("Path B") ("793") ("After info minus after tasting") ///
+    (r(mu_2)) (r(mu_1)) (r(mu_1)-r(mu_2)) (r(p)) (r(lb_diff)) (r(ub_diff))
+
+*--------------------------------------------------------------------
+* Path A: Info → baseline
+*--------------------------------------------------------------------
+
+quietly ttest wtp_2a_info_584 == wtp_1
+post `memhold' ///
+    ("Path A") ("584") ("After info minus baseline") ///
+    (r(mu_2)) (r(mu_1)) (r(mu_1)-r(mu_2)) (r(p)) (r(lb_diff)) (r(ub_diff))
+
+quietly ttest wtp_2a_info_793 == wtp_1
+post `memhold' ///
+    ("Path A") ("793") ("After info minus baseline") ///
+    (r(mu_2)) (r(mu_1)) (r(mu_1)-r(mu_2)) (r(p)) (r(lb_diff)) (r(ub_diff))
+
+postclose `memhold'
+
+use "$logs/table3_day1_paired.dta", clear
+
+label variable pathway "Randomization Path"
+label variable product "Product"
+label variable comparison "Definition of Change"
+label variable mean_before "Mean Before"
+label variable mean_after "Mean After"
+label variable diff "Mean Difference"
+label variable pvalue "p-value"
+label variable ci_low "95% CI (Lower)"
+label variable ci_high "95% CI (Upper)"
+
+list, clean noobs
+
+export delimited using "$logs/table3_day1_paired.csv", replace
 
 
-	
-	
-	
+**********************************************************************
+**# 13 - Create combined driver variables (Path A + Path B)
+**********************************************************************
+
+use "$logs/clean_data_day1_584_793.dta", clear
+
+* Combine info usefulness
+gen info_useful = after_info_3b_d1_useful
+replace info_useful = after_info_2a_d1_useful if missing(info_useful)
+
+* Combine magnesium benefit drivers
+gen mag_muscle = mag_benefit_3b_d1_musle
+replace mag_muscle = mag_benefit_2a_d1_muscle if missing(mag_muscle)
+
+gen mag_cramps = mag_benefit_3b_d1_cramps
+replace mag_cramps = mag_benefit_2a_d1_cramps if missing(mag_cramps)
+
+gen mag_sugar = mag_benefit_3b_d1_sugar
+replace mag_sugar = mag_benefit_2a_d1_sugar if missing(mag_sugar)
+
+gen mag_bone = mag_benefit_3b_d1_bone
+replace mag_bone = mag_benefit_2a_d1_bone if missing(mag_bone)
+
+gen mag_sleep = mag_benefit_3b_d1_sleep
+replace mag_sleep = mag_benefit_2a_d1_sleep if missing(mag_sleep)
+
+* Label clearly
+label variable info_useful "Info usefulness (combined A & B)"
+label variable mag_muscle "Magnesium: muscle recovery importance"
+label variable mag_cramps "Magnesium: cramp reduction importance"
+label variable mag_sugar "Magnesium: blood sugar importance"
+label variable mag_bone "Magnesium: bone health importance"
+label variable mag_sleep "Magnesium: sleep/relaxation importance"
+
+save "$logs/clean_data_day1_drivers.dta", replace
+
+
+**********************************************************************
+**# 14 - Table 4: Functional magnesium benefit drivers (Day 1)
+**********************************************************************
+
+use "$logs/clean_data_day1_drivers.dta", clear
+
+tempname memhold
+postfile `memhold' str45 driver ///
+    corr_584 p_584 ///
+    corr_793 p_793 ///
+    using "$logs/table4_functional_drivers_day1.dta", replace
+
+foreach var in info_useful mag_muscle mag_cramps mag_sugar mag_bone mag_sleep {
+
+    local lab : variable label `var'
+
+    * Correlation with magnesium product (584)
+    quietly pwcorr diff_584 `var', sig
+    matrix C = r(C)
+    matrix P = r(sig)
+    local c584 = C[1,2]
+    local p584 = P[1,2]
+
+    * Correlation with non-magnesium product (793)
+    quietly pwcorr diff_793 `var', sig
+    matrix C = r(C)
+    matrix P = r(sig)
+    local c793 = C[1,2]
+    local p793 = P[1,2]
+
+    post `memhold' ///
+        ("`lab'") ///
+        (`c584') (`p584') ///
+        (`c793') (`p793')
+}
+
+postclose `memhold'
+
+use "$logs/table4_functional_drivers_day1.dta", clear
+
+label variable driver "Functional magnesium benefit"
+label variable corr_584 "Correlation with WTP change (584)"
+label variable p_584 "p-value (584)"
+label variable corr_793 "Correlation with WTP change (793)"
+label variable p_793 "p-value (793)"
+
+list, clean noobs
+
+export delimited using "$logs/table4_functional_drivers_day1.csv", replace

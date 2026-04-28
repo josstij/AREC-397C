@@ -1,0 +1,5 @@
+pathway,product,comparison,mean_before,mean_after,diff,pvalue,ci_low,ci_high
+Path B,584,After info minus after tasting,2.6176472,2.8088236,.19117647,.024516564,.026146838,.35620609
+Path B,793,After info minus after tasting,2.7573528,2.4705882,-.28676471,.01502686,-.51416183,-.059367564
+Path A,584,After info minus baseline,3.1388888,3.0416667,-.097222224,.3291299,-.29665461,.10221016
+Path A,793,After info minus baseline,3.1388888,2.3958333,-.74305558,7.6708324e-07,-.99437934,-.49173176

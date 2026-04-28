@@ -70,7 +70,7 @@
 	*** 73 observations deleted
 	
 	summarize					wtp_*
-	lidjoidoimoied
+	
 * keep only the variables needed
 	keep 					wtp_2b_584 wtp_3b_info_584 ///
 							wtp_2b_793 wtp_3b_info_793 ///

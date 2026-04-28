@@ -3,7 +3,7 @@
       name:  {res}<unnamed>
        {txt}log:  {res}C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/assignment_tijerina3.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res}27 Apr 2026, 18:15:01
+ {txt}opened on:  {res}27 Apr 2026, 20:09:28
 {txt}
 {com}.         set                     scheme s2color
 {txt}
@@ -269,276 +269,27 @@ all files already exist and are up to date.
 (0 real changes made)
 
 {com}. 
-.         * check structure
-.         summarize day randomizer
-
-{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
-{hline 13}{c +}{hline 57}
-{space 9}day {c |}{res}        143     1.51049     .501647          1          2
-{txt}{space 2}randomizer {c |}{res}        143    2.461538    1.118155          1          4
-{txt}
-{com}.         tab randomizer
-
- {txt}randomizer {c |}      Freq.     Percent        Cum.
-{hline 12}{c +}{hline 35}
-          1 {c |}{res}         38       26.57       26.57
-{txt}          2 {c |}{res}         34       23.78       50.35
-{txt}          3 {c |}{res}         38       26.57       76.92
-{txt}          4 {c |}{res}         33       23.08      100.00
-{txt}{hline 12}{c +}{hline 35}
-      Total {c |}{res}        143      100.00
-{txt}
-{com}.         tab day
-
-        {txt}Day {c |}      Freq.     Percent        Cum.
-{hline 12}{c +}{hline 35}
-          1 {c |}{res}         70       48.95       48.95
-{txt}          2 {c |}{res}         73       51.05      100.00
-{txt}{hline 12}{c +}{hline 35}
-      Total {c |}{res}        143      100.00
-{txt}
-{com}. 
-. 
-. **********************************************************************
-. **# 2 - Create Day 1 WTP change variables
-. **********************************************************************
-. 
-.         * keep Day 1 only
-.         keep if day == 1
-{txt}(73 observations deleted)
-
-{com}. 
-.         * B-path
-.         gen diff_584_b = wtp_3b_info_584 - wtp_2b_584
-{txt}(36 missing values generated)
-
-{com}.         gen diff_793_b = wtp_3b_info_793 - wtp_2b_793
-{txt}(36 missing values generated)
-
-{com}. 
-.         * A-path (FIXED — correct logic)
-.         gen diff_584_a = wtp_3a_584 - wtp_2a_info_584
-{txt}(34 missing values generated)
-
-{com}.         gen diff_793_a = wtp_3a_793 - wtp_2a_info_793
-{txt}(34 missing values generated)
-
-{com}. 
-.         * combine
-.         gen diff_584 = diff_584_b
-{txt}(36 missing values generated)
-
-{com}.         replace diff_584 = diff_584_a if missing(diff_584)
-{txt}(36 real changes made)
-
-{com}. 
-.         gen diff_793 = diff_793_b
-{txt}(36 missing values generated)
-
-{com}.         replace diff_793 = diff_793_a if missing(diff_793)
-{txt}(36 real changes made)
-
-{com}. 
-.         * check
-.         summarize diff_584 diff_793
-
-{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
-{hline 13}{c +}{hline 57}
-{space 4}diff_584 {c |}{res}         70   -.0678571    .7309432       -2.5       1.25
-{txt}{space 4}diff_793 {c |}{res}         70    .1214286    .7891277       -2.5       2.25
-{txt}
-{com}.         tab randomizer if !missing(diff_584)
-
- {txt}randomizer {c |}      Freq.     Percent        Cum.
-{hline 12}{c +}{hline 35}
-          1 {c |}{res}         17       24.29       24.29
-{txt}          2 {c |}{res}         17       24.29       48.57
-{txt}          3 {c |}{res}         20       28.57       77.14
-{txt}          4 {c |}{res}         16       22.86      100.00
-{txt}{hline 12}{c +}{hline 35}
-      Total {c |}{res}         70      100.00
-{txt}
-{com}. 
-. **********************************************************************
-. **# 2.1 - Label variables (for clean tables)
-. **********************************************************************
-. 
-. * products
-. label variable wtp_2b_584 "WTP before info (UA Lemon Lime - 584)"
-{txt}
-{com}. label variable wtp_3b_info_584 "WTP after info (UA Lemon Lime - 584)"
-{txt}
-{com}. 
-. label variable wtp_2b_793 "WTP before info (Gatorade - 793)"
-{txt}
-{com}. label variable wtp_3b_info_793 "WTP after info (Gatorade - 793)"
-{txt}
-{com}. 
-. * main variables
-. label variable diff_584 "WTP change (UA Lemon Lime - Magnesium)"
-{txt}
-{com}. label variable diff_793 "WTP change (Gatorade - No Magnesium)"
-{txt}
-{com}. 
-. save "$logs/day1_clean.dta", replace
-{txt}{p 0 4 2}
-file {bf}
-C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/day1_clean.dta{rm}
-saved
-{p_end}
-
-{com}.         
-.         
-. **********************************************************************
-. **# 2.2 - Table 1: Summary statistics
-. **********************************************************************
-. 
-.         tabstat wtp_2b_584 wtp_3b_info_584 ///
->         wtp_2b_793 wtp_3b_info_793 ///
->         diff_584 diff_793, ///
->         stats(mean sd n) columns(statistics) varwidth(35)
-{txt}(option {bf:varwidth()} outside valid range 8..32; 32 assumed)
-
-{ralign 32:Variable} {...}
-{c |}      Mean        SD         N
-{hline 33}{c +}{hline 30}
-{ralign 32:wtp_2b_584} {...}
-{c |}{...}
- {res} 2.617647   .761864        34
-{txt}{ralign 32:wtp_3b_info_584} {...}
-{c |}{...}
- {res} 2.808824  .8002339        34
-{txt}{ralign 32:wtp_2b_793} {...}
-{c |}{...}
- {res} 2.757353  .8083028        34
-{txt}{ralign 32:wtp_3b_info_793} {...}
-{c |}{...}
- {res} 2.470588  .8698761        34
-{txt}{ralign 32:diff_584} {...}
-{c |}{...}
- {res}-.0678571  .7309432        70
-{txt}{ralign 32:diff_793} {...}
-{c |}{...}
- {res} .1214286  .7891277        70
-{txt}{hline 33}{c BT}{hline 30}
-
-{com}.                         
-.                 
-. **********************************************************************
-. **# 3 - Table 2: Benchmark tests ($2.50)
-. **********************************************************************
-. 
-. tempname memhold
-{txt}
-{com}. postfile `memhold' str30 product mean tstat pvalue ci_low ci_high ///
-> using "$logs/table2_benchmark.dta", replace
-{txt}
-{com}. 
-. ttest wtp_3b_info_584 == 2.5
-
-{txt}One-sample t test
-{hline 9}{c TT}{hline 68}
-Variable{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. err.{col 47}Std. dev.{col 59}[95% conf. interval]
-{hline 9}{c +}{hline 68}
-wtp_3b~4 {c |}{res}{col 12}     34{col 22} 2.808824{col 34}  .137239{col 46} .8002339{col 58} 2.529609{col 70} 3.088038
-{txt}{hline 9}{c BT}{hline 68}
-    mean = mean({res}wtp_3b_info_584{txt})                                  t = {res}  2.2503
-{txt}H0: mean = {res}2.5                                   {txt}Degrees of freedom = {res}      33
-
-   {txt}Ha: mean < {res}2.5               {txt}Ha: mean != {res}2.5               {txt}Ha: mean > {res}2.5
- {txt}Pr(T < t) = {res}0.9844         {txt}Pr(|T| > |t|) = {res}0.0312          {txt}Pr(T > t) = {res}0.0156
-{txt}
-{com}. post `memhold' ("UA Lemon Lime (584)") (r(mu_1)) (r(t)) (r(p)) (r(lb_1)) (r(ub_1))
-{txt}
-{com}. 
-. ttest wtp_3b_info_793 == 2.5
-
-{txt}One-sample t test
-{hline 9}{c TT}{hline 68}
-Variable{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. err.{col 47}Std. dev.{col 59}[95% conf. interval]
-{hline 9}{c +}{hline 68}
-wtp_3b~3 {c |}{res}{col 12}     34{col 22} 2.470588{col 34} .1491825{col 46} .8698761{col 58} 2.167074{col 70} 2.774102
-{txt}{hline 9}{c BT}{hline 68}
-    mean = mean({res}wtp_3b_info_793{txt})                                  t = {res} -0.1972
-{txt}H0: mean = {res}2.5                                   {txt}Degrees of freedom = {res}      33
-
-   {txt}Ha: mean < {res}2.5               {txt}Ha: mean != {res}2.5               {txt}Ha: mean > {res}2.5
- {txt}Pr(T < t) = {res}0.4225         {txt}Pr(|T| > |t|) = {res}0.8449          {txt}Pr(T > t) = {res}0.5775
-{txt}
-{com}. post `memhold' ("Gatorade (793)") (r(mu_1)) (r(t)) (r(p)) (r(lb_1)) (r(ub_1))
-{txt}
-{com}. 
-. postclose `memhold'
-{txt}
-{com}. 
-. use "$logs/table2_benchmark.dta", clear
-{txt}
-{com}. list, clean noobs
-{txt}
-    {res}            product       mean       tstat     pvalue     ci_low    ci_high {txt} 
-    {res}UA Lemon Lime (584)   2.808824    2.250261   .0312193   2.529609   3.088038 {txt} 
-    {res}     Gatorade (793)   2.470588   -.1971529   .8449172   2.167074   2.774102 {txt} 
-
-{com}. 
-. **********************************************************************
-. **# 4 - Table 3: WTP change (main result)
-. **********************************************************************
-. 
-. use "$logs/day1_clean.dta", clear
-{txt}
-{com}. 
-. tempname memhold
-{txt}
-{com}. postfile `memhold' str30 product mean_change tstat pvalue ci_low ci_high ///
-> using "$logs/table3_diff.dta", replace
-{txt}
-{com}. 
-. ttest diff_584 == 0
-
-{txt}One-sample t test
-{hline 9}{c TT}{hline 68}
-Variable{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. err.{col 47}Std. dev.{col 59}[95% conf. interval]
-{hline 9}{c +}{hline 68}
-diff_584 {c |}{res}{col 12}     70{col 22}-.0678571{col 34} .0873644{col 46} .7309432{col 58}-.2421444{col 70} .1064301
-{txt}{hline 9}{c BT}{hline 68}
-    mean = mean({res}diff_584{txt})                                         t = {res} -0.7767
-{txt}H0: mean = {res}0                                     {txt}Degrees of freedom = {res}      69
-
-    {txt}Ha: mean < {res}0                 {txt}Ha: mean != {res}0                 {txt}Ha: mean > {res}0
- {txt}Pr(T < t) = {res}0.2200         {txt}Pr(|T| > |t|) = {res}0.4400          {txt}Pr(T > t) = {res}0.7800
-{txt}
-{com}. post `memhold' ("UA Lemon Lime (584)") (r(mu_1)) (r(t)) (r(p)) (r(lb_1)) (r(ub_1))
-{txt}
-{com}. 
-. ttest diff_793 == 0
-
-{txt}One-sample t test
-{hline 9}{c TT}{hline 68}
-Variable{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. err.{col 47}Std. dev.{col 59}[95% conf. interval]
-{hline 9}{c +}{hline 68}
-diff_793 {c |}{res}{col 12}     70{col 22} .1214286{col 34} .0943188{col 46} .7891277{col 58}-.0667323{col 70} .3095894
-{txt}{hline 9}{c BT}{hline 68}
-    mean = mean({res}diff_793{txt})                                         t = {res}  1.2874
-{txt}H0: mean = {res}0                                     {txt}Degrees of freedom = {res}      69
-
-    {txt}Ha: mean < {res}0                 {txt}Ha: mean != {res}0                 {txt}Ha: mean > {res}0
- {txt}Pr(T < t) = {res}0.8989         {txt}Pr(|T| > |t|) = {res}0.2022          {txt}Pr(T > t) = {res}0.1011
-{txt}
-{com}. post `memhold' ("Gatorade (793)") (r(mu_1)) (r(t)) (r(p)) (r(lb_1)) (r(ub_1))
-{txt}
-{com}. 
-. postclose `memhold'
-{txt}
-{com}. 
-. use "$logs/table3_diff.dta", clear
-{txt}
-{com}. list, clean noobs
-{txt}
-    {res}            product   mean_ch~e       tstat     pvalue      ci_low    ci_high {txt} 
-    {res}UA Lemon Lime (584)   -.0678571   -.7767137   .4399823   -.2421444   .1064301 {txt} 
-    {res}     Gatorade (793)    .1214286    1.287427   .2022472   -.0667323   .3095894 {txt} 
-
-{com}. 
 {txt}end of do-file
 
-{com}. exit, clear
+{com}. do "C:\Users\tijer\OneDrive - University of Arizona\AREC 397C\AREC-397C\data\assignment_tijerina1.do"
+{txt}
+{com}. * course: AREC 397C
+. * assignment: 1
+. * created on: 7 april 2026
+. * created by: jmt
+. * edited on: 27 april 2026
+. * edited by: jmt
+. * Stata v.19.5
+. 
+. * does
+.         
+.         
+. * needs
+.         * finished
+.         
+.         clear                           all
+{res}{txt}
+{com}.         
+.         cap log                 close
+{smcl}
+{com}{sf}{ul off}

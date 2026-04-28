@@ -1,0 +1,1246 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/regression_assignment_day1.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}27 Apr 2026, 20:52:20
+{txt}
+{com}. 
+. * import data from CSV
+. import delimited using "$data/spors_bev_data_use_me.csv", clear
+{res}{txt}(encoding automatically selected: ISO-8859-1)
+{res}{text}(185 vars, 149 obs)
+
+{com}. 
+. * inspect data
+. describe
+
+{txt}Contains data
+ Observations:{res}           149                  
+{txt}    Variables:{res}           185                  
+{txt}{hline}
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+{hline}
+{p 0 48}{res}{bind:startdate      }{txt}{bind: str15   }{bind:%15s      }{space 1}{bind:         }{bind:  }{res}{res}StartDate{p_end}
+{p 0 48}{bind:enddate        }{txt}{bind: str15   }{bind:%15s      }{space 1}{bind:         }{bind:  }{res}{res}EndDate{p_end}
+{p 0 48}{bind:status         }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}Status{p_end}
+{p 0 48}{bind:ipaddress      }{txt}{bind: str15   }{bind:%15s      }{space 1}{bind:         }{bind:  }{res}{res}IPAddress{p_end}
+{p 0 48}{bind:progress       }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}Progress{p_end}
+{p 0 48}{bind:durationinsec~s}{txt}{bind: long    }{bind:%12.0g    }{space 1}{bind:         }{bind:  }{res}{res}Duration (in seconds){p_end}
+{p 0 48}{bind:finished       }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}Finished{p_end}
+{p 0 48}{bind:recordeddate   }{txt}{bind: str15   }{bind:%15s      }{space 1}{bind:         }{bind:  }{res}{res}RecordedDate{p_end}
+{p 0 48}{bind:responseid     }{txt}{bind: str17   }{bind:%17s      }{space 1}{bind:         }{bind:  }{res}{res}ResponseId{p_end}
+{p 0 48}{bind:recipientlast~e}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}RecipientLastName{p_end}
+{p 0 48}{bind:recipientfirs~e}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}RecipientFirstName{p_end}
+{p 0 48}{bind:recipientemail }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}RecipientEmail{p_end}
+{p 0 48}{bind:externalrefer~e}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}ExternalReference{p_end}
+{p 0 48}{bind:locationlatit~e}{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}LocationLatitude{p_end}
+{p 0 48}{bind:locationlongi~e}{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}LocationLongitude{p_end}
+{p 0 48}{bind:distributionc~l}{txt}{bind: str2    }{bind:%9s       }{space 1}{bind:         }{bind:  }{res}{res}DistributionChannel{p_end}
+{p 0 48}{bind:userlanguage   }{txt}{bind: str2    }{bind:%9s       }{space 1}{bind:         }{bind:  }{res}{res}UserLanguage{p_end}
+{p 0 48}{bind:consent        }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:con_freq       }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:con_situation_1}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}con_situation _1{p_end}
+{p 0 48}{bind:con_situation_2}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}con_situation _2{p_end}
+{p 0 48}{bind:con_situation_3}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}con_situation _3{p_end}
+{p 0 48}{bind:con_situation_4}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}con_situation _4{p_end}
+{p 0 48}{bind:con_situation_5}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}con_situation _5{p_end}
+{p 0 48}{bind:con_situation_6}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}con_situation _6{p_end}
+{p 0 48}{bind:con_situation_7}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}con_situation _7{p_end}
+{p 0 48}{bind:con_situation~t}{txt}{bind: strL    }{bind:%9s       }{space 1}{bind:         }{bind:  }{res}{res}con_situation _7_TEXT{p_end}
+{p 0 48}{bind:exercise       }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:flavor_pref1_1 }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:flavor_pref1_2 }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:flavor_pref1_3 }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:flavor_pref1_4 }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:flavor_pref1_5 }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:flavor_pref1_6 }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:flavor_pref1_7 }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:flavor_pref1_8 }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:flavor_pref1_9 }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:flavor_pref1_~t}{txt}{bind: strL    }{bind:%9s       }{space 1}{bind:         }{bind:  }{res}{res}flavor_pref1_9_TEXT{p_end}
+{p 0 48}{bind:flavor_pref2   }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:flavor_pref2_~t}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}flavor_pref2_9_TEXT{p_end}
+{p 0 48}{bind:pref_flavor    }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:pref_sweet     }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:pref_sugar     }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:pref_ingred    }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:pref_health    }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:label_habit_l~l}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:label_habit_r~d}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:label_habit_i~d}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:preknow_vitd   }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:preknow_vitc   }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:preknow_calc   }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:preknow_iron   }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:preknow_pota   }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:preknow_5_magn }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:wtp_1          }{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sure_1         }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sensory_584_o~l}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sensory_584_a~r}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sensory_584_c~r}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sensory_584_a~a}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sensory_584_f~r}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sensory_584_l~n}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sensory_584_~et}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sensory_584_~lt}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sensory_584_s~r}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sensory_584_a~t}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:refresh_584    }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:wtp_2b_584     }{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sure_2b_584    }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sensory_793_o~l}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sensory_793_a~r}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sensory_793_c~r}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sensory_793_a~a}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sensory_793_f~r}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sensory_793_l~n}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sensory_793_~et}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sensory_793_~lt}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sensory_793_s~r}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sensory_793_a~t}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:refresh_793    }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:wtp_2b_793     }{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sure_2b_793    }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}Sure_2b_793{p_end}
+{p 0 48}{bind:wtp_3b_info_584}{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:wtp_3b_info_793}{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sure_3b_inf~584}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sure_3b_inf~793}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:after_~b_d1_new}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:aft~b_d1_useful}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:mag_benefit~sle}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:mag~b_d1_cramps}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:mag_~b_d1_sugar}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:mag_b~b_d1_bone}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:mag_~b_d1_sleep}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:mag_intake_d1~p}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:mag_intake_d1~t}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:wtp_2a_info_584}{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:wtp_2a_info_793}{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sure_2a_inf~584}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sure_2a_inf~793}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:after_~a_d1_new}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:aft~a_d1_useful}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:mag_be~1_muscle}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:mag~a_d1_cramps}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:mag_~a_d1_sugar}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:mag_b~a_d1_bone}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:mag_~a_d1_sleep}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:ma~a_d1_magsupp}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:m~a_d1_multivit}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:wtp_3a_584     }{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sure_3a_584    }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:wtp_3a_793     }{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sure_3a_793    }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sensory_356_o~l}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sensory_356_a~r}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sensory_356_c~r}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sensory_356_a~a}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sensory_356_f~r}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sensory_356_b~y}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sensory_356_~et}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sensory_356_~lt}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sensory_356_s~r}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sensory_356_a~t}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:refresh_356    }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:wtp_2b_356     }{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sure_2b_356    }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sensory_831_o~l}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sensory_831_a~r}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sensory_831_c~r}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sensory_831_a~a}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sensory_831_f~r}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sensory_831_p~e}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sensory_831_~et}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sensory_831_~at}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sensory_831_s~r}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sensory_831_a~t}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:refresh_831    }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:wtp_2b_831     }{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sure_2b_831    }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:wtp_3b_info_356}{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:wtp_3b_info_831}{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sure_3b_inf~356}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sure_3b_inf~831}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:after_~b_d2_new}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:aft~b_d2_useful}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:mag~b_d2_muscle}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:mag~b_d2_cramps}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:mag_~b_d2_sugar}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:mag_b~b_d2_bone}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:mag_~b_d2_sleep}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:mag_intake_3b~p}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:mag_intake_3b~t}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:wtp_2a_info_356}{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:wtp_2a_info_831}{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sure_2a_inf~356}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sure_2a_inf~831}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:after_~a_d2_new}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:aft~a_d2_useful}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:mag~a_d2_muscle}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:mag~a_d2_cramps}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:mag_~a_d2_sugar}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:mag_b~a_d2_bone}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:mag_~a_d2_sleep}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:ma~a_d2_magsupp}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:m~a_d2_multivit}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:wtp_3a_356     }{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sure_3a_356    }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:wtp_3a_831     }{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:sure_3a_831    }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:gender         }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:gender_4_text  }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}gender_4_TEXT{p_end}
+{p 0 48}{bind:age            }{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:race_2         }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:race_7         }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:race_8         }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:race_9         }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:race_10        }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:race_11        }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:race_12        }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:race_13        }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:race_999       }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}race_-999{p_end}
+{p 0 48}{bind:race_13_text   }{txt}{bind: str12   }{bind:%12s      }{space 1}{bind:         }{bind:  }{res}{res}race_13_TEXT{p_end}
+{p 0 48}{bind:edu            }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:income         }{txt}{bind: int     }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:randomizer     }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:day            }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}Day{p_end}
+{txt}{hline}
+Sorted by: 
+     Note: {res}Dataset has changed since last saved.
+{txt}
+{com}. 
+. * drop unfinished responses
+. drop if finished != 1
+{txt}(6 observations deleted)
+
+{com}. 
+. * adjust display settings
+. set linesize 200
+{txt}
+{com}. 
+. * replace -999 missing codes
+. foreach var of varlist age edu income {c -(}
+{txt}  2{com}.     replace `var' = . if `var' == -999
+{txt}  3{com}. {c )-}
+{txt}(0 real changes made)
+(0 real changes made)
+(26 real changes made, 26 to missing)
+
+{com}. 
+. * check survey day
+. tab day
+
+        {txt}Day {c |}      Freq.     Percent        Cum.
+{hline 12}{c +}{hline 35}
+          1 {c |}{res}         70       48.95       48.95
+{txt}          2 {c |}{res}         73       51.05      100.00
+{txt}{hline 12}{c +}{hline 35}
+      Total {c |}{res}        143      100.00
+{txt}
+{com}. 
+. 
+. **********************************************************************
+. **# 2 - Generate variables and clean: Day 1 only, 584 vs 793
+. **********************************************************************
+. 
+. **## 2.1 - inspect WTP variables
+. describe wtp_*
+
+{txt}Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+{hline}
+{p 0 48}{res}{bind:wtp_1          }{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:wtp_2b_584     }{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:wtp_2b_793     }{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:wtp_3b_info_584}{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:wtp_3b_info_793}{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:wtp_2a_info_584}{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:wtp_2a_info_793}{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:wtp_3a_584     }{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:wtp_3a_793     }{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:wtp_2b_356     }{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:wtp_2b_831     }{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:wtp_3b_info_356}{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:wtp_3b_info_831}{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:wtp_2a_info_356}{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:wtp_2a_info_831}{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:wtp_3a_356     }{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:wtp_3a_831     }{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{txt}
+{com}. 
+. * keep Day 1 only
+. keep if day == 1
+{txt}(73 observations deleted)
+
+{com}. 
+. * keep only variables needed for Day 1 regression analysis
+. keep wtp_1 ///
+>      wtp_2b_584 wtp_3b_info_584 ///
+>      wtp_2b_793 wtp_3b_info_793 ///
+>      wtp_2a_info_584 wtp_2a_info_793 ///
+>      after_info_3b_d1_useful after_info_2a_d1_useful ///
+>      mag_benefit_3b_d1_musle mag_benefit_3b_d1_cramps ///
+>      mag_benefit_3b_d1_sugar mag_benefit_3b_d1_bone ///
+>      mag_benefit_3b_d1_sleep ///
+>      mag_benefit_2a_d1_muscle mag_benefit_2a_d1_cramps ///
+>      mag_benefit_2a_d1_sugar mag_benefit_2a_d1_bone ///
+>      mag_benefit_2a_d1_sleep ///
+>      preknow_5_magn day randomizer ///
+>      age gender income exercise con_freq
+{txt}
+{com}. 
+. **## 2.2 - create pathway-specific WTP change variables
+. 
+. * Path B: taste first, then magnesium information
+. gen diffB_584 = wtp_3b_info_584 - wtp_2b_584
+{txt}(36 missing values generated)
+
+{com}. gen diffB_793 = wtp_3b_info_793 - wtp_2b_793
+{txt}(36 missing values generated)
+
+{com}. 
+. * Path A: magnesium information first
+. gen diffA_584 = wtp_2a_info_584 - wtp_1
+{txt}(34 missing values generated)
+
+{com}. gen diffA_793 = wtp_2a_info_793 - wtp_1
+{txt}(34 missing values generated)
+
+{com}. 
+. **## 2.3 - combine Path A and Path B into one outcome variable
+. 
+. gen diff_584 = diffB_584
+{txt}(36 missing values generated)
+
+{com}. replace diff_584 = diffA_584 if missing(diff_584)
+{txt}(36 real changes made)
+
+{com}. 
+. gen diff_793 = diffB_793
+{txt}(36 missing values generated)
+
+{com}. replace diff_793 = diffA_793 if missing(diff_793)
+{txt}(36 real changes made)
+
+{com}. 
+. **## 2.4 - create deviation from market price ($2.50)
+. 
+. gen devB_584_taste = wtp_2b_584 - 2.5
+{txt}(36 missing values generated)
+
+{com}. gen devB_584_info  = wtp_3b_info_584 - 2.5
+{txt}(36 missing values generated)
+
+{com}. 
+. gen devB_793_taste = wtp_2b_793 - 2.5
+{txt}(36 missing values generated)
+
+{com}. gen devB_793_info  = wtp_3b_info_793 - 2.5
+{txt}(36 missing values generated)
+
+{com}. 
+. gen devA_584_info  = wtp_2a_info_584 - 2.5
+{txt}(34 missing values generated)
+
+{com}. gen devA_793_info  = wtp_2a_info_793 - 2.5
+{txt}(34 missing values generated)
+
+{com}. gen dev_baseline   = wtp_1 - 2.5
+{txt}
+{com}. 
+. 
+. **********************************************************************
+. **# 3 - Label variables and save clean dataset
+. **********************************************************************
+. 
+. **## 3.1 - label key variables clearly
+. 
+. label variable wtp_1              "Baseline WTP before product info"
+{txt}
+{com}. 
+. label variable wtp_2b_584         "Path B: WTP 584 after tasting"
+{txt}
+{com}. label variable wtp_3b_info_584    "Path B: WTP 584 after magnesium info"
+{txt}
+{com}. 
+. label variable wtp_2b_793         "Path B: WTP 793 after tasting"
+{txt}
+{com}. label variable wtp_3b_info_793    "Path B: WTP 793 after magnesium info"
+{txt}
+{com}. 
+. label variable wtp_2a_info_584    "Path A: WTP 584 after magnesium info"
+{txt}
+{com}. label variable wtp_2a_info_793    "Path A: WTP 793 after magnesium info"
+{txt}
+{com}. 
+. label variable diff_584           "Change in WTP for 584 due to magnesium info (A & B)"
+{txt}
+{com}. label variable diff_793           "Change in WTP for 793 due to magnesium info (A & B)"
+{txt}
+{com}. 
+. label variable preknow_5_magn     "Prior knowledge of magnesium"
+{txt}
+{com}. label variable exercise           "Exercise frequency"
+{txt}
+{com}. label variable con_freq           "Sports drink consumption frequency"
+{txt}
+{com}. label variable randomizer         "Randomization pathway"
+{txt}
+{com}. 
+. **## 3.2 - save clean dataset for regression
+. 
+. save "$logs/clean_data_day1_584_793.dta", replace
+{txt}{p 0 4 2}
+file {bf}
+C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/clean_data_day1_584_793.dta{rm}
+saved
+{p_end}
+
+{com}. 
+.         
+. **********************************************************************
+. **# 4 - Regression models
+. **********************************************************************
+. 
+. * install estout if needed
+. cap which esttab
+{txt}
+{com}. if _rc ssc install estout, replace
+{txt}
+{com}. 
+. * clear stored models
+. eststo clear
+{txt}
+{com}. 
+. **## 4.1 - Model 1: Magnesium product 584
+. eststo m1: reg diff_584 ///
+>     preknow_5_magn ///
+>     exercise ///
+>     con_freq ///
+>     age ///
+>     i.gender ///
+>     i.randomizer
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}        70
+{txt}{hline 13}{c +}{hline 34}   F(9, 60)        = {res}     1.18
+{txt}       Model {c |} {res} 3.15847402         9  .350941558   {txt}Prob > F        ={res}    0.3240
+{txt}    Residual {c |} {res} 17.8379546        60  .297299243   {txt}R-squared       ={res}    0.1504
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0230
+{txt}       Total {c |} {res} 20.9964286        69  .304296066   {txt}Root MSE        =   {res} .54525
+
+{txt}{hline 15}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}      diff_584{col 16}{c |} Coefficient{col 28}  Std. err.{col 40}      t{col 48}   P>|t|{col 56}     [95% con{col 69}f. interval]
+{hline 15}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+preknow_5_magn {c |}{col 16}{res}{space 2}-.0160189{col 28}{space 2} .0822772{col 39}{space 1}   -0.19{col 48}{space 3}0.846{col 56}{space 4}-.1805978{col 69}{space 3}   .14856
+{txt}{space 6}exercise {c |}{col 16}{res}{space 2}-.1055745{col 28}{space 2} .0806692{col 39}{space 1}   -1.31{col 48}{space 3}0.196{col 56}{space 4} -.266937{col 69}{space 3}  .055788
+{txt}{space 6}con_freq {c |}{col 16}{res}{space 2} .0591157{col 28}{space 2} .0626237{col 39}{space 1}    0.94{col 48}{space 3}0.349{col 56}{space 4}-.0661504{col 69}{space 3} .1843818
+{txt}{space 11}age {c |}{col 16}{res}{space 2} -.007595{col 28}{space 2} .0064806{col 39}{space 1}   -1.17{col 48}{space 3}0.246{col 56}{space 4}-.0205581{col 69}{space 3}  .005368
+{txt}{space 14} {c |}
+{space 8}gender {c |}
+{space 12}2  {c |}{col 16}{res}{space 2} .0667401{col 28}{space 2}  .147333{col 39}{space 1}    0.45{col 48}{space 3}0.652{col 56}{space 4}-.2279697{col 69}{space 3} .3614499
+{txt}{space 12}3  {c |}{col 16}{res}{space 2}  .220623{col 28}{space 2} .5990611{col 39}{space 1}    0.37{col 48}{space 3}0.714{col 56}{space 4}-.9776777{col 69}{space 3} 1.418924
+{txt}{space 14} {c |}
+{space 4}randomizer {c |}
+{space 12}2  {c |}{col 16}{res}{space 2}  .208981{col 28}{space 2} .1936798{col 39}{space 1}    1.08{col 48}{space 3}0.285{col 56}{space 4}-.1784363{col 69}{space 3} .5963983
+{txt}{space 12}3  {c |}{col 16}{res}{space 2}-.3043893{col 28}{space 2} .1982326{col 39}{space 1}   -1.54{col 48}{space 3}0.130{col 56}{space 4}-.7009134{col 69}{space 3} .0921349
+{txt}{space 12}4  {c |}{col 16}{res}{space 2}-.1309673{col 28}{space 2} .2008112{col 39}{space 1}   -0.65{col 48}{space 3}0.517{col 56}{space 4}-.5326496{col 69}{space 3} .2707149
+{txt}{space 14} {c |}
+{space 9}_cons {c |}{col 16}{res}{space 2} .4983819{col 28}{space 2} .4003039{col 39}{space 1}    1.25{col 48}{space 3}0.218{col 56}{space 4}-.3023451{col 69}{space 3} 1.299109
+{txt}{hline 15}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+. **## 4.2 - Model 2: Non-magnesium product 793
+. eststo m2: reg diff_793 ///
+>     preknow_5_magn ///
+>     exercise ///
+>     con_freq ///
+>     age ///
+>     i.gender ///
+>     i.randomizer
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}        70
+{txt}{hline 13}{c +}{hline 34}   F(9, 60)        = {res}     2.98
+{txt}       Model {c |} {res} 11.4084057         9  1.26760063   {txt}Prob > F        ={res}    0.0054
+{txt}    Residual {c |} {res} 25.5594515        60  .425990858   {txt}R-squared       ={res}    0.3086
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.2049
+{txt}       Total {c |} {res} 36.9678571        69  .535766046   {txt}Root MSE        =   {res} .65268
+
+{txt}{hline 15}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}      diff_793{col 16}{c |} Coefficient{col 28}  Std. err.{col 40}      t{col 48}   P>|t|{col 56}     [95% con{col 69}f. interval]
+{hline 15}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+preknow_5_magn {c |}{col 16}{res}{space 2}-.0993439{col 28}{space 2} .0984879{col 39}{space 1}   -1.01{col 48}{space 3}0.317{col 56}{space 4} -.296349{col 69}{space 3} .0976612
+{txt}{space 6}exercise {c |}{col 16}{res}{space 2} .0800125{col 28}{space 2} .0965631{col 39}{space 1}    0.83{col 48}{space 3}0.411{col 56}{space 4}-.1131425{col 69}{space 3} .2731674
+{txt}{space 6}con_freq {c |}{col 16}{res}{space 2}-.1439891{col 28}{space 2} .0749622{col 39}{space 1}   -1.92{col 48}{space 3}0.060{col 56}{space 4}-.2939357{col 69}{space 3} .0059576
+{txt}{space 11}age {c |}{col 16}{res}{space 2} .0123041{col 28}{space 2} .0077574{col 39}{space 1}    1.59{col 48}{space 3}0.118{col 56}{space 4} -.003213{col 69}{space 3} .0278212
+{txt}{space 14} {c |}
+{space 8}gender {c |}
+{space 12}2  {c |}{col 16}{res}{space 2} .4158294{col 28}{space 2} .1763612{col 39}{space 1}    2.36{col 48}{space 3}0.022{col 56}{space 4} .0630543{col 69}{space 3} .7686044
+{txt}{space 12}3  {c |}{col 16}{res}{space 2} .3140574{col 28}{space 2} .7170912{col 39}{space 1}    0.44{col 48}{space 3}0.663{col 56}{space 4}-1.120339{col 69}{space 3} 1.748453
+{txt}{space 14} {c |}
+{space 4}randomizer {c |}
+{space 12}2  {c |}{col 16}{res}{space 2}-.1707503{col 28}{space 2} .2318396{col 39}{space 1}   -0.74{col 48}{space 3}0.464{col 56}{space 4}-.6344985{col 69}{space 3} .2929979
+{txt}{space 12}3  {c |}{col 16}{res}{space 2}-.4860087{col 28}{space 2} .2372893{col 39}{space 1}   -2.05{col 48}{space 3}0.045{col 56}{space 4} -.960658{col 69}{space 3}-.0113593
+{txt}{space 12}4  {c |}{col 16}{res}{space 2}-.7367619{col 28}{space 2} .2403761{col 39}{space 1}   -3.07{col 48}{space 3}0.003{col 56}{space 4}-1.217586{col 69}{space 3}-.2559382
+{txt}{space 14} {c |}
+{space 9}_cons {c |}{col 16}{res}{space 2}-.2790184{col 28}{space 2} .4791738{col 39}{space 1}   -0.58{col 48}{space 3}0.563{col 56}{space 4}-1.237509{col 69}{space 3} .6794719
+{txt}{hline 15}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}.         
+. 
+. **********************************************************************
+. **# 5 - Extended regression models (include baseline WTP)
+. **********************************************************************
+. 
+. **## 5.1 - Model 3: 584 with baseline control
+. eststo m3: reg diff_584 ///
+>     wtp_1 ///
+>     preknow_5_magn ///
+>     exercise ///
+>     con_freq ///
+>     age ///
+>     i.gender ///
+>     i.randomizer
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}        70
+{txt}{hline 13}{c +}{hline 34}   F(10, 59)       = {res}     2.18
+{txt}       Model {c |} {res} 5.67114217        10  .567114217   {txt}Prob > F        ={res}    0.0314
+{txt}    Residual {c |} {res} 15.3252864        59  .259750617   {txt}R-squared       ={res}    0.2701
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.1464
+{txt}       Total {c |} {res} 20.9964286        69  .304296066   {txt}Root MSE        =   {res} .50966
+
+{txt}{hline 15}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}      diff_584{col 16}{c |} Coefficient{col 28}  Std. err.{col 40}      t{col 48}   P>|t|{col 56}     [95% con{col 69}f. interval]
+{hline 15}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 9}wtp_1 {c |}{col 16}{res}{space 2}-.2846079{col 28}{space 2} .0915077{col 39}{space 1}   -3.11{col 48}{space 3}0.003{col 56}{space 4}-.4677143{col 69}{space 3}-.1015014
+{txt}preknow_5_magn {c |}{col 16}{res}{space 2}-.0256594{col 28}{space 2} .0769686{col 39}{space 1}   -0.33{col 48}{space 3}0.740{col 56}{space 4}-.1796732{col 69}{space 3} .1283543
+{txt}{space 6}exercise {c |}{col 16}{res}{space 2}-.0717407{col 28}{space 2} .0761838{col 39}{space 1}   -0.94{col 48}{space 3}0.350{col 56}{space 4}-.2241841{col 69}{space 3} .0807027
+{txt}{space 6}con_freq {c |}{col 16}{res}{space 2} .0715508{col 28}{space 2}  .058672{col 39}{space 1}    1.22{col 48}{space 3}0.228{col 56}{space 4}-.0458516{col 69}{space 3} .1889532
+{txt}{space 11}age {c |}{col 16}{res}{space 2}-.0064689{col 28}{space 2} .0060683{col 39}{space 1}   -1.07{col 48}{space 3}0.291{col 56}{space 4}-.0186116{col 69}{space 3} .0056738
+{txt}{space 14} {c |}
+{space 8}gender {c |}
+{space 12}2  {c |}{col 16}{res}{space 2} .0697649{col 28}{space 2} .1377185{col 39}{space 1}    0.51{col 48}{space 3}0.614{col 56}{space 4}-.2058091{col 69}{space 3} .3453389
+{txt}{space 12}3  {c |}{col 16}{res}{space 2} .0211613{col 28}{space 2} .5636148{col 39}{space 1}    0.04{col 48}{space 3}0.970{col 56}{space 4}-1.106629{col 69}{space 3} 1.148952
+{txt}{space 14} {c |}
+{space 4}randomizer {c |}
+{space 12}2  {c |}{col 16}{res}{space 2} .2243702{col 28}{space 2} .1811039{col 39}{space 1}    1.24{col 48}{space 3}0.220{col 56}{space 4}-.1380179{col 69}{space 3} .5867584
+{txt}{space 12}3  {c |}{col 16}{res}{space 2}-.2425551{col 28}{space 2} .1863554{col 39}{space 1}   -1.30{col 48}{space 3}0.198{col 56}{space 4}-.6154514{col 69}{space 3} .1303412
+{txt}{space 12}4  {c |}{col 16}{res}{space 2}-.0889718{col 28}{space 2} .1881872{col 39}{space 1}   -0.47{col 48}{space 3}0.638{col 56}{space 4}-.4655336{col 69}{space 3}   .28759
+{txt}{space 14} {c |}
+{space 9}_cons {c |}{col 16}{res}{space 2} 1.219238{col 28}{space 2} .4401391{col 39}{space 1}    2.77{col 48}{space 3}0.007{col 56}{space 4} .3385213{col 69}{space 3} 2.099954
+{txt}{hline 15}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+. **## 5.2 - Model 4: 793 with baseline control
+. eststo m4: reg diff_793 ///
+>     wtp_1 ///
+>     preknow_5_magn ///
+>     exercise ///
+>     con_freq ///
+>     age ///
+>     i.gender ///
+>     i.randomizer
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}        70
+{txt}{hline 13}{c +}{hline 34}   F(10, 59)       = {res}     3.99
+{txt}       Model {c |} {res} 14.9113287        10  1.49113287   {txt}Prob > F        ={res}    0.0003
+{txt}    Residual {c |} {res} 22.0565284        59  .373839465   {txt}R-squared       ={res}    0.4034
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.3022
+{txt}       Total {c |} {res} 36.9678571        69  .535766046   {txt}Root MSE        =   {res} .61142
+
+{txt}{hline 15}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}      diff_793{col 16}{c |} Coefficient{col 28}  Std. err.{col 40}      t{col 48}   P>|t|{col 56}     [95% con{col 69}f. interval]
+{hline 15}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 9}wtp_1 {c |}{col 16}{res}{space 2}-.3360428{col 28}{space 2} .1097797{col 39}{space 1}   -3.06{col 48}{space 3}0.003{col 56}{space 4}-.5557114{col 69}{space 3}-.1163742
+{txt}preknow_5_magn {c |}{col 16}{res}{space 2}-.1107267{col 28}{space 2} .0923374{col 39}{space 1}   -1.20{col 48}{space 3}0.235{col 56}{space 4}-.2954934{col 69}{space 3}   .07404
+{txt}{space 6}exercise {c |}{col 16}{res}{space 2} .1199607{col 28}{space 2} .0913959{col 39}{space 1}    1.31{col 48}{space 3}0.194{col 56}{space 4}-.0629221{col 69}{space 3} .3028436
+{txt}{space 6}con_freq {c |}{col 16}{res}{space 2}-.1293067{col 28}{space 2} .0703875{col 39}{space 1}   -1.84{col 48}{space 3}0.071{col 56}{space 4}-.2701517{col 69}{space 3} .0115383
+{txt}{space 11}age {c |}{col 16}{res}{space 2} .0136338{col 28}{space 2}   .00728{col 39}{space 1}    1.87{col 48}{space 3}0.066{col 56}{space 4}-.0009336{col 69}{space 3} .0282011
+{txt}{space 14} {c |}
+{space 8}gender {c |}
+{space 12}2  {c |}{col 16}{res}{space 2} .4194008{col 28}{space 2} .1652176{col 39}{space 1}    2.54{col 48}{space 3}0.014{col 56}{space 4} .0888011{col 69}{space 3} .7500006
+{txt}{space 12}3  {c |}{col 16}{res}{space 2} .0785485{col 28}{space 2} .6761556{col 39}{space 1}    0.12{col 48}{space 3}0.908{col 56}{space 4}-1.274436{col 69}{space 3} 1.431533
+{txt}{space 14} {c |}
+{space 4}randomizer {c |}
+{space 12}2  {c |}{col 16}{res}{space 2}-.1525799{col 28}{space 2} .2172662{col 39}{space 1}   -0.70{col 48}{space 3}0.485{col 56}{space 4}-.5873286{col 69}{space 3} .2821688
+{txt}{space 12}3  {c |}{col 16}{res}{space 2}-.4129997{col 28}{space 2} .2235663{col 39}{space 1}   -1.85{col 48}{space 3}0.070{col 56}{space 4}-.8603548{col 69}{space 3} .0343554
+{txt}{space 12}4  {c |}{col 16}{res}{space 2}-.6871768{col 28}{space 2} .2257639{col 39}{space 1}   -3.04{col 48}{space 3}0.003{col 56}{space 4}-1.138929{col 69}{space 3}-.2354244
+{txt}{space 14} {c |}
+{space 9}_cons {c |}{col 16}{res}{space 2} .5721119{col 28}{space 2} .5280247{col 39}{space 1}    1.08{col 48}{space 3}0.283{col 56}{space 4}-.4844631{col 69}{space 3} 1.628687
+{txt}{hline 15}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}.         
+. 
+. **********************************************************************
+. **# 6 - Export regression results table
+. **********************************************************************
+. 
+. esttab m1 m2 m3 m4 using "$logs/regression_results_day1.rtf", ///
+>     replace ///
+>     b(3) se(3) ///
+>     star(* 0.10 ** 0.05 *** 0.01) ///
+>     label ///
+>     title("Regression Results for Change in Willingness to Pay")
+{res}{txt}(output written to {browse  `"C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/regression_results_day1.rtf"'})
+
+{com}.         
+. 
+. **********************************************************************
+. **# 7 - Summary statistics table
+. **********************************************************************
+. 
+. **## 7.1 - summarize key variables
+. 
+. summarize wtp_1 ///
+>           wtp_2b_584 wtp_3b_info_584 ///
+>           wtp_2b_793 wtp_3b_info_793 ///
+>           wtp_2a_info_584 wtp_2a_info_793 ///
+>           diffA_584 diffA_793 ///
+>           diffB_584 diffB_793 ///
+>           diff_584 diff_793 ///
+>           preknow_5_magn exercise con_freq age
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+{space 7}wtp_1 {c |}{res}         70    3.042857    .6980452          2        4.5
+{txt}{space 2}wtp_2b_584 {c |}{res}         34    2.617647     .761864        .75        4.5
+{txt}wtp_3b_i~584 {c |}{res}         34    2.808824    .8002339          0        4.5
+{txt}{space 2}wtp_2b_793 {c |}{res}         34    2.757353    .8083028       1.25        4.5
+{txt}wtp_3b_i~793 {c |}{res}         34    2.470588    .8698761          0        4.5
+{txt}{hline 13}{c +}{hline 57}
+wtp_2a_i~584 {c |}{res}         36    3.041667    .6020797          2       4.75
+{txt}wtp_2a_i~793 {c |}{res}         36    2.395833    .8267298          0          4
+{txt}{space 3}diffA_584 {c |}{res}         36   -.0972222     .589424       -1.5       1.75
+{txt}{space 3}diffA_793 {c |}{res}         36   -.7430556    .7427894         -3        .25
+{txt}{space 3}diffB_584 {c |}{res}         34    .1911765    .4729774         -1       1.25
+{txt}{hline 13}{c +}{hline 57}
+{space 3}diffB_793 {c |}{res}         34   -.2867647    .6517237       -2.5        .75
+{txt}{space 4}diff_584 {c |}{res}         70    .0428571    .5516304       -1.5       1.75
+{txt}{space 4}diff_793 {c |}{res}         70   -.5214286    .7319604         -3        .75
+{txt}preknow_5_~n {c |}{res}         70    3.571429    .9258201          1          5
+{txt}{space 4}exercise {c |}{res}         70    2.814286    .8894365          1          4
+{txt}{hline 13}{c +}{hline 57}
+{space 4}con_freq {c |}{res}         70    2.071429    1.171168          0          5
+{txt}{space 9}age {c |}{res}         70    25.67143    10.90801       18.5         55
+{txt}
+{com}. 
+. **## 7.2 - formatted summary table
+. 
+. tabstat wtp_1 ///
+>         wtp_2b_584 wtp_3b_info_584 ///
+>         wtp_2b_793 wtp_3b_info_793 ///
+>         wtp_2a_info_584 wtp_2a_info_793 ///
+>         diffA_584 diffA_793 ///
+>         diffB_584 diffB_793 ///
+>         diff_584 diff_793 ///
+>         preknow_5_magn exercise con_freq age, ///
+>         stats(mean sd min max n) columns(statistics)
+
+{txt}{ralign 12:Variable} {...}
+{c |}      Mean        SD       Min       Max         N
+{hline 13}{c +}{hline 50}
+{ralign 12:wtp_1} {...}
+{c |}{...}
+ {res} 3.042857  .6980452         2       4.5        70
+{txt}{ralign 12:wtp_2b_584} {...}
+{c |}{...}
+ {res} 2.617647   .761864       .75       4.5        34
+{txt}{ralign 12:wtp_3b_i~584} {...}
+{c |}{...}
+ {res} 2.808824  .8002339         0       4.5        34
+{txt}{ralign 12:wtp_2b_793} {...}
+{c |}{...}
+ {res} 2.757353  .8083028      1.25       4.5        34
+{txt}{ralign 12:wtp_3b_i~793} {...}
+{c |}{...}
+ {res} 2.470588  .8698761         0       4.5        34
+{txt}{ralign 12:wtp_2a_i~584} {...}
+{c |}{...}
+ {res} 3.041667  .6020797         2      4.75        36
+{txt}{ralign 12:wtp_2a_i~793} {...}
+{c |}{...}
+ {res} 2.395833  .8267298         0         4        36
+{txt}{ralign 12:diffA_584} {...}
+{c |}{...}
+ {res}-.0972222   .589424      -1.5      1.75        36
+{txt}{ralign 12:diffA_793} {...}
+{c |}{...}
+ {res}-.7430556  .7427894        -3       .25        36
+{txt}{ralign 12:diffB_584} {...}
+{c |}{...}
+ {res} .1911765  .4729774        -1      1.25        34
+{txt}{ralign 12:diffB_793} {...}
+{c |}{...}
+ {res}-.2867647  .6517237      -2.5       .75        34
+{txt}{ralign 12:diff_584} {...}
+{c |}{...}
+ {res} .0428571  .5516304      -1.5      1.75        70
+{txt}{ralign 12:diff_793} {...}
+{c |}{...}
+ {res}-.5214286  .7319604        -3       .75        70
+{txt}{ralign 12:preknow_5_~n} {...}
+{c |}{...}
+ {res} 3.571429  .9258201         1         5        70
+{txt}{ralign 12:exercise} {...}
+{c |}{...}
+ {res} 2.814286  .8894365         1         4        70
+{txt}{ralign 12:con_freq} {...}
+{c |}{...}
+ {res} 2.071429  1.171168         0         5        70
+{txt}{ralign 12:age} {...}
+{c |}{...}
+ {res} 25.67143  10.90801      18.5        55        70
+{txt}{hline 13}{c BT}{hline 50}
+
+{com}.                 
+.                 
+. **********************************************************************
+. **# 8 - Hypothesis testing (paired t-tests, Day 1 only)
+. **********************************************************************
+. 
+. **## H1: Magnesium information changes WTP for product 584 (Path B)
+. ttest wtp_3b_info_584 == wtp_2b_584
+
+{txt}Paired t test
+{hline 9}{c TT}{hline 68}
+Variable{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. err.{col 47}Std. dev.{col 59}[95% conf. interval]
+{hline 9}{c +}{hline 68}
+wtp_3b~4 {c |}{res}{col 12}     34{col 22} 2.808824{col 34}  .137239{col 46} .8002339{col 58} 2.529609{col 70} 3.088038
+{txt}wtp_2b~4 {c |}{res}{col 12}     34{col 22} 2.617647{col 34} .1306586{col 46}  .761864{col 58}  2.35182{col 70} 2.883474
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 12}     34{col 22} .1911765{col 34}  .081115{col 46} .4729774{col 58} .0261468{col 70} .3562061
+{txt}{hline 9}{c BT}{hline 68}
+     mean(diff) = mean({res}wtp_3b_info_584{txt} - {res}wtp_2b_584{txt})              t = {res}  2.3569
+{txt} H0: mean(diff) = 0                              Degrees of freedom = {res}      33
+
+ {txt}Ha: mean(diff) < 0           Ha: mean(diff) != 0           Ha: mean(diff) > 0
+ Pr(T < t) = {res}0.9877         {txt}Pr(|T| > |t|) = {res}0.0245          {txt}Pr(T > t) = {res}0.0123
+{txt}
+{com}. 
+. /*
+> H0: mean(WTP after info - WTP after taste) = 0
+> H1: ≠ 0
+> */
+. 
+. **## H2: Magnesium information changes WTP for product 793 (Path B)
+. ttest wtp_3b_info_793 == wtp_2b_793
+
+{txt}Paired t test
+{hline 9}{c TT}{hline 68}
+Variable{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. err.{col 47}Std. dev.{col 59}[95% conf. interval]
+{hline 9}{c +}{hline 68}
+wtp_3b~3 {c |}{res}{col 12}     34{col 22} 2.470588{col 34} .1491825{col 46} .8698761{col 58} 2.167074{col 70} 2.774102
+{txt}wtp_2b~3 {c |}{res}{col 12}     34{col 22} 2.757353{col 34} .1386228{col 46} .8083028{col 58} 2.475323{col 70} 3.039383
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 12}     34{col 22}-.2867647{col 34} .1117697{col 46} .6517237{col 58}-.5141618{col 70}-.0593676
+{txt}{hline 9}{c BT}{hline 68}
+     mean(diff) = mean({res}wtp_3b_info_793{txt} - {res}wtp_2b_793{txt})              t = {res} -2.5657
+{txt} H0: mean(diff) = 0                              Degrees of freedom = {res}      33
+
+ {txt}Ha: mean(diff) < 0           Ha: mean(diff) != 0           Ha: mean(diff) > 0
+ Pr(T < t) = {res}0.0075         {txt}Pr(|T| > |t|) = {res}0.0150          {txt}Pr(T > t) = {res}0.9925
+{txt}
+{com}. 
+. /*
+> H0: mean(WTP after info - WTP after taste) = 0
+> H1: ≠ 0
+> */
+. 
+. 
+. 
+. **## H3: Magnesium information changes WTP for product 584 (Path A)
+. ttest wtp_2a_info_584 == wtp_1
+
+{txt}Paired t test
+{hline 9}{c TT}{hline 68}
+Variable{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. err.{col 47}Std. dev.{col 59}[95% conf. interval]
+{hline 9}{c +}{hline 68}
+wtp_2a~4 {c |}{res}{col 12}     36{col 22} 3.041667{col 34} .1003466{col 46} .6020797{col 58} 2.837952{col 70} 3.245381
+   {txt}wtp_1 {c |}{res}{col 12}     36{col 22} 3.138889{col 34} .1176171{col 46} .7057024{col 58} 2.900114{col 70} 3.377664
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 12}     36{col 22}-.0972222{col 34} .0982373{col 46}  .589424{col 58}-.2966546{col 70} .1022102
+{txt}{hline 9}{c BT}{hline 68}
+     mean(diff) = mean({res}wtp_2a_info_584{txt} - {res}wtp_1{txt})                   t = {res} -0.9897
+{txt} H0: mean(diff) = 0                              Degrees of freedom = {res}      35
+
+ {txt}Ha: mean(diff) < 0           Ha: mean(diff) != 0           Ha: mean(diff) > 0
+ Pr(T < t) = {res}0.1646         {txt}Pr(|T| > |t|) = {res}0.3291          {txt}Pr(T > t) = {res}0.8354
+{txt}
+{com}. 
+. /*
+> H0: mean(WTP after info - baseline) = 0
+> H1: ≠ 0
+> */
+. 
+. **## H4: Magnesium information changes WTP for product 793 (Path A)
+. ttest wtp_2a_info_793 == wtp_1
+
+{txt}Paired t test
+{hline 9}{c TT}{hline 68}
+Variable{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. err.{col 47}Std. dev.{col 59}[95% conf. interval]
+{hline 9}{c +}{hline 68}
+wtp_2a~3 {c |}{res}{col 12}     36{col 22} 2.395833{col 34} .1377883{col 46} .8267298{col 58} 2.116108{col 70} 2.675558
+   {txt}wtp_1 {c |}{res}{col 12}     36{col 22} 3.138889{col 34} .1176171{col 46} .7057024{col 58} 2.900114{col 70} 3.377664
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 12}     36{col 22}-.7430556{col 34} .1237982{col 46} .7427894{col 58}-.9943793{col 70}-.4917318
+{txt}{hline 9}{c BT}{hline 68}
+     mean(diff) = mean({res}wtp_2a_info_793{txt} - {res}wtp_1{txt})                   t = {res} -6.0021
+{txt} H0: mean(diff) = 0                              Degrees of freedom = {res}      35
+
+ {txt}Ha: mean(diff) < 0           Ha: mean(diff) != 0           Ha: mean(diff) > 0
+ Pr(T < t) = {res}0.0000         {txt}Pr(|T| > |t|) = {res}0.0000          {txt}Pr(T > t) = {res}1.0000
+{txt}
+{com}. 
+. /*
+> H0: mean(WTP after info - baseline) = 0
+> H1: ≠ 0
+> */
+. 
+. 
+. **********************************************************************
+. **# 9 - Compare magnesium vs non-magnesium effect (Day 1)
+. **********************************************************************
+. 
+. ttest diff_584 == diff_793
+
+{txt}Paired t test
+{hline 9}{c TT}{hline 68}
+Variable{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. err.{col 47}Std. dev.{col 59}[95% conf. interval]
+{hline 9}{c +}{hline 68}
+diff_584 {c |}{res}{col 12}     70{col 22} .0428571{col 34} .0659324{col 46} .5516304{col 58}-.0886745{col 70} .1743888
+{txt}diff_793 {c |}{res}{col 12}     70{col 22}-.5214286{col 34}  .087486{col 46} .7319604{col 58}-.6959584{col 70}-.3468988
+{txt}{hline 9}{c +}{hline 68}
+    diff {c |}{res}{col 12}     70{col 22} .5642857{col 34} .0997779{col 46}  .834802{col 58} .3652342{col 70} .7633372
+{txt}{hline 9}{c BT}{hline 68}
+     mean(diff) = mean({res}diff_584{txt} - {res}diff_793{txt})                       t = {res}  5.6554
+{txt} H0: mean(diff) = 0                              Degrees of freedom = {res}      69
+
+ {txt}Ha: mean(diff) < 0           Ha: mean(diff) != 0           Ha: mean(diff) > 0
+ Pr(T < t) = {res}1.0000         {txt}Pr(|T| > |t|) = {res}0.0000          {txt}Pr(T > t) = {res}0.0000
+{txt}
+{com}. 
+. /*
+> H0: Change in WTP for magnesium product = Change in WTP for non-magnesium product
+> H1: They are different
+> */
+. 
+. 
+. **********************************************************************
+. **# 10 - Table 1: Summary Statistics Output
+. **********************************************************************
+. 
+. use "$logs/clean_data_day1_584_793.dta", clear
+{txt}
+{com}. 
+. tempname memhold
+{txt}
+{com}. postfile `memhold' str50 variable mean sd min max n cv ///
+>     using "$logs/table1_day1_sumstats.dta", replace
+{txt}
+{com}. 
+. foreach var of varlist ///
+>     wtp_1 ///
+>     wtp_2b_584 wtp_3b_info_584 ///
+>     wtp_2b_793 wtp_3b_info_793 ///
+>     wtp_2a_info_584 wtp_2a_info_793 ///
+>     diffB_584 diffB_793 ///
+>     diffA_584 diffA_793 ///
+>     diff_584 diff_793 ///
+>     preknow_5_magn exercise con_freq age {c -(}
+{txt}  2{com}. 
+.     quietly summarize `var'
+{txt}  3{com}. 
+.     local lab : variable label `var'
+{txt}  4{com}.     if "`lab'" == "" local lab "`var'"
+{txt}  5{com}. 
+.     post `memhold' ///
+>         ("`lab'") ///
+>         (r(mean)) ///
+>         (r(sd)) ///
+>         (r(min)) ///
+>         (r(max)) ///
+>         (r(N)) ///
+>         (r(sd)/r(mean))
+{txt}  6{com}. {c )-}
+{txt}
+{com}. 
+. postclose `memhold'
+{txt}
+{com}. 
+. use "$logs/table1_day1_sumstats.dta", clear
+{txt}
+{com}. 
+. label variable variable "Variable"
+{txt}
+{com}. label variable mean "Mean"
+{txt}
+{com}. label variable sd "Std. Dev."
+{txt}
+{com}. label variable min "Min"
+{txt}
+{com}. label variable max "Max"
+{txt}
+{com}. label variable n "N"
+{txt}
+{com}. label variable cv "Coefficient of Variation"
+{txt}
+{com}. 
+. list, clean noobs
+{txt}
+    {res}                                          variable        mean         sd    min    max    n          cv {txt} 
+    {res}                  Baseline WTP before product info    3.042857   .6980452      2    4.5   70    .2294045 {txt} 
+    {res}                     Path B: WTP 584 after tasting    2.617647    .761864    .75    4.5   34    .2910492 {txt} 
+    {res}              Path B: WTP 584 after magnesium info    2.808824   .8002339      0    4.5   34       .2849 {txt} 
+    {res}                     Path B: WTP 793 after tasting    2.757353   .8083028   1.25    4.5   34    .2931445 {txt} 
+    {res}              Path B: WTP 793 after magnesium info    2.470588   .8698761      0    4.5   34    .3520927 {txt} 
+    {res}              Path A: WTP 584 after magnesium info    3.041667   .6020797      2   4.75   36     .197944 {txt} 
+    {res}              Path A: WTP 793 after magnesium info    2.395833   .8267298      0      4   36    .3450698 {txt} 
+    {res}                                         diffB_584    .1911765   .4729775     -1   1.25   34    2.474036 {txt} 
+    {res}                                         diffB_793   -.2867647   .6517237   -2.5    .75   34   -2.272677 {txt} 
+    {res}                                         diffA_584   -.0972222    .589424   -1.5   1.75   36   -6.062647 {txt} 
+    {res}                                         diffA_793   -.7430556   .7427894     -3    .25   36   -.9996418 {txt} 
+    {res}Change in WTP for 584 due to magnesium info (A & B    .0428571   .5516304   -1.5   1.75   70    12.87138 {txt} 
+    {res}Change in WTP for 793 due to magnesium info (A & B   -.5214286   .7319604     -3    .75   70    -1.40376 {txt} 
+    {res}                      Prior knowledge of magnesium    3.571429   .9258201      1      5   70    .2592296 {txt} 
+    {res}                                Exercise frequency    2.814286   .8894365      1      4   70    .3160434 {txt} 
+    {res}                Sports drink consumption frequency    2.071429   1.171168      0      5   70    .5653917 {txt} 
+    {res}                                               age    25.67143   10.90801   18.5     55   70    .4249086 {txt} 
+
+{com}. 
+. export delimited using "$logs/table1_day1_sumstats.csv", replace
+{res}{txt}file {bf:C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/table1_day1_sumstats.csv} saved
+
+{com}. 
+. 
+. **********************************************************************
+. **# 11 - Table 2: One-sample t-tests (Day 1, benchmark = $2.50)
+. **********************************************************************
+. 
+. use "$logs/clean_data_day1_584_793.dta", clear
+{txt}
+{com}. 
+. tempname memhold
+{txt}
+{com}. postfile `memhold' str50 variable mean tstat pvalue ci_low ci_high ///
+>     using "$logs/table2_day1_onesample.dta", replace
+{txt}
+{com}. 
+. foreach var of varlist ///
+>     wtp_3b_info_584 ///
+>     wtp_3b_info_793 ///
+>     wtp_2a_info_584 ///
+>     wtp_2a_info_793 {c -(}
+{txt}  2{com}. 
+.     quietly ttest `var' == 2.5
+{txt}  3{com}. 
+.     local lab : variable label `var'
+{txt}  4{com}.     if "`lab'" == "" local lab "`var'"
+{txt}  5{com}. 
+.     post `memhold' ///
+>         ("`lab'") ///
+>         (r(mu_1)) ///
+>         (r(t)) ///
+>         (r(p)) ///
+>         (r(lb_1)) ///
+>         (r(ub_1))
+{txt}  6{com}. {c )-}
+{txt}
+{com}. 
+. postclose `memhold'
+{txt}
+{com}. 
+. use "$logs/table2_day1_onesample.dta", clear
+{txt}
+{com}. 
+. label variable variable "Variable"
+{txt}
+{com}. label variable mean "Mean WTP"
+{txt}
+{com}. label variable tstat "t-statistic"
+{txt}
+{com}. label variable pvalue "p-value"
+{txt}
+{com}. label variable ci_low "95% CI (Lower)"
+{txt}
+{com}. label variable ci_high "95% CI (Upper)"
+{txt}
+{com}. 
+. list, clean noobs
+{txt}
+    {res}                            variable       mean       tstat     pvalue     ci_low    ci_high {txt} 
+    {res}Path B: WTP 584 after magnesium info   2.808824    2.250261   .0312193   2.529609   3.088038 {txt} 
+    {res}Path B: WTP 793 after magnesium info   2.470588   -.1971529   .8449172   2.167074   2.774102 {txt} 
+    {res}Path A: WTP 584 after magnesium info   3.041667    5.397956   4.80e-06   2.837952   3.245381 {txt} 
+    {res}Path A: WTP 793 after magnesium info   2.395833   -.7559907   .4547132   2.116108   2.675559 {txt} 
+
+{com}. 
+. export delimited using "$logs/table2_day1_onesample.csv", replace
+{res}{txt}file {bf:C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/table2_day1_onesample.csv} saved
+
+{com}. 
+. 
+. **********************************************************************
+. **# 12 - Table 3: Paired t-tests (Day 1, Path A and Path B)
+. **********************************************************************
+. 
+. use "$logs/clean_data_day1_584_793.dta", clear
+{txt}
+{com}. 
+. tempname memhold
+{txt}
+{com}. postfile `memhold' str15 pathway str10 product str40 comparison ///
+>     mean_before mean_after diff pvalue ci_low ci_high ///
+>     using "$logs/table3_day1_paired.dta", replace
+{txt}{p 0 4 2}
+(file {bf}
+C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/table3_day1_paired.dta{rm}
+not found)
+{p_end}
+
+{com}. 
+. *--------------------------------------------------------------------
+. * Path B: Taste → Info
+. *--------------------------------------------------------------------
+. 
+. quietly ttest wtp_3b_info_584 == wtp_2b_584
+{txt}
+{com}. post `memhold' ///
+>     ("Path B") ("584") ("After info minus after tasting") ///
+>     (r(mu_2)) (r(mu_1)) (r(mu_1)-r(mu_2)) (r(p)) (r(lb_diff)) (r(ub_diff))
+{txt}
+{com}. 
+. quietly ttest wtp_3b_info_793 == wtp_2b_793
+{txt}
+{com}. post `memhold' ///
+>     ("Path B") ("793") ("After info minus after tasting") ///
+>     (r(mu_2)) (r(mu_1)) (r(mu_1)-r(mu_2)) (r(p)) (r(lb_diff)) (r(ub_diff))
+{txt}
+{com}. 
+. *--------------------------------------------------------------------
+. * Path A: Info → baseline
+. *--------------------------------------------------------------------
+. 
+. quietly ttest wtp_2a_info_584 == wtp_1
+{txt}
+{com}. post `memhold' ///
+>     ("Path A") ("584") ("After info minus baseline") ///
+>     (r(mu_2)) (r(mu_1)) (r(mu_1)-r(mu_2)) (r(p)) (r(lb_diff)) (r(ub_diff))
+{txt}
+{com}. 
+. quietly ttest wtp_2a_info_793 == wtp_1
+{txt}
+{com}. post `memhold' ///
+>     ("Path A") ("793") ("After info minus baseline") ///
+>     (r(mu_2)) (r(mu_1)) (r(mu_1)-r(mu_2)) (r(p)) (r(lb_diff)) (r(ub_diff))
+{txt}
+{com}. 
+. postclose `memhold'
+{txt}
+{com}. 
+. use "$logs/table3_day1_paired.dta", clear
+{txt}
+{com}. 
+. label variable pathway "Randomization Path"
+{txt}
+{com}. label variable product "Product"
+{txt}
+{com}. label variable comparison "Definition of Change"
+{txt}
+{com}. label variable mean_before "Mean Before"
+{txt}
+{com}. label variable mean_after "Mean After"
+{txt}
+{com}. label variable diff "Mean Difference"
+{txt}
+{com}. label variable pvalue "p-value"
+{txt}
+{com}. label variable ci_low "95% CI (Lower)"
+{txt}
+{com}. label variable ci_high "95% CI (Upper)"
+{txt}
+{com}. 
+. list, clean noobs
+{txt}
+    {res}pathway   product                       comparison   mean_b~e   mean_a~r        diff     pvalue      ci_low     ci_high {txt} 
+    {res} Path B       584   After info minus after tasting   2.617647   2.808824    .1911765   .0245166    .0261468    .3562061 {txt} 
+    {res} Path B       793   After info minus after tasting   2.757353   2.470588   -.2867647   .0150269   -.5141618   -.0593676 {txt} 
+    {res} Path A       584        After info minus baseline   3.138889   3.041667   -.0972222   .3291299   -.2966546    .1022102 {txt} 
+    {res} Path A       793        After info minus baseline   3.138889   2.395833   -.7430556   7.67e-07   -.9943793   -.4917318 {txt} 
+
+{com}. 
+. export delimited using "$logs/table3_day1_paired.csv", replace
+{res}{txt}{p 0 4 2}
+(file {bf}
+C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/table3_day1_paired.csv{rm}
+not found)
+{p_end}
+{txt}file {bf:C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/table3_day1_paired.csv} saved
+
+{com}. 
+{txt}end of do-file
+
+{com}. do "C:\Users\tijer\AppData\Local\Temp\STD41dc_00000m.tmp"
+{txt}
+{com}. 
+. use "$logs/clean_data_day1_584_793.dta", clear
+{txt}
+{com}. 
+. * Combine info usefulness
+. gen info_useful = after_info_3b_d1_useful
+{txt}(36 missing values generated)
+
+{com}. replace info_useful = after_info_2a_d1_useful if missing(info_useful)
+{txt}(36 real changes made)
+
+{com}. 
+. * Combine magnesium benefit drivers
+. gen mag_muscle = mag_benefit_3b_d1_musle
+{txt}(37 missing values generated)
+
+{com}. replace mag_muscle = mag_benefit_2a_d1_muscle if missing(mag_muscle)
+{txt}(35 real changes made)
+
+{com}. 
+. gen mag_cramps = mag_benefit_3b_d1_cramps
+{txt}(37 missing values generated)
+
+{com}. replace mag_cramps = mag_benefit_2a_d1_cramps if missing(mag_cramps)
+{txt}(35 real changes made)
+
+{com}. 
+. gen mag_sugar = mag_benefit_3b_d1_sugar
+{txt}(37 missing values generated)
+
+{com}. replace mag_sugar = mag_benefit_2a_d1_sugar if missing(mag_sugar)
+{txt}(35 real changes made)
+
+{com}. 
+. gen mag_bone = mag_benefit_3b_d1_bone
+{txt}(37 missing values generated)
+
+{com}. replace mag_bone = mag_benefit_2a_d1_bone if missing(mag_bone)
+{txt}(34 real changes made)
+
+{com}. 
+. gen mag_sleep = mag_benefit_3b_d1_sleep
+{txt}(37 missing values generated)
+
+{com}. replace mag_sleep = mag_benefit_2a_d1_sleep if missing(mag_sleep)
+{txt}(33 real changes made)
+
+{com}. 
+. * Label clearly
+. label variable info_useful "Info usefulness (combined A & B)"
+{txt}
+{com}. label variable mag_muscle "Magnesium: muscle recovery importance"
+{txt}
+{com}. label variable mag_cramps "Magnesium: cramp reduction importance"
+{txt}
+{com}. label variable mag_sugar "Magnesium: blood sugar importance"
+{txt}
+{com}. label variable mag_bone "Magnesium: bone health importance"
+{txt}
+{com}. label variable mag_sleep "Magnesium: sleep/relaxation importance"
+{txt}
+{com}. 
+. save "$logs/clean_data_day1_drivers.dta", replace
+{txt}{p 0 4 2}
+(file {bf}
+C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/clean_data_day1_drivers.dta{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/clean_data_day1_drivers.dta{rm}
+saved
+{p_end}
+
+{com}. 
+{txt}end of do-file
+
+{com}. do "C:\Users\tijer\AppData\Local\Temp\STD41dc_00000n.tmp"
+{txt}
+{com}. 
+. use "$logs/clean_data_day1_drivers.dta", clear
+{txt}
+{com}. 
+. tempname memhold
+{txt}
+{com}. postfile `memhold' str45 driver ///
+>     corr_584 p_584 ///
+>     corr_793 p_793 ///
+>     using "$logs/table4_functional_drivers_day1.dta", replace
+{txt}{p 0 4 2}
+(file {bf}
+C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/table4_functional_drivers_day1.dta{rm}
+not found)
+{p_end}
+
+{com}. 
+. foreach var in info_useful mag_muscle mag_cramps mag_sugar mag_bone mag_sleep {c -(}
+{txt}  2{com}. 
+.     local lab : variable label `var'
+{txt}  3{com}. 
+.     * Correlation with magnesium product (584)
+.     quietly pwcorr diff_584 `var', sig
+{txt}  4{com}.     matrix C = r(C)
+{txt}  5{com}.     matrix P = r(sig)
+{txt}  6{com}.     local c584 = C[1,2]
+{txt}  7{com}.     local p584 = P[1,2]
+{txt}  8{com}. 
+.     * Correlation with non-magnesium product (793)
+.     quietly pwcorr diff_793 `var', sig
+{txt}  9{com}.     matrix C = r(C)
+{txt} 10{com}.     matrix P = r(sig)
+{txt} 11{com}.     local c793 = C[1,2]
+{txt} 12{com}.     local p793 = P[1,2]
+{txt} 13{com}. 
+.     post `memhold' ///
+>         ("`lab'") ///
+>         (`c584') (`p584') ///
+>         (`c793') (`p793')
+{txt} 14{com}. {c )-}
+{txt}
+{com}. 
+. postclose `memhold'
+{txt}
+{com}. 
+. use "$logs/table4_functional_drivers_day1.dta", clear
+{txt}
+{com}. 
+. label variable driver "Functional magnesium benefit"
+{txt}
+{com}. label variable corr_584 "Correlation with WTP change (584)"
+{txt}
+{com}. label variable p_584 "p-value (584)"
+{txt}
+{com}. label variable corr_793 "Correlation with WTP change (793)"
+{txt}
+{com}. label variable p_793 "p-value (793)"
+{txt}
+{com}. 
+. list, clean noobs
+{txt}
+    {res}                                driver    corr_584      p_584    corr_793      p_793 {txt} 
+    {res}      Info usefulness (combined A & B)    .0598894   .6223722   -.0225674   .8528872 {txt} 
+    {res} Magnesium: muscle recovery importance    .1959255   .1093215    -.250493   .0393704 {txt} 
+    {res} Magnesium: cramp reduction importance     .267812   .0272447   -.1693239   .1674685 {txt} 
+    {res}     Magnesium: blood sugar importance   -.0894718   .4680953   -.1097477   .3729722 {txt} 
+    {res}     Magnesium: bone health importance    .1255435   .3113988   -.1016289   .4131658 {txt} 
+    {res}Magnesium: sleep/relaxation importance    .2750338   .0254182   -.0846989   .4989352 {txt} 
+
+{com}. 
+. export delimited using "$logs/table4_functional_drivers_day1.csv", replace
+{res}{txt}{p 0 4 2}
+(file {bf}
+C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/table4_functional_drivers_day1.csv{rm}
+not found)
+{p_end}
+{txt}file {bf:C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/table4_functional_drivers_day1.csv} saved
+
+{com}. 
+{txt}end of do-file
+
+{com}. 
