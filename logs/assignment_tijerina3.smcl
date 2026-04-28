@@ -3,7 +3,7 @@
       name:  {res}<unnamed>
        {txt}log:  {res}C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/assignment_tijerina3.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res}27 Apr 2026, 16:55:52
+ {txt}opened on:  {res}27 Apr 2026, 17:58:46
 {txt}
 {com}.         set                     scheme s2color
 {txt}
@@ -343,578 +343,177 @@ wtp_2a_i~584 {c |}{res}         36    3.041667    .6020797          2       4.75
 {com}. 
 .         
 . **********************************************************************
-. **# 2 - Create WTP change variables (A-path + B-path)
+. **# 2 - Create Day 1 WTP change variables using all randomizers
 . **********************************************************************
 . 
-. **## 2.1 - B-path (after tasting → after info)
-. 
-.         gen diff_584_b = wtp_3b_info_584 - wtp_2b_584
-{txt}(109 missing values generated)
-
-{com}.         gen diff_793_b = wtp_3b_info_793 - wtp_2b_793
-{txt}(109 missing values generated)
+. **## 2.1 - keep Day 1 only
+. keep if day == 1
+{txt}(73 observations deleted)
 
 {com}. 
-.         gen diff_356_b = wtp_3b_info_356 - wtp_2b_356
-{txt}(105 missing values generated)
+. **## 2.2 - B-path: after tasting WTP to after magnesium info WTP
+. gen diff_584_b = wtp_3b_info_584 - wtp_2b_584
+{txt}(36 missing values generated)
 
-{com}.         gen diff_831_b = wtp_3b_info_831 - wtp_2b_831
-{txt}(105 missing values generated)
-
-{com}. 
-. 
-. **## 2.2 - A-path (baseline → info first)
-. 
-.         gen diff_584_a = wtp_2a_info_584 - wtp_1
-{txt}(107 missing values generated)
-
-{com}.         gen diff_793_a = wtp_2a_info_793 - wtp_1
-{txt}(107 missing values generated)
+{com}. gen diff_793_b = wtp_3b_info_793 - wtp_2b_793
+{txt}(36 missing values generated)
 
 {com}. 
-.         gen diff_356_a = wtp_2a_info_356 - wtp_1
-{txt}(108 missing values generated)
+. **## 2.3 - A-path: info-first WTP to later product-specific WTP
+. gen diff_584_a = wtp_3a_584 - wtp_2a_info_584
+{txt}(34 missing values generated)
 
-{com}.         gen diff_831_a = wtp_2a_info_831 - wtp_1
-{txt}(108 missing values generated)
+{com}. gen diff_793_a = wtp_3a_793 - wtp_2a_info_793
+{txt}(34 missing values generated)
 
 {com}. 
-. 
-. **## 2.3 - Combine paths (THIS FIXES YOUR FEEDBACK)
-. 
-.         gen diff_584 = diff_584_b
-{txt}(109 missing values generated)
+. **## 2.4 - combine paths
+. gen diff_584 = diff_584_b
+{txt}(36 missing values generated)
 
-{com}.         replace diff_584 = diff_584_a if missing(diff_584)
+{com}. replace diff_584 = diff_584_a if missing(diff_584)
 {txt}(36 real changes made)
 
 {com}. 
-.         gen diff_793 = diff_793_b
-{txt}(109 missing values generated)
+. gen diff_793 = diff_793_b
+{txt}(36 missing values generated)
 
-{com}.         replace diff_793 = diff_793_a if missing(diff_793)
+{com}. replace diff_793 = diff_793_a if missing(diff_793)
 {txt}(36 real changes made)
 
 {com}. 
-.         gen diff_356 = diff_356_b
-{txt}(105 missing values generated)
-
-{com}.         replace diff_356 = diff_356_a if missing(diff_356)
-{txt}(35 real changes made)
-
-{com}. 
-.         gen diff_831 = diff_831_b
-{txt}(105 missing values generated)
-
-{com}.         replace diff_831 = diff_831_a if missing(diff_831)
-{txt}(35 real changes made)
-
-{com}. 
-. 
-. **## 2.4 - check results
-. 
-.         summarize diff_584 diff_793 diff_356 diff_831
+. **## 2.5 - check results
+. summarize diff_584_b diff_584_a diff_584
 
 {txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
 {hline 13}{c +}{hline 57}
-{space 4}diff_584 {c |}{res}         70    .0428571    .5516304       -1.5       1.75
-{txt}{space 4}diff_793 {c |}{res}         70   -.5214286    .7319604         -3        .75
-{txt}{space 4}diff_356 {c |}{res}         73    -.130137    .8240205         -3        1.5
-{txt}{space 4}diff_831 {c |}{res}         73   -.0068493    .5788107         -2       1.75
+{space 2}diff_584_b {c |}{res}         34    .1911765    .4729774         -1       1.25
+{txt}{space 2}diff_584_a {c |}{res}         36      -.3125    .8459462       -2.5       1.25
+{txt}{space 4}diff_584 {c |}{res}         70   -.0678571    .7309432       -2.5       1.25
 {txt}
-{com}.         
-. /*
->         summarize diff_584 diff_793 diff_356 diff_831
-> 
->     Variable |        Obs        Mean    Std. dev.       Min        Max
-> -------------+---------------------------------------------------------
->     diff_584 |         70    .0428571    .5516304       -1.5       1.75
->     diff_793 |         70   -.5214286    .7319604         -3        .75
->     diff_356 |         73    -.130137    .8240205         -3        1.5
->     diff_831 |         73   -.0068493    .5788107         -2       1.75
-> 
-> */
-. 
-. 
-. **********************************************************************
-. **# 3 - Create magnesium driver variables (combined across days)
-. **********************************************************************
-. 
-. **## 3.1 - information usefulness
-.         gen info_useful = after_info_3b_d1_useful
-{txt}(109 missing values generated)
-
-{com}.         replace info_useful = after_info_3b_d2_useful if missing(info_useful)
-{txt}(38 real changes made)
-
-{com}. 
-. 
-. **## 3.2 - muscle recovery
-.         gen benefit_muscle = mag_benefit_3b_d1_musle
-{txt}(110 missing values generated)
-
-{com}.         replace benefit_muscle = mag_benefit_3b_d2_muscle if missing(benefit_muscle)
-{txt}(38 real changes made)
-
-{com}. 
-. 
-. **## 3.3 - reduce cramps
-.         gen benefit_cramps = mag_benefit_3b_d1_cramps
-{txt}(110 missing values generated)
-
-{com}.         replace benefit_cramps = mag_benefit_3b_d2_cramps if missing(benefit_cramps)
-{txt}(38 real changes made)
-
-{com}. 
-. 
-. **## 3.4 - blood sugar support
-.         gen benefit_sugar = mag_benefit_3b_d1_sugar
-{txt}(110 missing values generated)
-
-{com}.         replace benefit_sugar = mag_benefit_3b_d2_sugar if missing(benefit_sugar)
-{txt}(38 real changes made)
-
-{com}. 
-. 
-. **## 3.5 - bone health
-.         gen benefit_bone = mag_benefit_3b_d1_bone
-{txt}(110 missing values generated)
-
-{com}.         replace benefit_bone = mag_benefit_3b_d2_bone if missing(benefit_bone)
-{txt}(38 real changes made)
-
-{com}. 
-. 
-. **## 3.6 - relaxation / sleep
-.         gen benefit_sleep = mag_benefit_3b_d1_sleep
-{txt}(110 missing values generated)
-
-{com}.         replace benefit_sleep = mag_benefit_3b_d2_sleep if missing(benefit_sleep)
-{txt}(37 real changes made)
-
-{com}. 
-.         
-. **## 3.7 - check results
-.         summarize info_useful benefit_muscle benefit_cramps ///
->                           benefit_sugar benefit_bone benefit_sleep
+{com}. summarize diff_793_b diff_793_a diff_793
 
 {txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
 {hline 13}{c +}{hline 57}
-{space 1}info_useful {c |}{res}         72    3.736111     1.16272          1          5
-{txt}benefit_mu~e {c |}{res}         71    72.35211    25.98247          0        100
-{txt}benefit_cr~s {c |}{res}         71    75.88732    24.21071          0        100
-{txt}benefit_su~r {c |}{res}         71    66.69014    26.57367          0        100
-{txt}benefit_bone {c |}{res}         71    61.39437    29.04208          0        100
-{txt}{hline 13}{c +}{hline 57}
-benefit_sl~p {c |}{res}         70    71.41429    30.19621          0        100
-{txt}
-{com}.                           
-.                           
-. **********************************************************************
-. **# 4 - Label variables
-. **********************************************************************
-. 
-. **## 4.1 - dependent variables (WTP change)
-. 
-.         label variable diff_584 "WTP change (Product 584, magnesium)"
-{txt}
-{com}.         label variable diff_793 "WTP change (Product 793, no magnesium)"
-{txt}
-{com}.         label variable diff_356 "WTP change (Product 356, magnesium)"
-{txt}
-{com}.         label variable diff_831 "WTP change (Product 831, magnesium)"
+{space 2}diff_793_b {c |}{res}         34   -.2867647    .6517237       -2.5        .75
+{txt}{space 2}diff_793_a {c |}{res}         36    .5069444    .7158564        -.5       2.25
+{txt}{space 4}diff_793 {c |}{res}         70    .1214286    .7891277       -2.5       2.25
 {txt}
 {com}. 
-. 
-. **## 4.2 - driver variables
-. 
-.         label variable info_useful   "Perceived usefulness of magnesium information"
+. tab randomizer if !missing(diff_584)
+
+ {txt}randomizer {c |}      Freq.     Percent        Cum.
+{hline 12}{c +}{hline 35}
+          1 {c |}{res}         17       24.29       24.29
+{txt}          2 {c |}{res}         17       24.29       48.57
+{txt}          3 {c |}{res}         20       28.57       77.14
+{txt}          4 {c |}{res}         16       22.86      100.00
+{txt}{hline 12}{c +}{hline 35}
+      Total {c |}{res}         70      100.00
 {txt}
-{com}.         label variable benefit_muscle "Importance: muscle recovery"
-{txt}
-{com}.         label variable benefit_cramps "Importance: reduce cramps"
-{txt}
-{com}.         label variable benefit_sugar  "Importance: blood sugar support"
-{txt}
-{com}.         label variable benefit_bone   "Importance: bone health"
-{txt}
-{com}.         label variable benefit_sleep  "Importance: relaxation / sleep"
+{com}. tab randomizer if !missing(diff_793)
+
+ {txt}randomizer {c |}      Freq.     Percent        Cum.
+{hline 12}{c +}{hline 35}
+          1 {c |}{res}         17       24.29       24.29
+{txt}          2 {c |}{res}         17       24.29       48.57
+{txt}          3 {c |}{res}         20       28.57       77.14
+{txt}          4 {c |}{res}         16       22.86      100.00
+{txt}{hline 12}{c +}{hline 35}
+      Total {c |}{res}         70      100.00
 {txt}
 {com}. 
-. 
-. **## 4.3 - control variables (optional but good)
-. 
-.         label variable age         "Age"
+. jdlkjdlkj
+{err}command {bf}jdlkjdlkj{sf} is unrecognized
+{txt}{search r(199), local:r(199);}
+
+end of do-file
+
+{search r(199), local:r(199);}
+
+{com}. do "C:\Users\tijer\AppData\Local\Temp\STD1a04_000002.tmp"
 {txt}
-{com}.         label variable exercise    "Exercise frequency"
+{com}. 
+. tempname memhold
 {txt}
-{com}.         label variable con_freq    "Sports drink consumption frequency"
-{txt}
-{com}.         label variable preknow_5_magn "Prior knowledge of magnesium benefits"
-{txt}
-{com}.         
-.         save "$logs/regression_ready.dta", replace
+{com}. postfile `memhold' str12 product mean_change tstat pvalue ci_low ci_high ///
+> using "$logs/table3_diff.dta", replace
 {txt}{p 0 4 2}
 (file {bf}
-C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/regression_ready.dta{rm}
-not found)
-{p_end}
-{p 0 4 2}
-file {bf}
-C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/regression_ready.dta{rm}
-saved
-{p_end}
-
-{com}. **********************************************************************
-. **# 5 - Regression models
-. **********************************************************************
-. 
-. **## 5.1 - magnesium products (drivers only)
-. 
-.         reg diff_584 ///
->                 benefit_sleep benefit_cramps benefit_muscle ///
->                 benefit_sugar benefit_bone info_useful
-
-{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}        33
-{txt}{hline 13}{c +}{hline 34}   F(6, 26)        = {res}     2.51
-{txt}       Model {c |} {res} 2.69720544         6   .44953424   {txt}Prob > F        ={res}    0.0471
-{txt}    Residual {c |} {res} 4.64749153        26  .178749674   {txt}R-squared       ={res}    0.3672
-{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.2212
-{txt}       Total {c |} {res} 7.34469697        32   .22952178   {txt}Root MSE        =   {res} .42279
-
-{txt}{hline 15}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}      diff_584{col 16}{c |} Coefficient{col 28}  Std. err.{col 40}      t{col 48}   P>|t|{col 56}     [95% con{col 69}f. interval]
-{hline 15}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 1}benefit_sleep {c |}{col 16}{res}{space 2} .0109263{col 28}{space 2} .0053675{col 39}{space 1}    2.04{col 48}{space 3}0.052{col 56}{space 4}-.0001068{col 69}{space 3} .0219595
-{txt}benefit_cramps {c |}{col 16}{res}{space 2} .0027896{col 28}{space 2}  .005144{col 39}{space 1}    0.54{col 48}{space 3}0.592{col 56}{space 4}-.0077841{col 69}{space 3} .0133633
-{txt}benefit_muscle {c |}{col 16}{res}{space 2} .0008109{col 28}{space 2} .0046855{col 39}{space 1}    0.17{col 48}{space 3}0.864{col 56}{space 4}-.0088203{col 69}{space 3} .0104422
-{txt}{space 1}benefit_sugar {c |}{col 16}{res}{space 2}-.0002289{col 28}{space 2} .0038053{col 39}{space 1}   -0.06{col 48}{space 3}0.952{col 56}{space 4}-.0080507{col 69}{space 3}  .007593
-{txt}{space 2}benefit_bone {c |}{col 16}{res}{space 2}-.0041339{col 28}{space 2}  .006178{col 39}{space 1}   -0.67{col 48}{space 3}0.509{col 56}{space 4}-.0168329{col 69}{space 3} .0085652
-{txt}{space 3}info_useful {c |}{col 16}{res}{space 2} -.022577{col 28}{space 2} .0703995{col 39}{space 1}   -0.32{col 48}{space 3}0.751{col 56}{space 4}-.1672854{col 69}{space 3} .1221313
-{txt}{space 9}_cons {c |}{col 16}{res}{space 2}-.5311159{col 28}{space 2} .3798356{col 39}{space 1}   -1.40{col 48}{space 3}0.174{col 56}{space 4}-1.311879{col 69}{space 3} .2496472
-{txt}{hline 15}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}{txt}
-{com}. 
-.         eststo m1_584
-{txt}
-{com}.         * sleep benefit is marginally sig p = 0.052
-. 
-.         reg diff_356 ///
->                 benefit_sleep benefit_cramps benefit_muscle ///
->                 benefit_sugar benefit_bone info_useful
-
-{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}        37
-{txt}{hline 13}{c +}{hline 34}   F(6, 30)        = {res}     1.75
-{txt}       Model {c |} {res} 1.68401442         6   .28066907   {txt}Prob > F        ={res}    0.1435
-{txt}    Residual {c |} {res} 4.80922882        30  .160307627   {txt}R-squared       ={res}    0.2593
-{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.1112
-{txt}       Total {c |} {res} 6.49324324        36  .180367868   {txt}Root MSE        =   {res} .40038
-
-{txt}{hline 15}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}      diff_356{col 16}{c |} Coefficient{col 28}  Std. err.{col 40}      t{col 48}   P>|t|{col 56}     [95% con{col 69}f. interval]
-{hline 15}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 1}benefit_sleep {c |}{col 16}{res}{space 2}  .004518{col 28}{space 2} .0025134{col 39}{space 1}    1.80{col 48}{space 3}0.082{col 56}{space 4} -.000615{col 69}{space 3}  .009651
-{txt}benefit_cramps {c |}{col 16}{res}{space 2}-.0079886{col 28}{space 2}  .004043{col 39}{space 1}   -1.98{col 48}{space 3}0.057{col 56}{space 4}-.0162454{col 69}{space 3} .0002682
-{txt}benefit_muscle {c |}{col 16}{res}{space 2} .0051922{col 28}{space 2} .0033438{col 39}{space 1}    1.55{col 48}{space 3}0.131{col 56}{space 4}-.0016368{col 69}{space 3} .0120211
-{txt}{space 1}benefit_sugar {c |}{col 16}{res}{space 2}-.0041562{col 28}{space 2} .0041579{col 39}{space 1}   -1.00{col 48}{space 3}0.326{col 56}{space 4}-.0126478{col 69}{space 3} .0043354
-{txt}{space 2}benefit_bone {c |}{col 16}{res}{space 2} .0039536{col 28}{space 2} .0046554{col 39}{space 1}    0.85{col 48}{space 3}0.402{col 56}{space 4}-.0055541{col 69}{space 3} .0134612
-{txt}{space 3}info_useful {c |}{col 16}{res}{space 2} .0805839{col 28}{space 2} .0594268{col 39}{space 1}    1.36{col 48}{space 3}0.185{col 56}{space 4}-.0407818{col 69}{space 3} .2019496
-{txt}{space 9}_cons {c |}{col 16}{res}{space 2}-.1025343{col 28}{space 2} .3507319{col 39}{space 1}   -0.29{col 48}{space 3}0.772{col 56}{space 4}-.8188244{col 69}{space 3} .6137558
-{txt}{hline 15}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}{txt}
-{com}. 
-.         eststo m2_356
-{txt}
-{com}.         * sleep benefit is borderline sig p = 0.082
-.         * cramps benefit is borderline sig p = 0.057
-. 
-.         reg diff_831 ///
->                 benefit_sleep benefit_cramps benefit_muscle ///
->                 benefit_sugar benefit_bone info_useful
-
-{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}        37
-{txt}{hline 13}{c +}{hline 34}   F(6, 30)        = {res}     1.47
-{txt}       Model {c |} {res} 1.43213128         6  .238688547   {txt}Prob > F        ={res}    0.2228
-{txt}    Residual {c |} {res} 4.87867953        30  .162622651   {txt}R-squared       ={res}    0.2269
-{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0723
-{txt}       Total {c |} {res} 6.31081081        36    .1753003   {txt}Root MSE        =   {res} .40326
-
-{txt}{hline 15}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}      diff_831{col 16}{c |} Coefficient{col 28}  Std. err.{col 40}      t{col 48}   P>|t|{col 56}     [95% con{col 69}f. interval]
-{hline 15}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 1}benefit_sleep {c |}{col 16}{res}{space 2} .0026728{col 28}{space 2} .0025315{col 39}{space 1}    1.06{col 48}{space 3}0.299{col 56}{space 4}-.0024971{col 69}{space 3} .0078428
-{txt}benefit_cramps {c |}{col 16}{res}{space 2}-.0007931{col 28}{space 2}  .004072{col 39}{space 1}   -0.19{col 48}{space 3}0.847{col 56}{space 4}-.0091093{col 69}{space 3} .0075231
-{txt}benefit_muscle {c |}{col 16}{res}{space 2} .0055462{col 28}{space 2} .0033679{col 39}{space 1}    1.65{col 48}{space 3}0.110{col 56}{space 4} -.001332{col 69}{space 3} .0124243
-{txt}{space 1}benefit_sugar {c |}{col 16}{res}{space 2}-.0013782{col 28}{space 2} .0041878{col 39}{space 1}   -0.33{col 48}{space 3}0.744{col 56}{space 4}-.0099309{col 69}{space 3} .0071745
-{txt}{space 2}benefit_bone {c |}{col 16}{res}{space 2}-.0018259{col 28}{space 2} .0046889{col 39}{space 1}   -0.39{col 48}{space 3}0.700{col 56}{space 4} -.011402{col 69}{space 3} .0077501
-{txt}{space 3}info_useful {c |}{col 16}{res}{space 2} .1050567{col 28}{space 2} .0598544{col 39}{space 1}    1.76{col 48}{space 3}0.089{col 56}{space 4}-.0171822{col 69}{space 3} .2272956
-{txt}{space 9}_cons {c |}{col 16}{res}{space 2}-.4626653{col 28}{space 2} .3532553{col 39}{space 1}   -1.31{col 48}{space 3}0.200{col 56}{space 4}-1.184109{col 69}{space 3} .2587783
-{txt}{hline 15}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}{txt}
-{com}. 
-.         eststo m3_831
-{txt}
-{com}.         * mag info usefulness marginally sig p = 0.089
-. 
-. 
-. **## 5.2 - add controls (stronger model)
-. 
-.         reg diff_584 ///
->                 benefit_sleep benefit_cramps benefit_muscle ///
->                 benefit_sugar benefit_bone info_useful ///
->                 age exercise con_freq preknow_5_magn
-
-{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}        33
-{txt}{hline 13}{c +}{hline 34}   F(10, 22)       = {res}     2.11
-{txt}       Model {c |} {res} 3.59740791        10  .359740791   {txt}Prob > F        ={res}    0.0692
-{txt}    Residual {c |} {res} 3.74728906        22  .170331321   {txt}R-squared       ={res}    0.4898
-{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.2579
-{txt}       Total {c |} {res} 7.34469697        32   .22952178   {txt}Root MSE        =   {res} .41271
-
-{txt}{hline 15}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}      diff_584{col 16}{c |} Coefficient{col 28}  Std. err.{col 40}      t{col 48}   P>|t|{col 56}     [95% con{col 69}f. interval]
-{hline 15}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 1}benefit_sleep {c |}{col 16}{res}{space 2} .0090315{col 28}{space 2} .0055461{col 39}{space 1}    1.63{col 48}{space 3}0.118{col 56}{space 4}-.0024703{col 69}{space 3} .0205334
-{txt}benefit_cramps {c |}{col 16}{res}{space 2} .0020031{col 28}{space 2} .0052573{col 39}{space 1}    0.38{col 48}{space 3}0.707{col 56}{space 4}-.0088999{col 69}{space 3} .0129061
-{txt}benefit_muscle {c |}{col 16}{res}{space 2} .0010017{col 28}{space 2} .0063969{col 39}{space 1}    0.16{col 48}{space 3}0.877{col 56}{space 4}-.0122647{col 69}{space 3}  .014268
-{txt}{space 1}benefit_sugar {c |}{col 16}{res}{space 2}-.0011782{col 28}{space 2} .0052818{col 39}{space 1}   -0.22{col 48}{space 3}0.826{col 56}{space 4}-.0121321{col 69}{space 3} .0097757
-{txt}{space 2}benefit_bone {c |}{col 16}{res}{space 2}-.0020365{col 28}{space 2} .0066484{col 39}{space 1}   -0.31{col 48}{space 3}0.762{col 56}{space 4}-.0158244{col 69}{space 3} .0117514
-{txt}{space 3}info_useful {c |}{col 16}{res}{space 2}-.0155381{col 28}{space 2} .0809048{col 39}{space 1}   -0.19{col 48}{space 3}0.849{col 56}{space 4}-.1833245{col 69}{space 3} .1522482
-{txt}{space 11}age {c |}{col 16}{res}{space 2}-.0118302{col 28}{space 2} .0085207{col 39}{space 1}   -1.39{col 48}{space 3}0.179{col 56}{space 4} -.029501{col 69}{space 3} .0058406
-{txt}{space 6}exercise {c |}{col 16}{res}{space 2}-.1162659{col 28}{space 2}  .094935{col 39}{space 1}   -1.22{col 48}{space 3}0.234{col 56}{space 4} -.313149{col 69}{space 3} .0806173
-{txt}{space 6}con_freq {c |}{col 16}{res}{space 2} .0785982{col 28}{space 2} .1179351{col 39}{space 1}    0.67{col 48}{space 3}0.512{col 56}{space 4}-.1659843{col 69}{space 3} .3231806
-{txt}preknow_5_magn {c |}{col 16}{res}{space 2}-.0104855{col 28}{space 2} .0987523{col 39}{space 1}   -0.11{col 48}{space 3}0.916{col 56}{space 4}-.2152852{col 69}{space 3} .1943142
-{txt}{space 9}_cons {c |}{col 16}{res}{space 2} .0907187{col 28}{space 2}  .576271{col 39}{space 1}    0.16{col 48}{space 3}0.876{col 56}{space 4}-1.104394{col 69}{space 3} 1.285832
-{txt}{hline 15}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}{txt}
-{com}. 
-.         eststo m4_584_ctrl
-{txt}
-{com}. 
-.         reg diff_356 ///
->                 benefit_sleep benefit_cramps benefit_muscle ///
->                 benefit_sugar benefit_bone info_useful ///
->                 age exercise con_freq preknow_5_magn
-
-{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}        37
-{txt}{hline 13}{c +}{hline 34}   F(10, 26)       = {res}     1.31
-{txt}       Model {c |} {res} 2.17355678        10  .217355678   {txt}Prob > F        ={res}    0.2773
-{txt}    Residual {c |} {res} 4.31968646        26  .166141787   {txt}R-squared       ={res}    0.3347
-{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0789
-{txt}       Total {c |} {res} 6.49324324        36  .180367868   {txt}Root MSE        =   {res}  .4076
-
-{txt}{hline 15}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}      diff_356{col 16}{c |} Coefficient{col 28}  Std. err.{col 40}      t{col 48}   P>|t|{col 56}     [95% con{col 69}f. interval]
-{hline 15}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 1}benefit_sleep {c |}{col 16}{res}{space 2} .0058067{col 28}{space 2} .0027288{col 39}{space 1}    2.13{col 48}{space 3}0.043{col 56}{space 4} .0001976{col 69}{space 3} .0114158
-{txt}benefit_cramps {c |}{col 16}{res}{space 2}-.0057382{col 28}{space 2} .0056336{col 39}{space 1}   -1.02{col 48}{space 3}0.318{col 56}{space 4}-.0173182{col 69}{space 3} .0058418
-{txt}benefit_muscle {c |}{col 16}{res}{space 2} .0055759{col 28}{space 2}  .003793{col 39}{space 1}    1.47{col 48}{space 3}0.154{col 56}{space 4}-.0022207{col 69}{space 3} .0133726
-{txt}{space 1}benefit_sugar {c |}{col 16}{res}{space 2}-.0034957{col 28}{space 2} .0050507{col 39}{space 1}   -0.69{col 48}{space 3}0.495{col 56}{space 4}-.0138776{col 69}{space 3} .0068861
-{txt}{space 2}benefit_bone {c |}{col 16}{res}{space 2} .0005214{col 28}{space 2} .0056504{col 39}{space 1}    0.09{col 48}{space 3}0.927{col 56}{space 4}-.0110932{col 69}{space 3} .0121361
-{txt}{space 3}info_useful {c |}{col 16}{res}{space 2} .0742351{col 28}{space 2} .0700081{col 39}{space 1}    1.06{col 48}{space 3}0.299{col 56}{space 4}-.0696686{col 69}{space 3} .2181389
-{txt}{space 11}age {c |}{col 16}{res}{space 2}-.0074144{col 28}{space 2} .0077021{col 39}{space 1}   -0.96{col 48}{space 3}0.345{col 56}{space 4}-.0232463{col 69}{space 3} .0084176
-{txt}{space 6}exercise {c |}{col 16}{res}{space 2}-.0440462{col 28}{space 2} .0917451{col 39}{space 1}   -0.48{col 48}{space 3}0.635{col 56}{space 4} -.232631{col 69}{space 3} .1445385
-{txt}{space 6}con_freq {c |}{col 16}{res}{space 2}-.0004325{col 28}{space 2} .0851786{col 39}{space 1}   -0.01{col 48}{space 3}0.996{col 56}{space 4}-.1755197{col 69}{space 3} .1746547
-{txt}preknow_5_magn {c |}{col 16}{res}{space 2}-.0806316{col 28}{space 2} .1260073{col 39}{space 1}   -0.64{col 48}{space 3}0.528{col 56}{space 4}-.3396433{col 69}{space 3}   .17838
-{txt}{space 9}_cons {c |}{col 16}{res}{space 2} .4270238{col 28}{space 2} .5494551{col 39}{space 1}    0.78{col 48}{space 3}0.444{col 56}{space 4}-.7023974{col 69}{space 3} 1.556445
-{txt}{hline 15}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}{txt}
-{com}. 
-.         eststo m5_356_ctrl
-{txt}
-{com}.         * sleep benefit is sig p = 0.043 with controls
-.         
-.         reg diff_831 ///
->                 benefit_sleep benefit_cramps benefit_muscle ///
->                 benefit_sugar benefit_bone info_useful ///
->                 age exercise con_freq preknow_5_magn
-
-{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}        37
-{txt}{hline 13}{c +}{hline 34}   F(10, 26)       = {res}     0.99
-{txt}       Model {c |} {res}  1.7354286        10   .17354286   {txt}Prob > F        ={res}    0.4790
-{txt}    Residual {c |} {res} 4.57538222        26  .175976239   {txt}R-squared       ={res}    0.2750
-{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}   -0.0039
-{txt}       Total {c |} {res} 6.31081081        36    .1753003   {txt}Root MSE        =   {res}  .4195
-
-{txt}{hline 15}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}      diff_831{col 16}{c |} Coefficient{col 28}  Std. err.{col 40}      t{col 48}   P>|t|{col 56}     [95% con{col 69}f. interval]
-{hline 15}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 1}benefit_sleep {c |}{col 16}{res}{space 2} .0028517{col 28}{space 2} .0028084{col 39}{space 1}    1.02{col 48}{space 3}0.319{col 56}{space 4} -.002921{col 69}{space 3} .0086244
-{txt}benefit_cramps {c |}{col 16}{res}{space 2} .0005734{col 28}{space 2} .0057979{col 39}{space 1}    0.10{col 48}{space 3}0.922{col 56}{space 4}-.0113443{col 69}{space 3} .0124912
-{txt}benefit_muscle {c |}{col 16}{res}{space 2} .0069614{col 28}{space 2} .0039037{col 39}{space 1}    1.78{col 48}{space 3}0.086{col 56}{space 4}-.0010628{col 69}{space 3} .0149855
-{txt}{space 1}benefit_sugar {c |}{col 16}{res}{space 2}-.0025445{col 28}{space 2}  .005198{col 39}{space 1}   -0.49{col 48}{space 3}0.629{col 56}{space 4}-.0132292{col 69}{space 3} .0081403
-{txt}{space 2}benefit_bone {c |}{col 16}{res}{space 2}-.0028085{col 28}{space 2} .0058153{col 39}{space 1}   -0.48{col 48}{space 3}0.633{col 56}{space 4} -.014762{col 69}{space 3} .0091449
-{txt}{space 3}info_useful {c |}{col 16}{res}{space 2} .1107816{col 28}{space 2} .0720503{col 39}{space 1}    1.54{col 48}{space 3}0.136{col 56}{space 4}-.0373199{col 69}{space 3} .2588832
-{txt}{space 11}age {c |}{col 16}{res}{space 2} -.006261{col 28}{space 2} .0079268{col 39}{space 1}   -0.79{col 48}{space 3}0.437{col 56}{space 4}-.0225548{col 69}{space 3} .0100328
-{txt}{space 6}exercise {c |}{col 16}{res}{space 2} .0483998{col 28}{space 2} .0944214{col 39}{space 1}    0.51{col 48}{space 3}0.613{col 56}{space 4}-.1456861{col 69}{space 3} .2424858
-{txt}{space 6}con_freq {c |}{col 16}{res}{space 2}-.0593199{col 28}{space 2} .0876634{col 39}{space 1}   -0.68{col 48}{space 3}0.505{col 56}{space 4}-.2395146{col 69}{space 3} .1208748
-{txt}preknow_5_magn {c |}{col 16}{res}{space 2} -.035362{col 28}{space 2} .1296831{col 39}{space 1}   -0.27{col 48}{space 3}0.787{col 56}{space 4}-.3019294{col 69}{space 3} .2312053
-{txt}{space 9}_cons {c |}{col 16}{res}{space 2}-.2758274{col 28}{space 2} .5654833{col 39}{space 1}   -0.49{col 48}{space 3}0.630{col 56}{space 4}-1.438195{col 69}{space 3} .8865403
-{txt}{hline 15}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}{txt}
-{com}. 
-.         eststo m6_831_ctrl
-{txt}
-{com}.         * muscle recovery is marginally significant p = 0.086
-.         
-. 
-. **********************************************************************
-. **# 6 - Table 1: Regression results - drivers only
-. **********************************************************************
-. 
-.         use "$logs/regression_ready.dta", clear
-{txt}
-{com}. 
-.         tempname memhold
-{txt}
-{com}.         postfile `memhold' str12 product str30 variable coef se pvalue using "$logs/table1_reg_drivers.dta", replace
-{txt}{p 0 4 2}
-(file {bf}
-C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/table1_reg_drivers.dta{rm}
+C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/table3_diff.dta{rm}
 not found)
 {p_end}
 
 {com}. 
-.         local drivers benefit_sleep benefit_cramps benefit_muscle benefit_sugar benefit_bone info_useful
+. 
+. **## 3.1 - Product 584
+. ttest diff_584 == 0
+
+{txt}One-sample t test
+{hline 9}{c TT}{hline 68}
+Variable{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. err.{col 47}Std. dev.{col 59}[95% conf. interval]
+{hline 9}{c +}{hline 68}
+diff_584 {c |}{res}{col 12}     70{col 22}-.0678571{col 34} .0873644{col 46} .7309432{col 58}-.2421444{col 70} .1064301
+{txt}{hline 9}{c BT}{hline 68}
+    mean = mean({res}diff_584{txt})                                         t = {res} -0.7767
+{txt}H0: mean = {res}0                                     {txt}Degrees of freedom = {res}      69
+
+    {txt}Ha: mean < {res}0                 {txt}Ha: mean != {res}0                 {txt}Ha: mean > {res}0
+ {txt}Pr(T < t) = {res}0.2200         {txt}Pr(|T| > |t|) = {res}0.4400          {txt}Pr(T > t) = {res}0.7800
 {txt}
 {com}. 
-.         foreach y in diff_584 diff_356 diff_831 {c -(}
-{txt}  2{com}. 
-.                 reg `y' benefit_sleep benefit_cramps benefit_muscle ///
->                         benefit_sugar benefit_bone info_useful
-{txt}  3{com}. 
-.                 foreach x of local drivers {c -(}
-{txt}  4{com}.                         post `memhold' ("`y'") ("`x'") (_b[`x']) (_se[`x']) (2*ttail(e(df_r), abs(_b[`x']/_se[`x'])))
-{txt}  5{com}.                 {c )-}
-{txt}  6{com}.         {c )-}
-
-{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}        33
-{txt}{hline 13}{c +}{hline 34}   F(6, 26)        = {res}     2.51
-{txt}       Model {c |} {res} 2.69720544         6   .44953424   {txt}Prob > F        ={res}    0.0471
-{txt}    Residual {c |} {res} 4.64749153        26  .178749674   {txt}R-squared       ={res}    0.3672
-{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.2212
-{txt}       Total {c |} {res} 7.34469697        32   .22952178   {txt}Root MSE        =   {res} .42279
-
-{txt}{hline 15}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}      diff_584{col 16}{c |} Coefficient{col 28}  Std. err.{col 40}      t{col 48}   P>|t|{col 56}     [95% con{col 69}f. interval]
-{hline 15}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 1}benefit_sleep {c |}{col 16}{res}{space 2} .0109263{col 28}{space 2} .0053675{col 39}{space 1}    2.04{col 48}{space 3}0.052{col 56}{space 4}-.0001068{col 69}{space 3} .0219595
-{txt}benefit_cramps {c |}{col 16}{res}{space 2} .0027896{col 28}{space 2}  .005144{col 39}{space 1}    0.54{col 48}{space 3}0.592{col 56}{space 4}-.0077841{col 69}{space 3} .0133633
-{txt}benefit_muscle {c |}{col 16}{res}{space 2} .0008109{col 28}{space 2} .0046855{col 39}{space 1}    0.17{col 48}{space 3}0.864{col 56}{space 4}-.0088203{col 69}{space 3} .0104422
-{txt}{space 1}benefit_sugar {c |}{col 16}{res}{space 2}-.0002289{col 28}{space 2} .0038053{col 39}{space 1}   -0.06{col 48}{space 3}0.952{col 56}{space 4}-.0080507{col 69}{space 3}  .007593
-{txt}{space 2}benefit_bone {c |}{col 16}{res}{space 2}-.0041339{col 28}{space 2}  .006178{col 39}{space 1}   -0.67{col 48}{space 3}0.509{col 56}{space 4}-.0168329{col 69}{space 3} .0085652
-{txt}{space 3}info_useful {c |}{col 16}{res}{space 2} -.022577{col 28}{space 2} .0703995{col 39}{space 1}   -0.32{col 48}{space 3}0.751{col 56}{space 4}-.1672854{col 69}{space 3} .1221313
-{txt}{space 9}_cons {c |}{col 16}{res}{space 2}-.5311159{col 28}{space 2} .3798356{col 39}{space 1}   -1.40{col 48}{space 3}0.174{col 56}{space 4}-1.311879{col 69}{space 3} .2496472
-{txt}{hline 15}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}        37
-{txt}{hline 13}{c +}{hline 34}   F(6, 30)        = {res}     1.75
-{txt}       Model {c |} {res} 1.68401442         6   .28066907   {txt}Prob > F        ={res}    0.1435
-{txt}    Residual {c |} {res} 4.80922882        30  .160307627   {txt}R-squared       ={res}    0.2593
-{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.1112
-{txt}       Total {c |} {res} 6.49324324        36  .180367868   {txt}Root MSE        =   {res} .40038
-
-{txt}{hline 15}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}      diff_356{col 16}{c |} Coefficient{col 28}  Std. err.{col 40}      t{col 48}   P>|t|{col 56}     [95% con{col 69}f. interval]
-{hline 15}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 1}benefit_sleep {c |}{col 16}{res}{space 2}  .004518{col 28}{space 2} .0025134{col 39}{space 1}    1.80{col 48}{space 3}0.082{col 56}{space 4} -.000615{col 69}{space 3}  .009651
-{txt}benefit_cramps {c |}{col 16}{res}{space 2}-.0079886{col 28}{space 2}  .004043{col 39}{space 1}   -1.98{col 48}{space 3}0.057{col 56}{space 4}-.0162454{col 69}{space 3} .0002682
-{txt}benefit_muscle {c |}{col 16}{res}{space 2} .0051922{col 28}{space 2} .0033438{col 39}{space 1}    1.55{col 48}{space 3}0.131{col 56}{space 4}-.0016368{col 69}{space 3} .0120211
-{txt}{space 1}benefit_sugar {c |}{col 16}{res}{space 2}-.0041562{col 28}{space 2} .0041579{col 39}{space 1}   -1.00{col 48}{space 3}0.326{col 56}{space 4}-.0126478{col 69}{space 3} .0043354
-{txt}{space 2}benefit_bone {c |}{col 16}{res}{space 2} .0039536{col 28}{space 2} .0046554{col 39}{space 1}    0.85{col 48}{space 3}0.402{col 56}{space 4}-.0055541{col 69}{space 3} .0134612
-{txt}{space 3}info_useful {c |}{col 16}{res}{space 2} .0805839{col 28}{space 2} .0594268{col 39}{space 1}    1.36{col 48}{space 3}0.185{col 56}{space 4}-.0407818{col 69}{space 3} .2019496
-{txt}{space 9}_cons {c |}{col 16}{res}{space 2}-.1025343{col 28}{space 2} .3507319{col 39}{space 1}   -0.29{col 48}{space 3}0.772{col 56}{space 4}-.8188244{col 69}{space 3} .6137558
-{txt}{hline 15}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}
-{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}        37
-{txt}{hline 13}{c +}{hline 34}   F(6, 30)        = {res}     1.47
-{txt}       Model {c |} {res} 1.43213128         6  .238688547   {txt}Prob > F        ={res}    0.2228
-{txt}    Residual {c |} {res} 4.87867953        30  .162622651   {txt}R-squared       ={res}    0.2269
-{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0723
-{txt}       Total {c |} {res} 6.31081081        36    .1753003   {txt}Root MSE        =   {res} .40326
-
-{txt}{hline 15}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 1}      diff_831{col 16}{c |} Coefficient{col 28}  Std. err.{col 40}      t{col 48}   P>|t|{col 56}     [95% con{col 69}f. interval]
-{hline 15}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{space 1}benefit_sleep {c |}{col 16}{res}{space 2} .0026728{col 28}{space 2} .0025315{col 39}{space 1}    1.06{col 48}{space 3}0.299{col 56}{space 4}-.0024971{col 69}{space 3} .0078428
-{txt}benefit_cramps {c |}{col 16}{res}{space 2}-.0007931{col 28}{space 2}  .004072{col 39}{space 1}   -0.19{col 48}{space 3}0.847{col 56}{space 4}-.0091093{col 69}{space 3} .0075231
-{txt}benefit_muscle {c |}{col 16}{res}{space 2} .0055462{col 28}{space 2} .0033679{col 39}{space 1}    1.65{col 48}{space 3}0.110{col 56}{space 4} -.001332{col 69}{space 3} .0124243
-{txt}{space 1}benefit_sugar {c |}{col 16}{res}{space 2}-.0013782{col 28}{space 2} .0041878{col 39}{space 1}   -0.33{col 48}{space 3}0.744{col 56}{space 4}-.0099309{col 69}{space 3} .0071745
-{txt}{space 2}benefit_bone {c |}{col 16}{res}{space 2}-.0018259{col 28}{space 2} .0046889{col 39}{space 1}   -0.39{col 48}{space 3}0.700{col 56}{space 4} -.011402{col 69}{space 3} .0077501
-{txt}{space 3}info_useful {c |}{col 16}{res}{space 2} .1050567{col 28}{space 2} .0598544{col 39}{space 1}    1.76{col 48}{space 3}0.089{col 56}{space 4}-.0171822{col 69}{space 3} .2272956
-{txt}{space 9}_cons {c |}{col 16}{res}{space 2}-.4626653{col 28}{space 2} .3532553{col 39}{space 1}   -1.31{col 48}{space 3}0.200{col 56}{space 4}-1.184109{col 69}{space 3} .2587783
-{txt}{hline 15}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}{txt}
-{com}. 
-.         postclose `memhold'
+. post `memhold' ("584") ///
+> (r(mu_1)) (r(t)) (r(p)) (r(lb_1)) (r(ub_1))
 {txt}
 {com}. 
-.         use "$logs/table1_reg_drivers.dta", clear
+. 
+. **## 3.2 - Product 793
+. ttest diff_793 == 0
+
+{txt}One-sample t test
+{hline 9}{c TT}{hline 68}
+Variable{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. err.{col 47}Std. dev.{col 59}[95% conf. interval]
+{hline 9}{c +}{hline 68}
+diff_793 {c |}{res}{col 12}     70{col 22} .1214286{col 34} .0943188{col 46} .7891277{col 58}-.0667323{col 70} .3095894
+{txt}{hline 9}{c BT}{hline 68}
+    mean = mean({res}diff_793{txt})                                         t = {res}  1.2874
+{txt}H0: mean = {res}0                                     {txt}Degrees of freedom = {res}      69
+
+    {txt}Ha: mean < {res}0                 {txt}Ha: mean != {res}0                 {txt}Ha: mean > {res}0
+ {txt}Pr(T < t) = {res}0.8989         {txt}Pr(|T| > |t|) = {res}0.2022          {txt}Pr(T > t) = {res}0.1011
 {txt}
 {com}. 
-.         replace product = "Product 584" if product == "diff_584"
-{txt}(6 real changes made)
-
-{com}.         replace product = "Product 356" if product == "diff_356"
-{txt}(6 real changes made)
-
-{com}.         replace product = "Product 831" if product == "diff_831"
-{txt}(6 real changes made)
-
-{com}. 
-.         replace variable = "Relaxation / sleep" if variable == "benefit_sleep"
-{txt}(3 real changes made)
-
-{com}.         replace variable = "Reduce cramps" if variable == "benefit_cramps"
-{txt}(3 real changes made)
-
-{com}.         replace variable = "Muscle recovery" if variable == "benefit_muscle"
-{txt}(3 real changes made)
-
-{com}.         replace variable = "Blood sugar support" if variable == "benefit_sugar"
-{txt}(3 real changes made)
-
-{com}.         replace variable = "Bone health" if variable == "benefit_bone"
-{txt}(3 real changes made)
-
-{com}.         replace variable = "Info usefulness" if variable == "info_useful"
-{txt}(3 real changes made)
-
-{com}. 
-.         label variable product  "Product"
-{txt}
-{com}.         label variable variable "Variable"
-{txt}
-{com}.         label variable coef     "Coefficient"
-{txt}
-{com}.         label variable se       "Std. Error"
-{txt}
-{com}.         label variable pvalue   "p-value"
+. post `memhold' ("793") ///
+> (r(mu_1)) (r(t)) (r(p)) (r(lb_1)) (r(ub_1))
 {txt}
 {com}. 
-.         list, clean noobs
+. 
+. postclose `memhold'
 {txt}
-    {res}    product              variable        coef         se     pvalue {txt} 
-    {res}Product 584    Relaxation / sleep    .0109263   .0053675   .0520968 {txt} 
-    {res}Product 584         Reduce cramps    .0027896    .005144   .5922342 {txt} 
-    {res}Product 584       Muscle recovery    .0008109   .0046855   .8639336 {txt} 
-    {res}Product 584   Blood sugar support   -.0002289   .0038053   .9524959 {txt} 
-    {res}Product 584           Bone health   -.0041339    .006178   .5093122 {txt} 
-    {res}Product 584       Info usefulness    -.022577   .0703995   .7510024 {txt} 
-    {res}Product 356    Relaxation / sleep     .004518   .0025134   .0823156 {txt} 
-    {res}Product 356         Reduce cramps   -.0079886    .004043   .0574225 {txt} 
-    {res}Product 356       Muscle recovery    .0051922   .0033438   .1309663 {txt} 
-    {res}Product 356   Blood sugar support   -.0041562   .0041579   .3255067 {txt} 
-    {res}Product 356           Bone health    .0039536   .0046554    .402473 {txt} 
-    {res}Product 356       Info usefulness    .0805839   .0594268   .1852128 {txt} 
-    {res}Product 831    Relaxation / sleep    .0026728   .0025315   .2994715 {txt} 
-    {res}Product 831         Reduce cramps   -.0007931    .004072   .8468881 {txt} 
-    {res}Product 831       Muscle recovery    .0055462   .0033679   .1100397 {txt} 
-    {res}Product 831   Blood sugar support   -.0013782   .0041878   .7443681 {txt} 
-    {res}Product 831           Bone health   -.0018259   .0046889   .6997194 {txt} 
-    {res}Product 831       Info usefulness    .1050567   .0598544   .0894326 {txt} 
+{com}. 
+. use "$logs/table3_diff.dta", clear
+{txt}
+{com}. 
+. label variable product     "Product"
+{txt}
+{com}. label variable mean_change "Mean WTP Change"
+{txt}
+{com}. label variable tstat       "t-stat"
+{txt}
+{com}. label variable pvalue      "p-value"
+{txt}
+{com}. label variable ci_low      "95% CI Lower"
+{txt}
+{com}. label variable ci_high     "95% CI Upper"
+{txt}
+{com}. 
+. list, clean noobs
+{txt}
+    {res}product   mean_ch~e       tstat     pvalue      ci_low    ci_high {txt} 
+    {res}    584   -.0678571   -.7767137   .4399823   -.2421444   .1064301 {txt} 
+    {res}    793    .1214286    1.287427   .2022472   -.0667323   .3095894 {txt} 
 
 {com}. 
 {txt}end of do-file
 
-{com}. exit, clear
+{com}. 
