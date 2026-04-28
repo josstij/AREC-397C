@@ -120,16 +120,18 @@
 **# 2.1 - Label variables (for clean tables)
 **********************************************************************
 
-	* products
-	label variable wtp_2b_584 "WTP before info (UA Lemon Lime - 584)"
-	label variable wtp_3b_info_584 "WTP after info (UA Lemon Lime - 584)"
+* products
+label variable wtp_2b_584 "WTP before info (UA Lemon Lime - 584)"
+label variable wtp_3b_info_584 "WTP after info (UA Lemon Lime - 584)"
 
-	label variable wtp_2b_793 "WTP before info (Gatorade - 793)"
-	label variable wtp_3b_info_793 "WTP after info (Gatorade - 793)"
+label variable wtp_2b_793 "WTP before info (Gatorade - 793)"
+label variable wtp_3b_info_793 "WTP after info (Gatorade - 793)"
 
-	* main variables
-	label variable diff_584 "WTP change (UA Lemon Lime - Magnesium)"
-	label variable diff_793 "WTP change (Gatorade - No Magnesium)"
+* main variables
+label variable diff_584 "WTP change (UA Lemon Lime - Magnesium)"
+label variable diff_793 "WTP change (Gatorade - No Magnesium)"
+
+save "$logs/day1_clean.dta", replace
 	
 	
 **********************************************************************
@@ -137,52 +139,47 @@
 **********************************************************************
 
 	tabstat wtp_2b_584 wtp_3b_info_584 ///
-			wtp_2b_793 wtp_3b_info_793 ///
-			diff_584 diff_793, ///
-			stats(mean sd n) columns(statistics)
+        wtp_2b_793 wtp_3b_info_793 ///
+        diff_584 diff_793, ///
+        stats(mean sd n) columns(statistics) varwidth(35)
 			
 		
 **********************************************************************
 **# 3 - Table 2: Benchmark tests ($2.50)
 **********************************************************************
 
-	tempname memhold
-	postfile `memhold' str12 variable mean tstat pvalue ci_low ci_high ///
-	using "$logs/table2_benchmark.dta", replace
+tempname memhold
+postfile `memhold' str30 product mean tstat pvalue ci_low ci_high ///
+using "$logs/table2_benchmark.dta", replace
 
-	* 584
-	ttest wtp_3b_info_584 == 2.5
-	post `memhold' ("584") (r(mu_1)) (r(t)) (r(p)) (r(lb_1)) (r(ub_1))
+ttest wtp_3b_info_584 == 2.5
+post `memhold' ("UA Lemon Lime (584)") (r(mu_1)) (r(t)) (r(p)) (r(lb_1)) (r(ub_1))
 
-	* 793
-	ttest wtp_3b_info_793 == 2.5
-	post `memhold' ("793") (r(mu_1)) (r(t)) (r(p)) (r(lb_1)) (r(ub_1))
+ttest wtp_3b_info_793 == 2.5
+post `memhold' ("Gatorade (793)") (r(mu_1)) (r(t)) (r(p)) (r(lb_1)) (r(ub_1))
 
-	postclose `memhold'
+postclose `memhold'
 
-	use "$logs/table2_benchmark.dta", clear
-	list, clean noobs
-
+use "$logs/table2_benchmark.dta", clear
+list, clean noobs
 
 **********************************************************************
 **# 4 - Table 3: WTP change (main result)
 **********************************************************************
 
-	tempname memhold
-	postfile `memhold' str12 product mean_change tstat pvalue ci_low ci_high ///
-	using "$logs/table3_diff.dta", replace
+use "$logs/day1_clean.dta", clear
 
-	* 584
-	ttest diff_584 == 0
-	post `memhold' ("584") (r(mu_1)) (r(t)) (r(p)) (r(lb_1)) (r(ub_1))
+tempname memhold
+postfile `memhold' str30 product mean_change tstat pvalue ci_low ci_high ///
+using "$logs/table3_diff.dta", replace
 
-	* 793
-	ttest diff_793 == 0
-	post `memhold' ("793") (r(mu_1)) (r(t)) (r(p)) (r(lb_1)) (r(ub_1))
+ttest diff_584 == 0
+post `memhold' ("UA Lemon Lime (584)") (r(mu_1)) (r(t)) (r(p)) (r(lb_1)) (r(ub_1))
 
-	postclose `memhold'
+ttest diff_793 == 0
+post `memhold' ("Gatorade (793)") (r(mu_1)) (r(t)) (r(p)) (r(lb_1)) (r(ub_1))
 
-	use "$logs/table3_diff.dta", clear
-	list, clean noobs
+postclose `memhold'
 
-	
+use "$logs/table3_diff.dta", clear
+list, clean noobs
