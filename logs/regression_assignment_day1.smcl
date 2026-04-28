@@ -1243,4 +1243,339 @@ not found)
 {com}. 
 {txt}end of do-file
 
+{com}. do "C:\Users\tijer\AppData\Local\Temp\STD41dc_00000o.tmp"
+{txt}
+{com}. 
+. use "$logs/clean_data_day1_drivers.dta", clear
+{txt}
+{com}. 
+. tempname memhold
+{txt}
+{com}. postfile `memhold' str45 driver ///
+>     corr_584 p_584 ///
+>     corr_793 p_793 ///
+>     using "$logs/table5_demographic_drivers_day1.dta", replace
+{txt}{p 0 4 2}
+(file {bf}
+C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/table5_demographic_drivers_day1.dta{rm}
+not found)
+{p_end}
+
+{com}. 
+. foreach var in preknow_5_magn exercise con_freq age income {c -(}
+{txt}  2{com}. 
+.     local lab : variable label `var'
+{txt}  3{com}.     if "`lab'" == "" local lab "`var'"
+{txt}  4{com}. 
+.     * Correlation with magnesium product (584)
+.     quietly pwcorr diff_584 `var', sig
+{txt}  5{com}.     matrix C = r(C)
+{txt}  6{com}.     matrix P = r(sig)
+{txt}  7{com}.     local c584 = C[1,2]
+{txt}  8{com}.     local p584 = P[1,2]
+{txt}  9{com}. 
+.     * Correlation with non-magnesium product (793)
+.     quietly pwcorr diff_793 `var', sig
+{txt} 10{com}.     matrix C = r(C)
+{txt} 11{com}.     matrix P = r(sig)
+{txt} 12{com}.     local c793 = C[1,2]
+{txt} 13{com}.     local p793 = P[1,2]
+{txt} 14{com}. 
+.     post `memhold' ///
+>         ("`lab'") ///
+>         (`c584') (`p584') ///
+>         (`c793') (`p793')
+{txt} 15{com}. {c )-}
+{txt}
+{com}. 
+. postclose `memhold'
+{txt}
+{com}. 
+. use "$logs/table5_demographic_drivers_day1.dta", clear
+{txt}
+{com}. 
+. label variable driver "Demographic / behavioral driver"
+{txt}
+{com}. label variable corr_584 "Correlation with WTP change (584)"
+{txt}
+{com}. label variable p_584 "p-value (584)"
+{txt}
+{com}. label variable corr_793 "Correlation with WTP change (793)"
+{txt}
+{com}. label variable p_793 "p-value (793)"
+{txt}
+{com}. 
+. list, clean noobs
+{txt}
+    {res}                            driver    corr_584      p_584    corr_793      p_793 {txt} 
+    {res}      Prior knowledge of magnesium   -.0273641   .8220846   -.0779074   .5214842 {txt} 
+    {res}                Exercise frequency   -.1238505   .3070226   -.0117666   .9229826 {txt} 
+    {res}Sports drink consumption frequency    .0176258   .8848501   -.3574437   .0023833 {txt} 
+    {res}                               age    -.166526   .1682614    .0594599   .6248754 {txt} 
+    {res}                            income    .0858595   .5179011    .0691415   .6028224 {txt} 
+
+{com}. 
+. export delimited using "$logs/table5_demographic_drivers_day1.csv", replace
+{res}{txt}{p 0 4 2}
+(file {bf}
+C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/table5_demographic_drivers_day1.csv{rm}
+not found)
+{p_end}
+{txt}file {bf:C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/table5_demographic_drivers_day1.csv} saved
+
+{com}. 
+{txt}end of do-file
+
+{com}. do "C:\Users\tijer\AppData\Local\Temp\STD41dc_00000p.tmp"
+{txt}
+{com}. 
+. use "$logs/clean_data_day1_drivers.dta", clear
+{txt}
+{com}. 
+. tempname memhold
+{txt}
+{com}. postfile `memhold' str45 driver ///
+>     low_584 high_584 p_584 ///
+>     low_793 high_793 p_793 ///
+>     using "$logs/table6_high_low_functional_day1.dta", replace
+{txt}{p 0 4 2}
+(file {bf}
+C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/table6_high_low_functional_day1.dta{rm}
+not found)
+{p_end}
+
+{com}. 
+. foreach var in info_useful mag_muscle mag_cramps mag_sugar mag_bone mag_sleep {c -(}
+{txt}  2{com}. 
+.     local lab : variable label `var'
+{txt}  3{com}. 
+.     * Create high vs low groups (median split)
+.     quietly summarize `var', detail
+{txt}  4{com}.     gen high = `var' > r(p50) if !missing(`var')
+{txt}  5{com}. 
+.     * Means for 584
+.     quietly summarize diff_584 if high == 0
+{txt}  6{com}.     local low584 = r(mean)
+{txt}  7{com}. 
+.     quietly summarize diff_584 if high == 1
+{txt}  8{com}.     local high584 = r(mean)
+{txt}  9{com}. 
+.     quietly ttest diff_584, by(high)
+{txt} 10{com}.     local p584 = r(p)
+{txt} 11{com}. 
+.     * Means for 793
+.     quietly summarize diff_793 if high == 0
+{txt} 12{com}.     local low793 = r(mean)
+{txt} 13{com}. 
+.     quietly summarize diff_793 if high == 1
+{txt} 14{com}.     local high793 = r(mean)
+{txt} 15{com}. 
+.     quietly ttest diff_793, by(high)
+{txt} 16{com}.     local p793 = r(p)
+{txt} 17{com}. 
+.     post `memhold' ///
+>         ("`lab'") ///
+>         (`low584') (`high584') (`p584') ///
+>         (`low793') (`high793') (`p793')
+{txt} 18{com}. 
+.     drop high
+{txt} 19{com}. {c )-}
+{txt}(2 missing values generated)
+(2 missing values generated)
+(2 missing values generated)
+(3 missing values generated)
+(4 missing values generated)
+
+{com}. 
+. postclose `memhold'
+{txt}
+{com}. 
+. use "$logs/table6_high_low_functional_day1.dta", clear
+{txt}
+{com}. 
+. label variable driver "Functional benefit driver"
+{txt}
+{com}. label variable low_584 "Low importance mean change (584)"
+{txt}
+{com}. label variable high_584 "High importance mean change (584)"
+{txt}
+{com}. label variable p_584 "p-value (584)"
+{txt}
+{com}. label variable low_793 "Low importance mean change (793)"
+{txt}
+{com}. label variable high_793 "High importance mean change (793)"
+{txt}
+{com}. label variable p_793 "p-value (793)"
+{txt}
+{com}. 
+. list, clean noobs
+{txt}
+    {res}                                driver     low_584   high_584      p_584     low_793    high_793      p_793 {txt} 
+    {res}      Info usefulness (combined A & B)   -.0046296    .203125   .1877921   -.4444444     -.78125   .1064363 {txt} 
+    {res} Magnesium: muscle recovery importance   -.0328947   .1416667   .2039716   -.4342105   -.6333333   .2723249 {txt} 
+    {res} Magnesium: cramp reduction importance   -.0743243   .1854839   .0559782   -.3986486   -.6693549   .1328551 {txt} 
+    {res}     Magnesium: blood sugar importance    .1029412   .0294118   .5686898   -.4485294   -.5514706   .5651268 {txt} 
+    {res}     Magnesium: bone health importance    .0294118   .1060606   .5583357   -.3897059   -.6287879   .1842104 {txt} 
+    {res}Magnesium: sleep/relaxation importance   -.0220588     .15625   .1771711   -.3529412    -.671875   .0795996 {txt} 
+
+{com}. 
+. export delimited using "$logs/table6_high_low_functional_day1.csv", replace
+{res}{txt}{p 0 4 2}
+(file {bf}
+C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/table6_high_low_functional_day1.csv{rm}
+not found)
+{p_end}
+{txt}file {bf:C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/table6_high_low_functional_day1.csv} saved
+
+{com}. 
+{txt}end of do-file
+
+{com}. do "C:\Users\tijer\AppData\Local\Temp\STD41dc_00000q.tmp"
+{txt}
+{com}. 
+. use "$logs/clean_data_day1_drivers.dta", clear
+{txt}
+{com}. 
+. * Create high indicators for each driver
+. foreach var in info_useful mag_muscle mag_cramps mag_sugar mag_bone mag_sleep {c -(}
+{txt}  2{com}.     quietly summarize `var', detail
+{txt}  3{com}.     gen high_`var' = `var' > r(p50) if !missing(`var')
+{txt}  4{com}. {c )-}
+{txt}(2 missing values generated)
+(2 missing values generated)
+(2 missing values generated)
+(3 missing values generated)
+(4 missing values generated)
+
+{com}. 
+. * Count how many "high" drivers each person has
+. egen high_driver_count = rowtotal(high_info_useful high_mag_muscle high_mag_cramps high_mag_sugar high_mag_bone high_mag_sleep)
+{txt}
+{com}. 
+. label variable high_driver_count "Number of high functional benefit ratings"
+{txt}
+{com}. 
+. * Distribution
+. tab high_driver_count
+
+  {txt}Number of {c |}
+       high {c |}
+ functional {c |}
+    benefit {c |}
+    ratings {c |}      Freq.     Percent        Cum.
+{hline 12}{c +}{hline 35}
+          0 {c |}{res}         18       25.71       25.71
+{txt}          1 {c |}{res}          8       11.43       37.14
+{txt}          2 {c |}{res}         10       14.29       51.43
+{txt}          3 {c |}{res}          8       11.43       62.86
+{txt}          4 {c |}{res}          9       12.86       75.71
+{txt}          5 {c |}{res}         14       20.00       95.71
+{txt}          6 {c |}{res}          3        4.29      100.00
+{txt}{hline 12}{c +}{hline 35}
+      Total {c |}{res}         70      100.00
+{txt}
+{com}. 
+. * Effect on WTP change
+. tabstat diff_584 diff_793, by(high_driver_count) stats(mean sd n)
+
+{txt}Summary statistics: Mean, SD, N
+Group variable: high_driver_count (Number of high functional benefit ratings)
+
+{ralign 17:high_driver_count} {...}
+{c |}{...}
+  diff_584  diff_793
+{hline 18}{c +}{hline 20}
+{ralign 17:0} {...}
+{c |}{...}
+ {res}-.0416667 -.2916667
+{txt}{space 17} {...}
+{c |}{...}
+ {res} .3952847  .5018349
+{txt}{space 17} {...}
+{c |}{...}
+ {res}       18        18
+{txt}{hline 18}{c +}{hline 20}
+{ralign 17:1} {...}
+{c |}{...}
+ {res}   -.1875   -.53125
+{txt}{space 17} {...}
+{c |}{...}
+ {res}  .703943  .6329847
+{txt}{space 17} {...}
+{c |}{...}
+ {res}        8         8
+{txt}{hline 18}{c +}{hline 20}
+{ralign 17:2} {...}
+{c |}{...}
+ {res}     .025     -.325
+{txt}{space 17} {...}
+{c |}{...}
+ {res} .3425801  .4866267
+{txt}{space 17} {...}
+{c |}{...}
+ {res}       10        10
+{txt}{hline 18}{c +}{hline 20}
+{ralign 17:3} {...}
+{c |}{...}
+ {res}    .0625   -.65625
+{txt}{space 17} {...}
+{c |}{...}
+ {res} .8100926  .8756375
+{txt}{space 17} {...}
+{c |}{...}
+ {res}        8         8
+{txt}{hline 18}{c +}{hline 20}
+{ralign 17:4} {...}
+{c |}{...}
+ {res} .1111111 -.7222222
+{txt}{space 17} {...}
+{c |}{...}
+ {res} .3560002  .5921946
+{txt}{space 17} {...}
+{c |}{...}
+ {res}        9         9
+{txt}{hline 18}{c +}{hline 20}
+{ralign 17:5} {...}
+{c |}{...}
+ {res} .1964286 -.8035714
+{txt}{space 17} {...}
+{c |}{...}
+ {res} .7217671  1.029276
+{txt}{space 17} {...}
+{c |}{...}
+ {res}       14        14
+{txt}{hline 18}{c +}{hline 20}
+{ralign 17:6} {...}
+{c |}{...}
+ {res}      .25      -.25
+{txt}{space 17} {...}
+{c |}{...}
+ {res} .4330127  1.145644
+{txt}{space 17} {...}
+{c |}{...}
+ {res}        3         3
+{txt}{hline 18}{c +}{hline 20}
+{ralign 17:Total} {...}
+{c |}{...}
+ {res} .0428571 -.5214286
+{txt}{space 17} {...}
+{c |}{...}
+ {res} .5516304  .7319604
+{txt}{space 17} {...}
+{c |}{...}
+ {res}       70        70
+{txt}{hline 18}{c BT}{hline 20}
+
+{com}. 
+. export delimited using "$logs/table7_overlap_day1.csv", replace
+{res}{txt}{p 0 4 2}
+(file {bf}
+C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/table7_overlap_day1.csv{rm}
+not found)
+{p_end}
+{txt}file {bf:C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/table7_overlap_day1.csv} saved
+
+{com}. 
+{txt}end of do-file
+
 {com}. 

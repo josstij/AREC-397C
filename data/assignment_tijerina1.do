@@ -559,3 +559,146 @@ label variable p_793 "p-value (793)"
 list, clean noobs
 
 export delimited using "$logs/table4_functional_drivers_day1.csv", replace
+
+
+**********************************************************************
+**# 15 - Table 5: Demographic drivers of WTP change (Day 1)
+**********************************************************************
+
+use "$logs/clean_data_day1_drivers.dta", clear
+
+tempname memhold
+postfile `memhold' str45 driver ///
+    corr_584 p_584 ///
+    corr_793 p_793 ///
+    using "$logs/table5_demographic_drivers_day1.dta", replace
+
+foreach var in preknow_5_magn exercise con_freq age income {
+
+    local lab : variable label `var'
+    if "`lab'" == "" local lab "`var'"
+
+    * Correlation with magnesium product (584)
+    quietly pwcorr diff_584 `var', sig
+    matrix C = r(C)
+    matrix P = r(sig)
+    local c584 = C[1,2]
+    local p584 = P[1,2]
+
+    * Correlation with non-magnesium product (793)
+    quietly pwcorr diff_793 `var', sig
+    matrix C = r(C)
+    matrix P = r(sig)
+    local c793 = C[1,2]
+    local p793 = P[1,2]
+
+    post `memhold' ///
+        ("`lab'") ///
+        (`c584') (`p584') ///
+        (`c793') (`p793')
+}
+
+postclose `memhold'
+
+use "$logs/table5_demographic_drivers_day1.dta", clear
+
+label variable driver "Demographic / behavioral driver"
+label variable corr_584 "Correlation with WTP change (584)"
+label variable p_584 "p-value (584)"
+label variable corr_793 "Correlation with WTP change (793)"
+label variable p_793 "p-value (793)"
+
+list, clean noobs
+
+export delimited using "$logs/table5_demographic_drivers_day1.csv", replace
+
+
+**********************************************************************
+**# 16 - Table 6: High vs Low functional benefit groups (Day 1)
+**********************************************************************
+
+use "$logs/clean_data_day1_drivers.dta", clear
+
+tempname memhold
+postfile `memhold' str45 driver ///
+    low_584 high_584 p_584 ///
+    low_793 high_793 p_793 ///
+    using "$logs/table6_high_low_functional_day1.dta", replace
+
+foreach var in info_useful mag_muscle mag_cramps mag_sugar mag_bone mag_sleep {
+
+    local lab : variable label `var'
+
+    * Create high vs low groups (median split)
+    quietly summarize `var', detail
+    gen high = `var' > r(p50) if !missing(`var')
+
+    * Means for 584
+    quietly summarize diff_584 if high == 0
+    local low584 = r(mean)
+
+    quietly summarize diff_584 if high == 1
+    local high584 = r(mean)
+
+    quietly ttest diff_584, by(high)
+    local p584 = r(p)
+
+    * Means for 793
+    quietly summarize diff_793 if high == 0
+    local low793 = r(mean)
+
+    quietly summarize diff_793 if high == 1
+    local high793 = r(mean)
+
+    quietly ttest diff_793, by(high)
+    local p793 = r(p)
+
+    post `memhold' ///
+        ("`lab'") ///
+        (`low584') (`high584') (`p584') ///
+        (`low793') (`high793') (`p793')
+
+    drop high
+}
+
+postclose `memhold'
+
+use "$logs/table6_high_low_functional_day1.dta", clear
+
+label variable driver "Functional benefit driver"
+label variable low_584 "Low importance mean change (584)"
+label variable high_584 "High importance mean change (584)"
+label variable p_584 "p-value (584)"
+label variable low_793 "Low importance mean change (793)"
+label variable high_793 "High importance mean change (793)"
+label variable p_793 "p-value (793)"
+
+list, clean noobs
+
+export delimited using "$logs/table6_high_low_functional_day1.csv", replace
+
+
+**********************************************************************
+**# 17 - Overlap between high driver groups (Day 1)
+**********************************************************************
+
+use "$logs/clean_data_day1_drivers.dta", clear
+
+* Create high indicators for each driver
+foreach var in info_useful mag_muscle mag_cramps mag_sugar mag_bone mag_sleep {
+    quietly summarize `var', detail
+    gen high_`var' = `var' > r(p50) if !missing(`var')
+}
+
+* Count how many "high" drivers each person has
+egen high_driver_count = rowtotal(high_info_useful high_mag_muscle high_mag_cramps high_mag_sugar high_mag_bone high_mag_sleep)
+
+label variable high_driver_count "Number of high functional benefit ratings"
+
+* Distribution
+tab high_driver_count
+
+* Effect on WTP change
+tabstat diff_584 diff_793, by(high_driver_count) stats(mean sd n)
+
+export delimited using "$logs/table7_overlap_day1.csv", replace
