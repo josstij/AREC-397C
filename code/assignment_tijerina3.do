@@ -82,11 +82,30 @@
 
 
 **********************************************************************
-**# 2 - Create Day 1 WTP variables using all randomizers
+**# 2 - Create Day 1 WTP variables using all randomizers ******CLARITY ISSUE
 **********************************************************************
 
 * keep Day 1 only
 keep if day == 1
+
+/*
+Definition of WTP change variables:
+
+Path B (taste → info):
+diff_584_b = WTP after magnesium info − WTP after tasting
+diff_793_b = WTP after magnesium info − WTP after tasting
+
+Path A (info → taste):
+diff_584_a = WTP after magnesium info − baseline WTP (wtp_1)
+diff_793_a = WTP after magnesium info − baseline WTP (wtp_1)
+
+Combined variables:
+diff_584 = uses both A and B observations
+diff_793 = uses both A and B observations
+
+Positive values = increase in WTP
+Negative values = decrease in WTP
+*/
 
 **## 2.1 - B-path: tasting first, then magnesium info
 gen before_584_b = wtp_2b_584
@@ -150,6 +169,20 @@ save "$logs/day1_clean.dta", replace
 **********************************************************************
 **# 3 - Table 1: Summary Statistics
 **********************************************************************
+
+/*
+Table 1 notes:
+
+diff_584_b = WTP after magnesium info − WTP after tasting (Path B)
+diff_584_a = WTP after magnesium info − baseline WTP (Path A)
+
+diff_793_b = same definition for product 793 (Path B)
+diff_793_a = same definition for product 793 (Path A)
+
+diff_584 and diff_793 are combined measures using both Path A and B.
+
+These variables represent the change in willingness to pay due to magnesium information.
+*/
 
 use "$logs/day1_clean.dta", clear
 
@@ -247,11 +280,29 @@ use "$logs/table3_change.dta", clear
 list, clean noobs
 
 export excel using "$logs/table3_change.xlsx", firstrow(variables) replace
-
+*/
 
 **********************************************************************
 **# 6 - Create magnesium benefit driver variables
 **********************************************************************
+
+/*
+Magnesium benefit driver variables:
+
+These variables combine Path A and Path B survey responses.
+If the Path B version is missing, the Path A version is used.
+
+info_useful = perceived usefulness of magnesium information
+benefit_muscle = importance of muscle recovery benefit
+benefit_cramps = importance of cramp reduction benefit
+benefit_sugar = importance of blood sugar support benefit
+benefit_bone = importance of bone health benefit
+benefit_sleep = importance of relaxation/sleep benefit
+
+These are used to explain:
+diff_584 = combined WTP change for 584 across Path A and Path B
+diff_793 = combined WTP change for 793 across Path A and Path B
+*/
 
 use "$logs/day1_clean.dta", clear
 
@@ -335,7 +386,7 @@ pwcorr diff_793 sensory_793_flavor sensory_793_sweet ///
 
 
 **********************************************************************
-**# 7 - Table 4: Regression Drivers of WTP Change
+**# 7 - Table 4: Regression Drivers of WTP Change ***************BIGGEST ISSUE
 **********************************************************************
 
 use "$logs/day1_regression_ready.dta", clear
