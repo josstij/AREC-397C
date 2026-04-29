@@ -2,7 +2,7 @@
 * assignment: 3
 * created on: 27 april 2026
 * created by: jmt
-* edited on: 27 april 2026
+* edited on: 29 april 2026
 * edited by: jmt
 * Stata v.19.5
 
@@ -28,44 +28,32 @@
 	
 
 **********************************************************************
-**# 0 - regression analysis - TO DO
+**# 0 - analysis roadmap (Day 1 only)
 **********************************************************************
 /*
-* Clean the dataset with clear variable names.
+	Goal: Test how magnesium information affects WTP
 
-* Use BOTH Day 1 and Day 2 data.
+	Design:
+	- Day 1 only
+	- Product 584 (magnesium) vs 793 (no magnesium)
+	- Path A (info first) vs Path B (taste first)
 
-* Create WTP change variables using BOTH survey paths:
-	* B-path: after tasting WTP to after magnesium information WTP
-	* A-path: baseline WTP to magnesium information WTP
+	Requirements:
+	1. Table 1: Summary statistics
+	2. Table 2: Benchmark t-tests (alpha = 0.05)
+	3. Table 3: WTP change tests (alpha = 0.05)
+	4. Correlation analysis:
+	   - correlation matrix
+	   - scatterplots
+	5. Simple regression:
+	   - ΔWTP = f(overall liking)
+	6. Multiple regression:
+	   - ΔWTP = f(liking + controls)
 
-* Define regression outcome variables:
-	* diff_584
-	* diff_793
-	* diff_356
-	* diff_831
-
-* Create common magnesium driver variables:
-	* information usefulness
-	* muscle recovery
-	* cramp reduction
-	* blood sugar support
-	* bone health
-	* relaxation / sleep
-
-* Estimate regression models:
-	* main models: magnesium products 584, 356, and 831
-	* comparison model: non-magnesium product 793, if useful
-
-* Justify model choice:
-	* OLS regression is used because WTP change is a continuous outcome.
-
-* Export clearly labeled regression tables for the Word document.
-
-* Discuss results in one page:
-	* identify which magnesium attributes significantly affect WTP change
-	* report p-values / significance levels
-	* connect findings back to the hypothesis
+	Notes:
+	- Keep sensory_584_overall and sensory_793_overall
+	- Do not mix products
+	- Interpret p-values at 5% significance
 */
 
 
@@ -77,6 +65,9 @@
 
 	* keep completed responses
 	keep if finished == 1
+	
+	*confirm liking variables exist
+	summarize sensory_584_overall sensory_793_overall 
 
 	* replace invalid values (-999 → missing)
 	ds, has(type numeric)
@@ -293,7 +284,56 @@ summarize diff_584 info_useful benefit_muscle benefit_cramps ///
           benefit_sugar benefit_bone benefit_sleep
 
 save "$logs/day1_regression_ready.dta", replace
-okoko
+
+
+**********************************************************************
+**# 6.5 - Bivariate analysis: 584 (liking vs WTP change)
+**********************************************************************
+
+* correlation
+corr diff_584 sensory_584_overall
+
+* scatterplot with line of best fit
+twoway (scatter diff_584 sensory_584_overall) ///
+       (lfit diff_584 sensory_584_overall), ///
+       title("WTP Change vs Liking (584)") ///
+       xtitle("Overall Liking (584)") ///
+       ytitle("WTP Change (584)")
+
+graph export "$logs/scatter_584.png", replace
+
+
+**********************************************************************
+**# 6.6 - Bivariate analysis: 793 (liking vs WTP change)
+**********************************************************************
+
+* correlation
+corr diff_793 sensory_793_overall
+
+* scatterplot with line of best fit
+twoway (scatter diff_793 sensory_793_overall) ///
+       (lfit diff_793 sensory_793_overall), ///
+       title("WTP Change vs Liking (793)") ///
+       xtitle("Overall Liking (793)") ///
+       ytitle("WTP Change (793)")
+
+graph export "$logs/scatter_793.png", replace
+
+
+**********************************************************************
+**# 6.7 - Correlation matrix
+**********************************************************************
+* 584 - 
+pwcorr diff_584 sensory_584_flavor sensory_584_sweet ///
+       sensory_584_sour sensory_584_salt sensory_584_aroma ///
+       sensory_584_aftert refresh_584 sensory_584_overall, sig
+	   
+* 793 - 
+pwcorr diff_793 sensory_793_flavor sensory_793_sweet ///
+       sensory_793_sour sensory_793_salt sensory_793_aroma ///
+       sensory_793_aftert refresh_793 sensory_793_overall, sig
+
+
 **********************************************************************
 **# 7 - Table 4: Regression Drivers of WTP Change
 **********************************************************************

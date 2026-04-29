@@ -3,7 +3,7 @@
       name:  {res}<unnamed>
        {txt}log:  {res}C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/assignment_tijerina3.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res}27 Apr 2026, 20:09:28
+ {txt}opened on:  {res}29 Apr 2026, 11:35:24
 {txt}
 {com}.         set                     scheme s2color
 {txt}
@@ -18,44 +18,32 @@ all files already exist and are up to date.
 {com}.         
 . 
 . **********************************************************************
-. **# 0 - regression analysis - TO DO
+. **# 0 - analysis roadmap (Day 1 only)
 . **********************************************************************
 . /*
-> * Clean the dataset with clear variable names.
+>         Goal: Test how magnesium information affects WTP
 > 
-> * Use BOTH Day 1 and Day 2 data.
+>         Design:
+>         - Day 1 only
+>         - Product 584 (magnesium) vs 793 (no magnesium)
+>         - Path A (info first) vs Path B (taste first)
 > 
-> * Create WTP change variables using BOTH survey paths:
->         * B-path: after tasting WTP to after magnesium information WTP
->         * A-path: baseline WTP to magnesium information WTP
+>         Requirements:
+>         1. Table 1: Summary statistics
+>         2. Table 2: Benchmark t-tests (alpha = 0.05)
+>         3. Table 3: WTP change tests (alpha = 0.05)
+>         4. Correlation analysis:
+>            - correlation matrix
+>            - scatterplots
+>         5. Simple regression:
+>            - ΔWTP = f(overall liking)
+>         6. Multiple regression:
+>            - ΔWTP = f(liking + controls)
 > 
-> * Define regression outcome variables:
->         * diff_584
->         * diff_793
->         * diff_356
->         * diff_831
-> 
-> * Create common magnesium driver variables:
->         * information usefulness
->         * muscle recovery
->         * cramp reduction
->         * blood sugar support
->         * bone health
->         * relaxation / sleep
-> 
-> * Estimate regression models:
->         * main models: magnesium products 584, 356, and 831
->         * comparison model: non-magnesium product 793, if useful
-> 
-> * Justify model choice:
->         * OLS regression is used because WTP change is a continuous outcome.
-> 
-> * Export clearly labeled regression tables for the Word document.
-> 
-> * Discuss results in one page:
->         * identify which magnesium attributes significantly affect WTP change
->         * report p-values / significance levels
->         * connect findings back to the hypothesis
+>         Notes:
+>         - Keep sensory_584_overall and sensory_793_overall
+>         - Do not mix products
+>         - Interpret p-values at 5% significance
 > */
 . 
 . 
@@ -72,6 +60,15 @@ all files already exist and are up to date.
 .         keep if finished == 1
 {txt}(6 observations deleted)
 
+{com}.         
+.         *confirm liking variables exist
+.         summarize sensory_584_overall sensory_793_overall 
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+sensory_58~l {c |}{res}         70    6.671429    1.481494          1          9
+{txt}sensory_79~l {c |}{res}         70    7.142857     1.56303          1          9
+{txt}
 {com}. 
 .         * replace invalid values (-999 → missing)
 .         ds, has(type numeric)
@@ -269,27 +266,846 @@ all files already exist and are up to date.
 (0 real changes made)
 
 {com}. 
+.         * check structure
+.         summarize day randomizer
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+{space 9}day {c |}{res}        143     1.51049     .501647          1          2
+{txt}{space 2}randomizer {c |}{res}        143    2.461538    1.118155          1          4
+{txt}
+{com}.         tab randomizer
+
+ {txt}randomizer {c |}      Freq.     Percent        Cum.
+{hline 12}{c +}{hline 35}
+          1 {c |}{res}         38       26.57       26.57
+{txt}          2 {c |}{res}         34       23.78       50.35
+{txt}          3 {c |}{res}         38       26.57       76.92
+{txt}          4 {c |}{res}         33       23.08      100.00
+{txt}{hline 12}{c +}{hline 35}
+      Total {c |}{res}        143      100.00
+{txt}
+{com}.         tab day
+
+        {txt}Day {c |}      Freq.     Percent        Cum.
+{hline 12}{c +}{hline 35}
+          1 {c |}{res}         70       48.95       48.95
+{txt}          2 {c |}{res}         73       51.05      100.00
+{txt}{hline 12}{c +}{hline 35}
+      Total {c |}{res}        143      100.00
+{txt}
+{com}. 
+. 
+. **********************************************************************
+. **# 2 - Create Day 1 WTP variables using all randomizers
+. **********************************************************************
+. 
+. * keep Day 1 only
+. keep if day == 1
+{txt}(73 observations deleted)
+
+{com}. 
+. **## 2.1 - B-path: tasting first, then magnesium info
+. gen before_584_b = wtp_2b_584
+{txt}(36 missing values generated)
+
+{com}. gen after_584_b  = wtp_3b_info_584
+{txt}(36 missing values generated)
+
+{com}. gen diff_584_b   = after_584_b - before_584_b
+{txt}(36 missing values generated)
+
+{com}. 
+. gen before_793_b = wtp_2b_793
+{txt}(36 missing values generated)
+
+{com}. gen after_793_b  = wtp_3b_info_793
+{txt}(36 missing values generated)
+
+{com}. gen diff_793_b   = after_793_b - before_793_b
+{txt}(36 missing values generated)
+
+{com}. 
+. **## 2.2 - A-path: baseline WTP, then magnesium info first
+. gen before_584_a = wtp_1
+{txt}
+{com}. gen after_584_a  = wtp_2a_info_584
+{txt}(34 missing values generated)
+
+{com}. gen diff_584_a   = after_584_a - before_584_a
+{txt}(34 missing values generated)
+
+{com}. 
+. gen before_793_a = wtp_1
+{txt}
+{com}. gen after_793_a  = wtp_2a_info_793
+{txt}(34 missing values generated)
+
+{com}. gen diff_793_a   = after_793_a - before_793_a
+{txt}(34 missing values generated)
+
+{com}. 
+. **## 2.3 - Combined variables using all randomizers
+. gen before_584 = before_584_b
+{txt}(36 missing values generated)
+
+{com}. replace before_584 = before_584_a if missing(before_584)
+{txt}(36 real changes made)
+
+{com}. 
+. gen after_584 = after_584_b
+{txt}(36 missing values generated)
+
+{com}. replace after_584 = after_584_a if missing(after_584)
+{txt}(36 real changes made)
+
+{com}. 
+. gen diff_584 = diff_584_b
+{txt}(36 missing values generated)
+
+{com}. replace diff_584 = diff_584_a if missing(diff_584)
+{txt}(36 real changes made)
+
+{com}. 
+. gen before_793 = before_793_b
+{txt}(36 missing values generated)
+
+{com}. replace before_793 = before_793_a if missing(before_793)
+{txt}(36 real changes made)
+
+{com}. 
+. gen after_793 = after_793_b
+{txt}(36 missing values generated)
+
+{com}. replace after_793 = after_793_a if missing(after_793)
+{txt}(36 real changes made)
+
+{com}. 
+. gen diff_793 = diff_793_b
+{txt}(36 missing values generated)
+
+{com}. replace diff_793 = diff_793_a if missing(diff_793)
+{txt}(36 real changes made)
+
+{com}. 
+. **## 2.4 - Labels
+. label variable before_584 "WTP before info: UA Lemon Lime 584"
+{txt}
+{com}. label variable after_584  "WTP after info: UA Lemon Lime 584"
+{txt}
+{com}. label variable diff_584   "WTP change: UA Lemon Lime 584"
+{txt}
+{com}. 
+. label variable before_793 "WTP before info: Gatorade 793"
+{txt}
+{com}. label variable after_793  "WTP after info: Gatorade 793"
+{txt}
+{com}. label variable diff_793   "WTP change: Gatorade 793"
+{txt}
+{com}. 
+. label variable diff_584_b "WTP change 584: B-path"
+{txt}
+{com}. label variable diff_584_a "WTP change 584: A-path"
+{txt}
+{com}. label variable diff_793_b "WTP change 793: B-path"
+{txt}
+{com}. label variable diff_793_a "WTP change 793: A-path"
+{txt}
+{com}. 
+. **## 2.5 - Checks
+. summarize before_584 after_584 diff_584 before_793 after_793 diff_793
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+{space 2}before_584 {c |}{res}         70    2.885714     .773995        .75        4.5
+{txt}{space 3}after_584 {c |}{res}         70    2.928571    .7098465          0       4.75
+{txt}{space 4}diff_584 {c |}{res}         70    .0428571    .5516304       -1.5       1.75
+{txt}{space 2}before_793 {c |}{res}         70    2.953571    .7758736       1.25        4.5
+{txt}{space 3}after_793 {c |}{res}         70    2.432143    .8426165          0        4.5
+{txt}{hline 13}{c +}{hline 57}
+{space 4}diff_793 {c |}{res}         70   -.5214286    .7319604         -3        .75
+{txt}
+{com}. tab randomizer if !missing(diff_584)
+
+ {txt}randomizer {c |}      Freq.     Percent        Cum.
+{hline 12}{c +}{hline 35}
+          1 {c |}{res}         17       24.29       24.29
+{txt}          2 {c |}{res}         17       24.29       48.57
+{txt}          3 {c |}{res}         20       28.57       77.14
+{txt}          4 {c |}{res}         16       22.86      100.00
+{txt}{hline 12}{c +}{hline 35}
+      Total {c |}{res}         70      100.00
+{txt}
+{com}. tab randomizer if !missing(diff_793)
+
+ {txt}randomizer {c |}      Freq.     Percent        Cum.
+{hline 12}{c +}{hline 35}
+          1 {c |}{res}         17       24.29       24.29
+{txt}          2 {c |}{res}         17       24.29       48.57
+{txt}          3 {c |}{res}         20       28.57       77.14
+{txt}          4 {c |}{res}         16       22.86      100.00
+{txt}{hline 12}{c +}{hline 35}
+      Total {c |}{res}         70      100.00
+{txt}
+{com}. 
+. save "$logs/day1_clean.dta", replace
+{txt}{p 0 4 2}
+file {bf}
+C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/day1_clean.dta{rm}
+saved
+{p_end}
+
+{com}. 
+. 
+. **********************************************************************
+. **# 3 - Table 1: Summary Statistics
+. **********************************************************************
+. 
+. use "$logs/day1_clean.dta", clear
+{txt}
+{com}. 
+. tempname memhold
+{txt}
+{com}. postfile `memhold' str40 variable mean sd se n cv using "$logs/table1_summary.dta", replace
+{txt}
+{com}. 
+. foreach var in before_584 after_584 diff_584_b diff_584_a diff_584 ///
+>                before_793 after_793 diff_793_b diff_793_a diff_793 {c -(}
+{txt}  2{com}. 
+.     summarize `var'
+{txt}  3{com}. 
+.     local mean = r(mean)
+{txt}  4{com}.     local sd   = r(sd)
+{txt}  5{com}.     local se   = r(sd)/sqrt(r(N))
+{txt}  6{com}.     local n    = r(N)
+{txt}  7{com}.     local cv   = r(sd)/r(mean)
+{txt}  8{com}. 
+.     post `memhold' ("`var'") (`mean') (`sd') (`se') (`n') (`cv')
+{txt}  9{com}. {c )-}
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+{space 2}before_584 {c |}{res}         70    2.885714     .773995        .75        4.5
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+{space 3}after_584 {c |}{res}         70    2.928571    .7098465          0       4.75
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+{space 2}diff_584_b {c |}{res}         34    .1911765    .4729774         -1       1.25
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+{space 2}diff_584_a {c |}{res}         36   -.0972222     .589424       -1.5       1.75
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+{space 4}diff_584 {c |}{res}         70    .0428571    .5516304       -1.5       1.75
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+{space 2}before_793 {c |}{res}         70    2.953571    .7758736       1.25        4.5
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+{space 3}after_793 {c |}{res}         70    2.432143    .8426165          0        4.5
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+{space 2}diff_793_b {c |}{res}         34   -.2867647    .6517237       -2.5        .75
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+{space 2}diff_793_a {c |}{res}         36   -.7430556    .7427894         -3        .25
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+{space 4}diff_793 {c |}{res}         70   -.5214286    .7319604         -3        .75
+{txt}
+{com}. 
+. postclose `memhold'
+{txt}
+{com}. 
+. use "$logs/table1_summary.dta", clear
+{txt}
+{com}. 
+. replace variable = "WTP Before Info: UA Lemon Lime (584)" if variable == "before_584"
+{txt}(1 real change made)
+
+{com}. replace variable = "WTP After Info: UA Lemon Lime (584)" if variable == "after_584"
+{txt}(1 real change made)
+
+{com}. replace variable = "WTP Change: UA Lemon Lime (B-path)" if variable == "diff_584_b"
+{txt}(1 real change made)
+
+{com}. replace variable = "WTP Change: UA Lemon Lime (A-path)" if variable == "diff_584_a"
+{txt}(1 real change made)
+
+{com}. replace variable = "WTP Change: UA Lemon Lime (Combined)" if variable == "diff_584"
+{txt}(1 real change made)
+
+{com}. 
+. replace variable = "WTP Before Info: Gatorade (793)" if variable == "before_793"
+{txt}(1 real change made)
+
+{com}. replace variable = "WTP After Info: Gatorade (793)" if variable == "after_793"
+{txt}(1 real change made)
+
+{com}. replace variable = "WTP Change: Gatorade (B-path)" if variable == "diff_793_b"
+{txt}(1 real change made)
+
+{com}. replace variable = "WTP Change: Gatorade (A-path)" if variable == "diff_793_a"
+{txt}(1 real change made)
+
+{com}. replace variable = "WTP Change: Gatorade (Combined)" if variable == "diff_793"
+{txt}(1 real change made)
+
+{com}. 
+. list, clean noobs
+{txt}
+    {res}                            variable        mean         sd         se    n          cv {txt} 
+    {res}WTP Before Info: UA Lemon Lime (584)    2.885714    .773995   .0925101   70    .2682161 {txt} 
+    {res} WTP After Info: UA Lemon Lime (584)    2.928571   .7098464   .0848429   70    .2423866 {txt} 
+    {res}  WTP Change: UA Lemon Lime (B-path)    .1911765   .4729775    .081115   34    2.474036 {txt} 
+    {res}  WTP Change: UA Lemon Lime (A-path)   -.0972222    .589424   .0982373   36   -6.062647 {txt} 
+    {res}WTP Change: UA Lemon Lime (Combined)    .0428571   .5516304   .0659324   70    12.87138 {txt} 
+    {res}     WTP Before Info: Gatorade (793)    2.953571   .7758736   .0927346   70      .26269 {txt} 
+    {res}      WTP After Info: Gatorade (793)    2.432143   .8426165   .1007119   70    .3464503 {txt} 
+    {res}       WTP Change: Gatorade (B-path)   -.2867647   .6517237   .1117697   34   -2.272677 {txt} 
+    {res}       WTP Change: Gatorade (A-path)   -.7430556   .7427894   .1237982   36   -.9996418 {txt} 
+    {res}     WTP Change: Gatorade (Combined)   -.5214286   .7319604    .087486   70    -1.40376 {txt} 
+
+{com}. 
+. export excel using "$logs/table1_summary.xlsx", firstrow(variables) replace
+{res}{txt}file {bf:C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/table1_summary.xlsx} saved
+
+{com}. 
+. 
+. **********************************************************************
+. **# 4 - Table 2: Benchmark Tests ($2.50)
+. **********************************************************************
+. 
+. use "$logs/day1_clean.dta", clear
+{txt}
+{com}. 
+. tempname memhold
+{txt}
+{com}. postfile `memhold' str40 product mean tstat pvalue ci_low ci_high using "$logs/table2_benchmark.dta", replace
+{txt}
+{com}. 
+. ttest after_584 == 2.5
+
+{txt}One-sample t test
+{hline 9}{c TT}{hline 68}
+Variable{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. err.{col 47}Std. dev.{col 59}[95% conf. interval]
+{hline 9}{c +}{hline 68}
+afte~584 {c |}{res}{col 12}     70{col 22} 2.928571{col 34} .0848429{col 46} .7098465{col 58} 2.759315{col 70} 3.097828
+{txt}{hline 9}{c BT}{hline 68}
+    mean = mean({res}after_584{txt})                                        t = {res}  5.0514
+{txt}H0: mean = {res}2.5                                   {txt}Degrees of freedom = {res}      69
+
+   {txt}Ha: mean < {res}2.5               {txt}Ha: mean != {res}2.5               {txt}Ha: mean > {res}2.5
+ {txt}Pr(T < t) = {res}1.0000         {txt}Pr(|T| > |t|) = {res}0.0000          {txt}Pr(T > t) = {res}0.0000
+{txt}
+{com}. post `memhold' ("UA Lemon Lime (584)") (r(mu_1)) (r(t)) (r(p)) (r(lb_1)) (r(ub_1))
+{txt}
+{com}. 
+. ttest after_793 == 2.5
+
+{txt}One-sample t test
+{hline 9}{c TT}{hline 68}
+Variable{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. err.{col 47}Std. dev.{col 59}[95% conf. interval]
+{hline 9}{c +}{hline 68}
+afte~793 {c |}{res}{col 12}     70{col 22} 2.432143{col 34} .1007119{col 46} .8426165{col 58} 2.231228{col 70} 2.633058
+{txt}{hline 9}{c BT}{hline 68}
+    mean = mean({res}after_793{txt})                                        t = {res} -0.6738
+{txt}H0: mean = {res}2.5                                   {txt}Degrees of freedom = {res}      69
+
+   {txt}Ha: mean < {res}2.5               {txt}Ha: mean != {res}2.5               {txt}Ha: mean > {res}2.5
+ {txt}Pr(T < t) = {res}0.2514         {txt}Pr(|T| > |t|) = {res}0.5027          {txt}Pr(T > t) = {res}0.7486
+{txt}
+{com}. post `memhold' ("Gatorade (793)") (r(mu_1)) (r(t)) (r(p)) (r(lb_1)) (r(ub_1))
+{txt}
+{com}. 
+. postclose `memhold'
+{txt}
+{com}. 
+. use "$logs/table2_benchmark.dta", clear
+{txt}
+{com}. list, clean noobs
+{txt}
+    {res}            product       mean       tstat     pvalue     ci_low    ci_high {txt} 
+    {res}UA Lemon Lime (584)   2.928571    5.051354   3.43e-06   2.759315   3.097828 {txt} 
+    {res}     Gatorade (793)   2.432143   -.6737746   .5027055   2.231228   2.633058 {txt} 
+
+{com}. 
+. export excel using "$logs/table2_benchmark.xlsx", firstrow(variables) replace
+{res}{txt}file {bf:C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/table2_benchmark.xlsx} saved
+
+{com}. 
+. 
+. **********************************************************************
+. **# 5 - Table 3: WTP Change Tests
+. **********************************************************************
+. 
+. use "$logs/day1_clean.dta", clear
+{txt}
+{com}. 
+. tempname memhold
+{txt}
+{com}. postfile `memhold' str40 product str15 path mean_change tstat pvalue ci_low ci_high using "$logs/table3_change.dta", replace
+{txt}
+{com}. 
+. ttest diff_584_b == 0
+
+{txt}One-sample t test
+{hline 9}{c TT}{hline 68}
+Variable{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. err.{col 47}Std. dev.{col 59}[95% conf. interval]
+{hline 9}{c +}{hline 68}
+diff_5~b {c |}{res}{col 12}     34{col 22} .1911765{col 34}  .081115{col 46} .4729774{col 58} .0261468{col 70} .3562061
+{txt}{hline 9}{c BT}{hline 68}
+    mean = mean({res}diff_584_b{txt})                                       t = {res}  2.3569
+{txt}H0: mean = {res}0                                     {txt}Degrees of freedom = {res}      33
+
+    {txt}Ha: mean < {res}0                 {txt}Ha: mean != {res}0                 {txt}Ha: mean > {res}0
+ {txt}Pr(T < t) = {res}0.9877         {txt}Pr(|T| > |t|) = {res}0.0245          {txt}Pr(T > t) = {res}0.0123
+{txt}
+{com}. post `memhold' ("UA Lemon Lime (584)") ("B-path") (r(mu_1)) (r(t)) (r(p)) (r(lb_1)) (r(ub_1))
+{txt}
+{com}. 
+. ttest diff_584_a == 0
+
+{txt}One-sample t test
+{hline 9}{c TT}{hline 68}
+Variable{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. err.{col 47}Std. dev.{col 59}[95% conf. interval]
+{hline 9}{c +}{hline 68}
+diff_5~a {c |}{res}{col 12}     36{col 22}-.0972222{col 34} .0982373{col 46}  .589424{col 58}-.2966546{col 70} .1022102
+{txt}{hline 9}{c BT}{hline 68}
+    mean = mean({res}diff_584_a{txt})                                       t = {res} -0.9897
+{txt}H0: mean = {res}0                                     {txt}Degrees of freedom = {res}      35
+
+    {txt}Ha: mean < {res}0                 {txt}Ha: mean != {res}0                 {txt}Ha: mean > {res}0
+ {txt}Pr(T < t) = {res}0.1646         {txt}Pr(|T| > |t|) = {res}0.3291          {txt}Pr(T > t) = {res}0.8354
+{txt}
+{com}. post `memhold' ("UA Lemon Lime (584)") ("A-path") (r(mu_1)) (r(t)) (r(p)) (r(lb_1)) (r(ub_1))
+{txt}
+{com}. 
+. ttest diff_584 == 0
+
+{txt}One-sample t test
+{hline 9}{c TT}{hline 68}
+Variable{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. err.{col 47}Std. dev.{col 59}[95% conf. interval]
+{hline 9}{c +}{hline 68}
+diff_584 {c |}{res}{col 12}     70{col 22} .0428571{col 34} .0659324{col 46} .5516304{col 58}-.0886745{col 70} .1743888
+{txt}{hline 9}{c BT}{hline 68}
+    mean = mean({res}diff_584{txt})                                         t = {res}  0.6500
+{txt}H0: mean = {res}0                                     {txt}Degrees of freedom = {res}      69
+
+    {txt}Ha: mean < {res}0                 {txt}Ha: mean != {res}0                 {txt}Ha: mean > {res}0
+ {txt}Pr(T < t) = {res}0.7411         {txt}Pr(|T| > |t|) = {res}0.5178          {txt}Pr(T > t) = {res}0.2589
+{txt}
+{com}. post `memhold' ("UA Lemon Lime (584)") ("Combined") (r(mu_1)) (r(t)) (r(p)) (r(lb_1)) (r(ub_1))
+{txt}
+{com}. 
+. ttest diff_793_b == 0
+
+{txt}One-sample t test
+{hline 9}{c TT}{hline 68}
+Variable{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. err.{col 47}Std. dev.{col 59}[95% conf. interval]
+{hline 9}{c +}{hline 68}
+diff_7~b {c |}{res}{col 12}     34{col 22}-.2867647{col 34} .1117697{col 46} .6517237{col 58}-.5141618{col 70}-.0593676
+{txt}{hline 9}{c BT}{hline 68}
+    mean = mean({res}diff_793_b{txt})                                       t = {res} -2.5657
+{txt}H0: mean = {res}0                                     {txt}Degrees of freedom = {res}      33
+
+    {txt}Ha: mean < {res}0                 {txt}Ha: mean != {res}0                 {txt}Ha: mean > {res}0
+ {txt}Pr(T < t) = {res}0.0075         {txt}Pr(|T| > |t|) = {res}0.0150          {txt}Pr(T > t) = {res}0.9925
+{txt}
+{com}. post `memhold' ("Gatorade (793)") ("B-path") (r(mu_1)) (r(t)) (r(p)) (r(lb_1)) (r(ub_1))
+{txt}
+{com}. 
+. ttest diff_793_a == 0
+
+{txt}One-sample t test
+{hline 9}{c TT}{hline 68}
+Variable{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. err.{col 47}Std. dev.{col 59}[95% conf. interval]
+{hline 9}{c +}{hline 68}
+diff_7~a {c |}{res}{col 12}     36{col 22}-.7430556{col 34} .1237982{col 46} .7427894{col 58}-.9943793{col 70}-.4917318
+{txt}{hline 9}{c BT}{hline 68}
+    mean = mean({res}diff_793_a{txt})                                       t = {res} -6.0021
+{txt}H0: mean = {res}0                                     {txt}Degrees of freedom = {res}      35
+
+    {txt}Ha: mean < {res}0                 {txt}Ha: mean != {res}0                 {txt}Ha: mean > {res}0
+ {txt}Pr(T < t) = {res}0.0000         {txt}Pr(|T| > |t|) = {res}0.0000          {txt}Pr(T > t) = {res}1.0000
+{txt}
+{com}. post `memhold' ("Gatorade (793)") ("A-path") (r(mu_1)) (r(t)) (r(p)) (r(lb_1)) (r(ub_1))
+{txt}
+{com}. 
+. ttest diff_793 == 0
+
+{txt}One-sample t test
+{hline 9}{c TT}{hline 68}
+Variable{col 10}{c |}{col 16}Obs{col 27}Mean{col 35}Std. err.{col 47}Std. dev.{col 59}[95% conf. interval]
+{hline 9}{c +}{hline 68}
+diff_793 {c |}{res}{col 12}     70{col 22}-.5214286{col 34}  .087486{col 46} .7319604{col 58}-.6959584{col 70}-.3468988
+{txt}{hline 9}{c BT}{hline 68}
+    mean = mean({res}diff_793{txt})                                         t = {res} -5.9601
+{txt}H0: mean = {res}0                                     {txt}Degrees of freedom = {res}      69
+
+    {txt}Ha: mean < {res}0                 {txt}Ha: mean != {res}0                 {txt}Ha: mean > {res}0
+ {txt}Pr(T < t) = {res}0.0000         {txt}Pr(|T| > |t|) = {res}0.0000          {txt}Pr(T > t) = {res}1.0000
+{txt}
+{com}. post `memhold' ("Gatorade (793)") ("Combined") (r(mu_1)) (r(t)) (r(p)) (r(lb_1)) (r(ub_1))
+{txt}
+{com}. 
+. postclose `memhold'
+{txt}
+{com}. 
+. use "$logs/table3_change.dta", clear
+{txt}
+{com}. list, clean noobs
+{txt}
+    {res}            product       path   mean_ch~e       tstat     pvalue      ci_low     ci_high {txt} 
+    {res}UA Lemon Lime (584)     B-path    .1911765    2.356858   .0245166    .0261468    .3562061 {txt} 
+    {res}UA Lemon Lime (584)     A-path   -.0972222   -.9896668   .3291299   -.2966546    .1022102 {txt} 
+    {res}UA Lemon Lime (584)   Combined    .0428571     .650016   .5178402   -.0886745    .1743888 {txt} 
+    {res}     Gatorade (793)     B-path   -.2867647   -2.565675   .0150269   -.5141618   -.0593676 {txt} 
+    {res}     Gatorade (793)     A-path   -.7430556    -6.00215   7.67e-07   -.9943793   -.4917318 {txt} 
+    {res}     Gatorade (793)   Combined   -.5214286   -5.960137   9.58e-08   -.6959584   -.3468988 {txt} 
+
+{com}. 
+. export excel using "$logs/table3_change.xlsx", firstrow(variables) replace
+{res}{txt}file {bf:C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/table3_change.xlsx} saved
+
+{com}. 
+. 
+. **********************************************************************
+. **# 6 - Create magnesium benefit driver variables
+. **********************************************************************
+. 
+. use "$logs/day1_clean.dta", clear
+{txt}
+{com}. 
+. gen info_useful = after_info_3b_d1_useful
+{txt}(36 missing values generated)
+
+{com}. replace info_useful = after_info_2a_d1_useful if missing(info_useful)
+{txt}(36 real changes made)
+
+{com}. 
+. gen benefit_muscle = mag_benefit_3b_d1_musle
+{txt}(37 missing values generated)
+
+{com}. replace benefit_muscle = mag_benefit_2a_d1_muscle if missing(benefit_muscle)
+{txt}(35 real changes made)
+
+{com}. 
+. gen benefit_cramps = mag_benefit_3b_d1_cramps
+{txt}(37 missing values generated)
+
+{com}. replace benefit_cramps = mag_benefit_2a_d1_cramps if missing(benefit_cramps)
+{txt}(35 real changes made)
+
+{com}. 
+. gen benefit_sugar = mag_benefit_3b_d1_sugar
+{txt}(37 missing values generated)
+
+{com}. replace benefit_sugar = mag_benefit_2a_d1_sugar if missing(benefit_sugar)
+{txt}(35 real changes made)
+
+{com}. 
+. gen benefit_bone = mag_benefit_3b_d1_bone
+{txt}(37 missing values generated)
+
+{com}. replace benefit_bone = mag_benefit_2a_d1_bone if missing(benefit_bone)
+{txt}(34 real changes made)
+
+{com}. 
+. gen benefit_sleep = mag_benefit_3b_d1_sleep
+{txt}(37 missing values generated)
+
+{com}. replace benefit_sleep = mag_benefit_2a_d1_sleep if missing(benefit_sleep)
+{txt}(33 real changes made)
+
+{com}. 
+. label variable info_useful    "Information usefulness"
+{txt}
+{com}. label variable benefit_muscle "Muscle recovery"
+{txt}
+{com}. label variable benefit_cramps "Reduce cramps"
+{txt}
+{com}. label variable benefit_sugar  "Blood sugar support"
+{txt}
+{com}. label variable benefit_bone   "Bone health"
+{txt}
+{com}. label variable benefit_sleep  "Relaxation / sleep"
+{txt}
+{com}. 
+. summarize diff_584 info_useful benefit_muscle benefit_cramps ///
+>           benefit_sugar benefit_bone benefit_sleep
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+{space 4}diff_584 {c |}{res}         70    .0428571    .5516304       -1.5       1.75
+{txt}{space 1}info_useful {c |}{res}         70    3.828571    1.102979          1          5
+{txt}benefit_mu~e {c |}{res}         68    71.63235    26.21205          0        100
+{txt}benefit_cr~s {c |}{res}         68    72.86765    26.10021          0        100
+{txt}benefit_su~r {c |}{res}         68    70.14706    24.76171          0        100
+{txt}{hline 13}{c +}{hline 57}
+benefit_bone {c |}{res}         67     63.8209    29.19056          0        100
+{txt}benefit_sl~p {c |}{res}         66    74.36364    28.40619          0        100
+{txt}
+{com}. 
+. save "$logs/day1_regression_ready.dta", replace
+{txt}{p 0 4 2}
+file {bf}
+C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/day1_regression_ready.dta{rm}
+saved
+{p_end}
+
+{com}. 
+. 
+. **********************************************************************
+. **# 6.5 - Bivariate analysis: 584 (liking vs WTP change)
+. **********************************************************************
+. 
+. * correlation
+. corr diff_584 sensory_584_overall
+{txt}(obs=70)
+
+             {c |} diff_584 sensor..
+{hline 13}{c +}{hline 18}
+    diff_584 {c |}{res}   1.0000
+{txt}sensory_58~l {c |}{res}  -0.0003   1.0000
+
+{txt}
+{com}. 
+. * scatterplot with line of best fit
+. twoway (scatter diff_584 sensory_584_overall) ///
+>        (lfit diff_584 sensory_584_overall), ///
+>        title("WTP Change vs Liking (584)") ///
+>        xtitle("Overall Liking (584)") ///
+>        ytitle("WTP Change (584)")
+{res}{txt}
+{com}. 
+. graph export "$logs/scatter_584.png", replace
+{txt}{p 0 4 2}
+(file {bf}
+C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/scatter_584.png{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/scatter_584.png{rm}
+saved as
+PNG
+format
+{p_end}
+
+{com}. 
+. kjkjk
+{err}command {bf}kjkjk{sf} is unrecognized
+{txt}{search r(199), local:r(199);}
+
+end of do-file
+
+{search r(199), local:r(199);}
+
+{com}. do "C:\Users\tijer\AppData\Local\Temp\STD3644_000003.tmp"
+{txt}
+{com}. 
+. * correlation
+. corr diff_793 sensory_793_overall
+{txt}(obs=70)
+
+             {c |} diff_793 sensor..
+{hline 13}{c +}{hline 18}
+    diff_793 {c |}{res}   1.0000
+{txt}sensory_79~l {c |}{res}  -0.0575   1.0000
+
+{txt}
+{com}. 
+. * scatterplot with line of best fit
+. twoway (scatter diff_793 sensory_793_overall) ///
+>        (lfit diff_793 sensory_793_overall), ///
+>        title("WTP Change vs Liking (793)") ///
+>        xtitle("Overall Liking (793)") ///
+>        ytitle("WTP Change (793)")
+{res}{txt}
+{com}. 
+. graph export "$logs/scatter_793.png", replace
+{txt}{p 0 4 2}
+(file {bf}
+C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/scatter_793.png{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/scatter_793.png{rm}
+saved as
+PNG
+format
+{p_end}
+
+{com}. 
 {txt}end of do-file
 
-{com}. do "C:\Users\tijer\OneDrive - University of Arizona\AREC 397C\AREC-397C\data\assignment_tijerina1.do"
+{com}. do "C:\Users\tijer\AppData\Local\Temp\STD3644_000004.tmp"
 {txt}
-{com}. * course: AREC 397C
-. * assignment: 1
-. * created on: 7 april 2026
-. * created by: jmt
-. * edited on: 27 april 2026
-. * edited by: jmt
-. * Stata v.19.5
-. 
-. * does
-.         
-.         
-. * needs
-.         * finished
-.         
-.         clear                           all
-{res}{txt}
-{com}.         
-.         cap log                 close
-{smcl}
-{com}{sf}{ul off}
+{com}. pwcorr diff_584 diff_793 sensory_584_overall sensory_793_overall, sig
+
+             {txt}{c |} diff_584 diff_793 sensor.. sensor..
+{hline 13}{c +}{hline 36}
+    diff_584 {c |} {res}  1.0000 
+             {txt}{c |}
+             {c |}
+    diff_793 {c |} {res}  0.1773   1.0000 
+             {txt}{c |}{res}   0.1420
+             {txt}{c |}
+sensory_58~l {c |} {res} -0.0003   0.2340   1.0000 
+             {txt}{c |}{res}   0.9983   0.0512
+             {txt}{c |}
+sensory_79~l {c |} {res}  0.0516  -0.0575   0.2709   1.0000 
+             {txt}{c |}{res}   0.6712   0.6366   0.0233
+             {txt}{c |}
+
+{com}. 
+. matrix list r(C)
+{res}
+{txt}symmetric r(C)[4,4]
+                  diff_584      diff_793  sensory_58~l  sensory_79~l
+    diff_584 {res}            1
+{txt}    diff_793 {res}    .17728798             1
+{txt}sensory_58~l {res}   -.00025334        .23398             1
+{txt}sensory_79~l {res}    .05162686    -.05745682     .27091198             1
+{reset}
+{com}. 
+{txt}end of do-file
+
+{com}. do "C:\Users\tijer\AppData\Local\Temp\STD3644_000005.tmp"
+{txt}
+{com}. pwcorr diff_584 diff_793 sensory_584_overall sensory_793_overall, sig
+
+             {txt}{c |} diff_584 diff_793 sensor.. sensor..
+{hline 13}{c +}{hline 36}
+    diff_584 {c |} {res}  1.0000 
+             {txt}{c |}
+             {c |}
+    diff_793 {c |} {res}  0.1773   1.0000 
+             {txt}{c |}{res}   0.1420
+             {txt}{c |}
+sensory_58~l {c |} {res} -0.0003   0.2340   1.0000 
+             {txt}{c |}{res}   0.9983   0.0512
+             {txt}{c |}
+sensory_79~l {c |} {res}  0.0516  -0.0575   0.2709   1.0000 
+             {txt}{c |}{res}   0.6712   0.6366   0.0233
+             {txt}{c |}
+
+{com}. 
+. matrix list r(C)
+{res}
+{txt}symmetric r(C)[4,4]
+                  diff_584      diff_793  sensory_58~l  sensory_79~l
+    diff_584 {res}            1
+{txt}    diff_793 {res}    .17728798             1
+{txt}sensory_58~l {res}   -.00025334        .23398             1
+{txt}sensory_79~l {res}    .05162686    -.05745682     .27091198             1
+{reset}
+{com}. 
+{txt}end of do-file
+
+{com}. do "C:\Users\tijer\AppData\Local\Temp\STD3644_000006.tmp"
+{txt}
+{com}. pwcorr diff_584 sensory_584_flavor sensory_584_sweet ///
+>        sensory_584_sour sensory_584_salt sensory_584_aroma ///
+>        sensory_584_aftert refresh_584 sensory_584_overall, sig
+
+             {txt}{c |} diff_584 sensor.. ~4_sweet s~4_sour s~4_salt ~4_aroma sensor..
+{hline 13}{c +}{hline 63}
+    diff_584 {c |} {res}  1.0000 
+             {txt}{c |}
+             {c |}
+sen~4_flavor {c |} {res}  0.0532   1.0000 
+             {txt}{c |}{res}   0.6621
+             {txt}{c |}
+sensory_5~et {c |} {res} -0.0884   0.6713   1.0000 
+             {txt}{c |}{res}   0.4668   0.0000
+             {txt}{c |}
+sensory_5~ur {c |} {res}  0.0751   0.7090   0.7451   1.0000 
+             {txt}{c |}{res}   0.5365   0.0000   0.0000
+             {txt}{c |}
+sensory_5~lt {c |} {res} -0.1144   0.5513   0.6813   0.6401   1.0000 
+             {txt}{c |}{res}   0.3457   0.0000   0.0000   0.0000
+             {txt}{c |}
+sensory_58~a {c |} {res}  0.1004   0.4483   0.4152   0.4209   0.4174   1.0000 
+             {txt}{c |}{res}   0.4082   0.0001   0.0004   0.0003   0.0003
+             {txt}{c |}
+sensory_5~rt {c |} {res}  0.0159   0.7316   0.5899   0.6731   0.4983   0.4714   1.0000 
+             {txt}{c |}{res}   0.8961   0.0000   0.0000   0.0000   0.0000   0.0000
+             {txt}{c |}
+ refresh_584 {c |} {res} -0.0393   0.6470   0.6257   0.5246   0.4494   0.4218   0.5805 
+             {txt}{c |}{res}   0.7464   0.0000   0.0000   0.0000   0.0001   0.0003   0.0000
+             {txt}{c |}
+sensory_58~l {c |} {res} -0.0003   0.8005   0.6106   0.5970   0.4482   0.4689   0.7024 
+             {txt}{c |}{res}   0.9983   0.0000   0.0000   0.0000   0.0001   0.0000   0.0000
+             {txt}{c |}
+
+             {c |} refr~584 sensor..
+{hline 13}{c +}{hline 18}
+ refresh_584 {c |} {res}  1.0000 
+             {txt}{c |}
+             {c |}
+sensory_58~l {c |} {res}  0.6141   1.0000 
+             {txt}{c |}{res}   0.0000
+             {txt}{c |}
+
+{com}.            
+. * 793 - 
+. pwcorr diff_793 sensory_793_flavor sensory_793_sweet ///
+>        sensory_793_sour sensory_793_salt sensory_793_aroma ///
+>        sensory_793_aftert refresh_793 sensory_793_overall, sig
+
+             {txt}{c |} diff_793 sensor.. ~3_sweet s~3_sour s~3_salt ~3_aroma sensor..
+{hline 13}{c +}{hline 63}
+    diff_793 {c |} {res}  1.0000 
+             {txt}{c |}
+             {c |}
+sen~3_flavor {c |} {res} -0.1079   1.0000 
+             {txt}{c |}{res}   0.3741
+             {txt}{c |}
+sensory_7~et {c |} {res} -0.0667   0.7483   1.0000 
+             {txt}{c |}{res}   0.5835   0.0000
+             {txt}{c |}
+sensory_7~ur {c |} {res}  0.0585   0.5923   0.6907   1.0000 
+             {txt}{c |}{res}   0.6303   0.0000   0.0000
+             {txt}{c |}
+sensory_7~lt {c |} {res}  0.0456   0.5188   0.6431   0.6673   1.0000 
+             {txt}{c |}{res}   0.7075   0.0000   0.0000   0.0000
+             {txt}{c |}
+sensory_79~a {c |} {res}  0.0947   0.6145   0.4896   0.4873   0.4498   1.0000 
+             {txt}{c |}{res}   0.4353   0.0000   0.0000   0.0000   0.0001
+             {txt}{c |}
+sensory_7~rt {c |} {res} -0.2117   0.6554   0.6560   0.5963   0.6067   0.4816   1.0000 
+             {txt}{c |}{res}   0.0786   0.0000   0.0000   0.0000   0.0000   0.0000
+             {txt}{c |}
+ refresh_793 {c |} {res} -0.2181   0.7072   0.5301   0.4332   0.3608   0.5154   0.6186 
+             {txt}{c |}{res}   0.0697   0.0000   0.0000   0.0002   0.0022   0.0000   0.0000
+             {txt}{c |}
+sensory_79~l {c |} {res} -0.0575   0.8681   0.6962   0.5613   0.4687   0.5145   0.6433 
+             {txt}{c |}{res}   0.6366   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000
+             {txt}{c |}
+
+             {c |} refr~793 sensor..
+{hline 13}{c +}{hline 18}
+ refresh_793 {c |} {res}  1.0000 
+             {txt}{c |}
+             {c |}
+sensory_79~l {c |} {res}  0.6725   1.0000 
+             {txt}{c |}{res}   0.0000
+             {txt}{c |}
+
+{com}. 
+{txt}end of do-file
+
+{com}. exit, clear
