@@ -45,11 +45,11 @@
 	4. Correlation analysis:
 	   - correlation matrix
 	   - scatterplots
-	5. Simple regression:
-	   - ΔWTP = f(overall liking)
-	6. Multiple regression:
-	   - ΔWTP = f(liking + controls)
-
+	5. Bivariate sensory analysis:
+   - sensory attributes and WTP change
+   - correlation matrix and scatterplots
+	6. Regression:
+	   - ΔWTP = f(magnesium benefit importance + information usefulness)
 	Notes:
 	- Keep sensory_584_overall and sensory_793_overall
 	- Do not mix products
@@ -82,7 +82,7 @@
 
 
 **********************************************************************
-**# 2 - Create Day 1 WTP variables using all randomizers ******CLARITY ISSUE
+**# 2 - Create Day 1 WTP variables using all randomizers
 **********************************************************************
 
 * keep Day 1 only
@@ -228,6 +228,22 @@ export excel using "$logs/table1_summary.xlsx", firstrow(variables) replace
 **# 4 - Table 2: Benchmark Tests ($2.50)
 **********************************************************************
 
+/*
+Table 2 notes:
+
+Benchmark test:
+H0: mean WTP after magnesium information = 2.50
+H1: mean WTP after magnesium information ≠ 2.50
+
+The benchmark price is $2.50 for a typical 20-oz sports beverage.
+
+after_584 = WTP after magnesium information for Product 584
+after_793 = WTP after magnesium information for Product 793
+
+Alpha = 0.05.
+If p < 0.05, reject H0.
+*/
+
 use "$logs/day1_clean.dta", clear
 
 tempname memhold
@@ -250,6 +266,28 @@ export excel using "$logs/table2_benchmark.xlsx", firstrow(variables) replace
 **********************************************************************
 **# 5 - Table 3: WTP Change Tests
 **********************************************************************
+
+/*
+Table 3 notes:
+
+Hypothesis:
+H0: Magnesium information does NOT change WTP (mean change = 0)
+H1: Magnesium information DOES change WTP (mean change ≠ 0)
+
+Path B:
+diff_584_b = WTP after info − WTP after tasting
+diff_793_b = WTP after info − WTP after tasting
+
+Path A:
+diff_584_a = WTP after info − baseline WTP (wtp_1)
+diff_793_a = WTP after info − baseline WTP (wtp_1)
+
+Combined:
+diff_584 and diff_793 include both Path A and Path B observations
+
+Alpha = 0.05.
+If p < 0.05, reject H0.
+*/
 
 use "$logs/day1_clean.dta", clear
 
@@ -280,7 +318,7 @@ use "$logs/table3_change.dta", clear
 list, clean noobs
 
 export excel using "$logs/table3_change.xlsx", firstrow(variables) replace
-*/
+
 
 **********************************************************************
 **# 6 - Create magnesium benefit driver variables
@@ -386,37 +424,59 @@ pwcorr diff_793 sensory_793_flavor sensory_793_sweet ///
 
 
 **********************************************************************
-**# 7 - Table 4: Regression Drivers of WTP Change ***************BIGGEST ISSUE
+**# 7 - Table 4: Regression Drivers of WTP Change
 **********************************************************************
+
+/*
+Regression model:
+
+Functional form:
+diff_i = β0 + β1 benefit_sleep_i + β2 benefit_cramps_i 
+       + β3 benefit_muscle_i + β4 benefit_sugar_i 
+       + β5 benefit_bone_i + β6 info_useful_i + u_i
+
+Dependent variable (Y):
+Model 1: diff_584 = combined WTP change for Product 584 across Path A and B
+Model 2: diff_793 = combined WTP change for Product 793 across Path A and B
+
+Independent variables (X):
+benefit_sleep  = importance of relaxation/sleep benefit
+benefit_cramps = importance of cramp reduction
+benefit_muscle = importance of muscle recovery
+benefit_sugar  = importance of blood sugar support
+benefit_bone   = importance of bone health
+info_useful    = perceived usefulness of magnesium information
+
+Interpretation:
+Each coefficient β measures the change in WTP associated with a one-unit 
+increase in the corresponding variable, holding other variables constant.
+
+Example:
+If β > 0 → higher importance increases WTP
+If β < 0 → higher importance decreases WTP
+
+Alpha = 0.05 for statistical significance.
+*/
 
 use "$logs/day1_regression_ready.dta", clear
 
+* Model 1: Product 584 with magnesium
 reg diff_584 benefit_sleep benefit_cramps benefit_muscle benefit_sugar benefit_bone info_useful
 
-tempname memhold
-postfile `memhold' str40 variable coef se tstat pvalue using "$logs/table4_regression.dta", replace
+* Model 2: Product 793 without magnesium
+reg diff_793 benefit_sleep benefit_cramps benefit_muscle benefit_sugar benefit_bone info_useful
 
-foreach x in benefit_sleep benefit_cramps benefit_muscle benefit_sugar benefit_bone info_useful {
+* store models
+eststo clear
+eststo model_584: reg diff_584 benefit_sleep benefit_cramps benefit_muscle benefit_sugar benefit_bone info_useful
+eststo model_793: reg diff_793 benefit_sleep benefit_cramps benefit_muscle benefit_sugar benefit_bone info_useful
 
-    local coef = _b[`x']
-    local se   = _se[`x']
-    local t    = _b[`x']/_se[`x']
-    local p    = 2*ttail(e(df_r), abs(`t'))
+* export to Word (RTF)
+esttab model_584 model_793 using "$logs/table_regression.rtf", ///
+    replace se b(3) se(3) ///
+    star(* 0.10 ** 0.05 *** 0.01) ///
+    title("Regression Results: Drivers of WTP Change") ///
+    mtitles("Product 584" "Product 793") ///
+    label
+	
 
-    post `memhold' ("`x'") (`coef') (`se') (`t') (`p')
-}
-
-postclose `memhold'
-
-use "$logs/table4_regression.dta", clear
-
-replace variable = "Relaxation / sleep" if variable == "benefit_sleep"
-replace variable = "Reduce cramps" if variable == "benefit_cramps"
-replace variable = "Muscle recovery" if variable == "benefit_muscle"
-replace variable = "Blood sugar support" if variable == "benefit_sugar"
-replace variable = "Bone health" if variable == "benefit_bone"
-replace variable = "Information usefulness" if variable == "info_useful"
-
-list, clean noobs
-
-export excel using "$logs/table4_regression.xlsx", firstrow(variables) replace

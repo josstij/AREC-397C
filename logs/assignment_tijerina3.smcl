@@ -3,7 +3,7 @@
       name:  {res}<unnamed>
        {txt}log:  {res}C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/assignment_tijerina3.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res}29 Apr 2026, 11:35:24
+ {txt}opened on:  {res}29 Apr 2026, 18:19:04
 {txt}
 {com}.         set                     scheme s2color
 {txt}
@@ -35,11 +35,11 @@ all files already exist and are up to date.
 >         4. Correlation analysis:
 >            - correlation matrix
 >            - scatterplots
->         5. Simple regression:
->            - ΔWTP = f(overall liking)
->         6. Multiple regression:
->            - ΔWTP = f(liking + controls)
-> 
+>         5. Bivariate sensory analysis:
+>    - sensory attributes and WTP change
+>    - correlation matrix and scatterplots
+>         6. Regression:
+>            - ΔWTP = f(magnesium benefit importance + information usefulness)
 >         Notes:
 >         - Keep sensory_584_overall and sensory_793_overall
 >         - Do not mix products
@@ -305,6 +305,25 @@ sensory_58~l {c |}{res}         70    6.671429    1.481494          1          9
 {txt}(73 observations deleted)
 
 {com}. 
+. /*
+> Definition of WTP change variables:
+> 
+> Path B (taste → info):
+> diff_584_b = WTP after magnesium info − WTP after tasting
+> diff_793_b = WTP after magnesium info − WTP after tasting
+> 
+> Path A (info → taste):
+> diff_584_a = WTP after magnesium info − baseline WTP (wtp_1)
+> diff_793_a = WTP after magnesium info − baseline WTP (wtp_1)
+> 
+> Combined variables:
+> diff_584 = uses both A and B observations
+> diff_793 = uses both A and B observations
+> 
+> Positive values = increase in WTP
+> Negative values = decrease in WTP
+> */
+. 
 . **## 2.1 - B-path: tasting first, then magnesium info
 . gen before_584_b = wtp_2b_584
 {txt}(36 missing values generated)
@@ -461,6 +480,20 @@ saved
 . **# 3 - Table 1: Summary Statistics
 . **********************************************************************
 . 
+. /*
+> Table 1 notes:
+> 
+> diff_584_b = WTP after magnesium info − WTP after tasting (Path B)
+> diff_584_a = WTP after magnesium info − baseline WTP (Path A)
+> 
+> diff_793_b = same definition for product 793 (Path B)
+> diff_793_a = same definition for product 793 (Path A)
+> 
+> diff_584 and diff_793 are combined measures using both Path A and B.
+> 
+> These variables represent the change in willingness to pay due to magnesium information.
+> */
+. 
 . use "$logs/day1_clean.dta", clear
 {txt}
 {com}. 
@@ -586,6 +619,22 @@ saved
 . **# 4 - Table 2: Benchmark Tests ($2.50)
 . **********************************************************************
 . 
+. /*
+> Table 2 notes:
+> 
+> Benchmark test:
+> H0: mean WTP after magnesium information = 2.50
+> H1: mean WTP after magnesium information ≠ 2.50
+> 
+> The benchmark price is $2.50 for a typical 20-oz sports beverage.
+> 
+> after_584 = WTP after magnesium information for Product 584
+> after_793 = WTP after magnesium information for Product 793
+> 
+> Alpha = 0.05.
+> If p < 0.05, reject H0.
+> */
+. 
 . use "$logs/day1_clean.dta", clear
 {txt}
 {com}. 
@@ -648,6 +697,28 @@ afte~793 {c |}{res}{col 12}     70{col 22} 2.432143{col 34} .1007119{col 46} .84
 . **********************************************************************
 . **# 5 - Table 3: WTP Change Tests
 . **********************************************************************
+. 
+. /*
+> Table 3 notes:
+> 
+> Hypothesis:
+> H0: Magnesium information does NOT change WTP (mean change = 0)
+> H1: Magnesium information DOES change WTP (mean change ≠ 0)
+> 
+> Path B:
+> diff_584_b = WTP after info − WTP after tasting
+> diff_793_b = WTP after info − WTP after tasting
+> 
+> Path A:
+> diff_584_a = WTP after info − baseline WTP (wtp_1)
+> diff_793_a = WTP after info − baseline WTP (wtp_1)
+> 
+> Combined:
+> diff_584 and diff_793 include both Path A and Path B observations
+> 
+> Alpha = 0.05.
+> If p < 0.05, reject H0.
+> */
 . 
 . use "$logs/day1_clean.dta", clear
 {txt}
@@ -784,6 +855,24 @@ diff_793 {c |}{res}{col 12}     70{col 22}-.5214286{col 34}  .087486{col 46} .73
 . **# 6 - Create magnesium benefit driver variables
 . **********************************************************************
 . 
+. /*
+> Magnesium benefit driver variables:
+> 
+> These variables combine Path A and Path B survey responses.
+> If the Path B version is missing, the Path A version is used.
+> 
+> info_useful = perceived usefulness of magnesium information
+> benefit_muscle = importance of muscle recovery benefit
+> benefit_cramps = importance of cramp reduction benefit
+> benefit_sugar = importance of blood sugar support benefit
+> benefit_bone = importance of bone health benefit
+> benefit_sleep = importance of relaxation/sleep benefit
+> 
+> These are used to explain:
+> diff_584 = combined WTP change for 584 across Path A and Path B
+> diff_793 = combined WTP change for 793 across Path A and Path B
+> */
+. 
 . use "$logs/day1_clean.dta", clear
 {txt}
 {com}. 
@@ -891,11 +980,6 @@ saved
 {com}. 
 . graph export "$logs/scatter_584.png", replace
 {txt}{p 0 4 2}
-(file {bf}
-C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/scatter_584.png{rm}
-not found)
-{p_end}
-{p 0 4 2}
 file {bf}
 C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/scatter_584.png{rm}
 saved as
@@ -904,17 +988,11 @@ format
 {p_end}
 
 {com}. 
-. kjkjk
-{err}command {bf}kjkjk{sf} is unrecognized
-{txt}{search r(199), local:r(199);}
-
-end of do-file
-
-{search r(199), local:r(199);}
-
-{com}. do "C:\Users\tijer\AppData\Local\Temp\STD3644_000003.tmp"
-{txt}
-{com}. 
+. 
+. **********************************************************************
+. **# 6.6 - Bivariate analysis: 793 (liking vs WTP change)
+. **********************************************************************
+. 
 . * correlation
 . corr diff_793 sensory_793_overall
 {txt}(obs=70)
@@ -936,11 +1014,6 @@ end of do-file
 {com}. 
 . graph export "$logs/scatter_793.png", replace
 {txt}{p 0 4 2}
-(file {bf}
-C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/scatter_793.png{rm}
-not found)
-{p_end}
-{p 0 4 2}
 file {bf}
 C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/scatter_793.png{rm}
 saved as
@@ -949,75 +1022,12 @@ format
 {p_end}
 
 {com}. 
-{txt}end of do-file
-
-{com}. do "C:\Users\tijer\AppData\Local\Temp\STD3644_000004.tmp"
-{txt}
-{com}. pwcorr diff_584 diff_793 sensory_584_overall sensory_793_overall, sig
-
-             {txt}{c |} diff_584 diff_793 sensor.. sensor..
-{hline 13}{c +}{hline 36}
-    diff_584 {c |} {res}  1.0000 
-             {txt}{c |}
-             {c |}
-    diff_793 {c |} {res}  0.1773   1.0000 
-             {txt}{c |}{res}   0.1420
-             {txt}{c |}
-sensory_58~l {c |} {res} -0.0003   0.2340   1.0000 
-             {txt}{c |}{res}   0.9983   0.0512
-             {txt}{c |}
-sensory_79~l {c |} {res}  0.0516  -0.0575   0.2709   1.0000 
-             {txt}{c |}{res}   0.6712   0.6366   0.0233
-             {txt}{c |}
-
-{com}. 
-. matrix list r(C)
-{res}
-{txt}symmetric r(C)[4,4]
-                  diff_584      diff_793  sensory_58~l  sensory_79~l
-    diff_584 {res}            1
-{txt}    diff_793 {res}    .17728798             1
-{txt}sensory_58~l {res}   -.00025334        .23398             1
-{txt}sensory_79~l {res}    .05162686    -.05745682     .27091198             1
-{reset}
-{com}. 
-{txt}end of do-file
-
-{com}. do "C:\Users\tijer\AppData\Local\Temp\STD3644_000005.tmp"
-{txt}
-{com}. pwcorr diff_584 diff_793 sensory_584_overall sensory_793_overall, sig
-
-             {txt}{c |} diff_584 diff_793 sensor.. sensor..
-{hline 13}{c +}{hline 36}
-    diff_584 {c |} {res}  1.0000 
-             {txt}{c |}
-             {c |}
-    diff_793 {c |} {res}  0.1773   1.0000 
-             {txt}{c |}{res}   0.1420
-             {txt}{c |}
-sensory_58~l {c |} {res} -0.0003   0.2340   1.0000 
-             {txt}{c |}{res}   0.9983   0.0512
-             {txt}{c |}
-sensory_79~l {c |} {res}  0.0516  -0.0575   0.2709   1.0000 
-             {txt}{c |}{res}   0.6712   0.6366   0.0233
-             {txt}{c |}
-
-{com}. 
-. matrix list r(C)
-{res}
-{txt}symmetric r(C)[4,4]
-                  diff_584      diff_793  sensory_58~l  sensory_79~l
-    diff_584 {res}            1
-{txt}    diff_793 {res}    .17728798             1
-{txt}sensory_58~l {res}   -.00025334        .23398             1
-{txt}sensory_79~l {res}    .05162686    -.05745682     .27091198             1
-{reset}
-{com}. 
-{txt}end of do-file
-
-{com}. do "C:\Users\tijer\AppData\Local\Temp\STD3644_000006.tmp"
-{txt}
-{com}. pwcorr diff_584 sensory_584_flavor sensory_584_sweet ///
+. 
+. **********************************************************************
+. **# 6.7 - Correlation matrix
+. **********************************************************************
+. * 584 - 
+. pwcorr diff_584 sensory_584_flavor sensory_584_sweet ///
 >        sensory_584_sour sensory_584_salt sensory_584_aroma ///
 >        sensory_584_aftert refresh_584 sensory_584_overall, sig
 
@@ -1106,6 +1116,149 @@ sensory_79~l {c |} {res}  0.6725   1.0000
              {txt}{c |}
 
 {com}. 
+. 
+. **********************************************************************
+. **# 7 - Table 4: Regression Drivers of WTP Change
+. **********************************************************************
+. 
+. /*
+> Regression model:
+> 
+> Functional form:
+> diff_i = β0 + β1 benefit_sleep_i + β2 benefit_cramps_i 
+>        + β3 benefit_muscle_i + β4 benefit_sugar_i 
+>        + β5 benefit_bone_i + β6 info_useful_i + u_i
+> 
+> Dependent variable (Y):
+> Model 1: diff_584 = combined WTP change for Product 584 across Path A and B
+> Model 2: diff_793 = combined WTP change for Product 793 across Path A and B
+> 
+> Independent variables (X):
+> benefit_sleep  = importance of relaxation/sleep benefit
+> benefit_cramps = importance of cramp reduction
+> benefit_muscle = importance of muscle recovery
+> benefit_sugar  = importance of blood sugar support
+> benefit_bone   = importance of bone health
+> info_useful    = perceived usefulness of magnesium information
+> 
+> Interpretation:
+> Each coefficient β measures the change in WTP associated with a one-unit 
+> increase in the corresponding variable, holding other variables constant.
+> 
+> Example:
+> If β > 0 → higher importance increases WTP
+> If β < 0 → higher importance decreases WTP
+> 
+> Alpha = 0.05 for statistical significance.
+> */
+. 
+. use "$logs/day1_regression_ready.dta", clear
+{txt}
+{com}. 
+. * Model 1: Product 584 with magnesium
+. reg diff_584 benefit_sleep benefit_cramps benefit_muscle benefit_sugar benefit_bone info_useful
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}        65
+{txt}{hline 13}{c +}{hline 34}   F(6, 58)        = {res}     2.44
+{txt}       Model {c |} {res} 3.73352539         6  .622254232   {txt}Prob > F        ={res}    0.0360
+{txt}    Residual {c |} {res}   14.80109        58  .255191207   {txt}R-squared       ={res}    0.2014
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.1188
+{txt}       Total {c |} {res} 18.5346154        64  .289603365   {txt}Root MSE        =   {res} .50516
+
+{txt}{hline 15}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}      diff_584{col 16}{c |} Coefficient{col 28}  Std. err.{col 40}      t{col 48}   P>|t|{col 56}     [95% con{col 69}f. interval]
+{hline 15}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 1}benefit_sleep {c |}{col 16}{res}{space 2}  .004476{col 28}{space 2} .0028804{col 39}{space 1}    1.55{col 48}{space 3}0.126{col 56}{space 4}-.0012898{col 69}{space 3} .0102418
+{txt}benefit_cramps {c |}{col 16}{res}{space 2}  .006689{col 28}{space 2} .0039499{col 39}{space 1}    1.69{col 48}{space 3}0.096{col 56}{space 4}-.0012176{col 69}{space 3} .0145955
+{txt}benefit_muscle {c |}{col 16}{res}{space 2} .0006946{col 28}{space 2} .0038111{col 39}{space 1}    0.18{col 48}{space 3}0.856{col 56}{space 4}-.0069341{col 69}{space 3} .0083233
+{txt}{space 1}benefit_sugar {c |}{col 16}{res}{space 2}-.0064276{col 28}{space 2} .0034292{col 39}{space 1}   -1.87{col 48}{space 3}0.066{col 56}{space 4}-.0132919{col 69}{space 3} .0004368
+{txt}{space 2}benefit_bone {c |}{col 16}{res}{space 2}-.0016492{col 28}{space 2} .0034786{col 39}{space 1}   -0.47{col 48}{space 3}0.637{col 56}{space 4}-.0086124{col 69}{space 3}  .005314
+{txt}{space 3}info_useful {c |}{col 16}{res}{space 2} .0497048{col 28}{space 2} .0595731{col 39}{space 1}    0.83{col 48}{space 3}0.408{col 56}{space 4}-.0695437{col 69}{space 3} .1689532
+{txt}{space 9}_cons {c |}{col 16}{res}{space 2}-.4356006{col 28}{space 2}  .335663{col 39}{space 1}   -1.30{col 48}{space 3}0.200{col 56}{space 4}-1.107503{col 69}{space 3}  .236302
+{txt}{hline 15}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+. * Model 2: Product 793 without magnesium
+. reg diff_793 benefit_sleep benefit_cramps benefit_muscle benefit_sugar benefit_bone info_useful
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}        65
+{txt}{hline 13}{c +}{hline 34}   F(6, 58)        = {res}     0.94
+{txt}       Model {c |} {res} 3.12159494         6  .520265823   {txt}Prob > F        ={res}    0.4739
+{txt}    Residual {c |} {res} 32.1130204        58  .553672766   {txt}R-squared       ={res}    0.0886
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}   -0.0057
+{txt}       Total {c |} {res} 35.2346154        64  .550540865   {txt}Root MSE        =   {res} .74409
+
+{txt}{hline 15}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}      diff_793{col 16}{c |} Coefficient{col 28}  Std. err.{col 40}      t{col 48}   P>|t|{col 56}     [95% con{col 69}f. interval]
+{hline 15}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 1}benefit_sleep {c |}{col 16}{res}{space 2}-.0008624{col 28}{space 2} .0042428{col 39}{space 1}   -0.20{col 48}{space 3}0.840{col 56}{space 4}-.0093552{col 69}{space 3} .0076305
+{txt}benefit_cramps {c |}{col 16}{res}{space 2} .0022443{col 28}{space 2} .0058181{col 39}{space 1}    0.39{col 48}{space 3}0.701{col 56}{space 4}-.0094018{col 69}{space 3} .0138904
+{txt}benefit_muscle {c |}{col 16}{res}{space 2}-.0108548{col 28}{space 2} .0056136{col 39}{space 1}   -1.93{col 48}{space 3}0.058{col 56}{space 4}-.0220917{col 69}{space 3} .0003821
+{txt}{space 1}benefit_sugar {c |}{col 16}{res}{space 2} .0005729{col 28}{space 2} .0050512{col 39}{space 1}    0.11{col 48}{space 3}0.910{col 56}{space 4}-.0095381{col 69}{space 3} .0106839
+{txt}{space 2}benefit_bone {c |}{col 16}{res}{space 2} .0023507{col 28}{space 2} .0051239{col 39}{space 1}    0.46{col 48}{space 3}0.648{col 56}{space 4}-.0079058{col 69}{space 3} .0126073
+{txt}{space 3}info_useful {c |}{col 16}{res}{space 2}-.0531561{col 28}{space 2} .0877493{col 39}{space 1}   -0.61{col 48}{space 3}0.547{col 56}{space 4}-.2288054{col 69}{space 3} .1224931
+{txt}{space 9}_cons {c |}{col 16}{res}{space 2}  .177693{col 28}{space 2} .4944214{col 39}{space 1}    0.36{col 48}{space 3}0.721{col 56}{space 4}-.8119989{col 69}{space 3} 1.167385
+{txt}{hline 15}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+. * store models
+. eststo clear
+{txt}
+{com}. eststo model_584: reg diff_584 benefit_sleep benefit_cramps benefit_muscle benefit_sugar benefit_bone info_useful
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}        65
+{txt}{hline 13}{c +}{hline 34}   F(6, 58)        = {res}     2.44
+{txt}       Model {c |} {res} 3.73352539         6  .622254232   {txt}Prob > F        ={res}    0.0360
+{txt}    Residual {c |} {res}   14.80109        58  .255191207   {txt}R-squared       ={res}    0.2014
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.1188
+{txt}       Total {c |} {res} 18.5346154        64  .289603365   {txt}Root MSE        =   {res} .50516
+
+{txt}{hline 15}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}      diff_584{col 16}{c |} Coefficient{col 28}  Std. err.{col 40}      t{col 48}   P>|t|{col 56}     [95% con{col 69}f. interval]
+{hline 15}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 1}benefit_sleep {c |}{col 16}{res}{space 2}  .004476{col 28}{space 2} .0028804{col 39}{space 1}    1.55{col 48}{space 3}0.126{col 56}{space 4}-.0012898{col 69}{space 3} .0102418
+{txt}benefit_cramps {c |}{col 16}{res}{space 2}  .006689{col 28}{space 2} .0039499{col 39}{space 1}    1.69{col 48}{space 3}0.096{col 56}{space 4}-.0012176{col 69}{space 3} .0145955
+{txt}benefit_muscle {c |}{col 16}{res}{space 2} .0006946{col 28}{space 2} .0038111{col 39}{space 1}    0.18{col 48}{space 3}0.856{col 56}{space 4}-.0069341{col 69}{space 3} .0083233
+{txt}{space 1}benefit_sugar {c |}{col 16}{res}{space 2}-.0064276{col 28}{space 2} .0034292{col 39}{space 1}   -1.87{col 48}{space 3}0.066{col 56}{space 4}-.0132919{col 69}{space 3} .0004368
+{txt}{space 2}benefit_bone {c |}{col 16}{res}{space 2}-.0016492{col 28}{space 2} .0034786{col 39}{space 1}   -0.47{col 48}{space 3}0.637{col 56}{space 4}-.0086124{col 69}{space 3}  .005314
+{txt}{space 3}info_useful {c |}{col 16}{res}{space 2} .0497048{col 28}{space 2} .0595731{col 39}{space 1}    0.83{col 48}{space 3}0.408{col 56}{space 4}-.0695437{col 69}{space 3} .1689532
+{txt}{space 9}_cons {c |}{col 16}{res}{space 2}-.4356006{col 28}{space 2}  .335663{col 39}{space 1}   -1.30{col 48}{space 3}0.200{col 56}{space 4}-1.107503{col 69}{space 3}  .236302
+{txt}{hline 15}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. eststo model_793: reg diff_793 benefit_sleep benefit_cramps benefit_muscle benefit_sugar benefit_bone info_useful
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}        65
+{txt}{hline 13}{c +}{hline 34}   F(6, 58)        = {res}     0.94
+{txt}       Model {c |} {res} 3.12159494         6  .520265823   {txt}Prob > F        ={res}    0.4739
+{txt}    Residual {c |} {res} 32.1130204        58  .553672766   {txt}R-squared       ={res}    0.0886
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}   -0.0057
+{txt}       Total {c |} {res} 35.2346154        64  .550540865   {txt}Root MSE        =   {res} .74409
+
+{txt}{hline 15}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}      diff_793{col 16}{c |} Coefficient{col 28}  Std. err.{col 40}      t{col 48}   P>|t|{col 56}     [95% con{col 69}f. interval]
+{hline 15}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 1}benefit_sleep {c |}{col 16}{res}{space 2}-.0008624{col 28}{space 2} .0042428{col 39}{space 1}   -0.20{col 48}{space 3}0.840{col 56}{space 4}-.0093552{col 69}{space 3} .0076305
+{txt}benefit_cramps {c |}{col 16}{res}{space 2} .0022443{col 28}{space 2} .0058181{col 39}{space 1}    0.39{col 48}{space 3}0.701{col 56}{space 4}-.0094018{col 69}{space 3} .0138904
+{txt}benefit_muscle {c |}{col 16}{res}{space 2}-.0108548{col 28}{space 2} .0056136{col 39}{space 1}   -1.93{col 48}{space 3}0.058{col 56}{space 4}-.0220917{col 69}{space 3} .0003821
+{txt}{space 1}benefit_sugar {c |}{col 16}{res}{space 2} .0005729{col 28}{space 2} .0050512{col 39}{space 1}    0.11{col 48}{space 3}0.910{col 56}{space 4}-.0095381{col 69}{space 3} .0106839
+{txt}{space 2}benefit_bone {c |}{col 16}{res}{space 2} .0023507{col 28}{space 2} .0051239{col 39}{space 1}    0.46{col 48}{space 3}0.648{col 56}{space 4}-.0079058{col 69}{space 3} .0126073
+{txt}{space 3}info_useful {c |}{col 16}{res}{space 2}-.0531561{col 28}{space 2} .0877493{col 39}{space 1}   -0.61{col 48}{space 3}0.547{col 56}{space 4}-.2288054{col 69}{space 3} .1224931
+{txt}{space 9}_cons {c |}{col 16}{res}{space 2}  .177693{col 28}{space 2} .4944214{col 39}{space 1}    0.36{col 48}{space 3}0.721{col 56}{space 4}-.8119989{col 69}{space 3} 1.167385
+{txt}{hline 15}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+. * export to Word (RTF)
+. esttab model_584 model_793 using "$logs/table_regression.rtf", ///
+>     replace se b(3) se(3) ///
+>     star(* 0.10 ** 0.05 *** 0.01) ///
+>     title("Regression Results: Drivers of WTP Change") ///
+>     mtitles("Product 584" "Product 793") ///
+>     label
+{res}{txt}(output written to {browse  `"C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/table_regression.rtf"'})
+
+{com}.         
+. 
+. 
 {txt}end of do-file
 
 {com}. exit, clear
