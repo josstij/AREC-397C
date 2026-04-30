@@ -3,7 +3,7 @@
       name:  {res}<unnamed>
        {txt}log:  {res}C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/assignment_tijerina3.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res}29 Apr 2026, 18:19:04
+ {txt}opened on:  {res}29 Apr 2026, 18:49:55
 {txt}
 {com}.         set                     scheme s2color
 {txt}
@@ -956,32 +956,22 @@ saved
 {com}. 
 . 
 . **********************************************************************
-. **# 6.5 - Bivariate analysis: 584 (liking vs WTP change)
+. **# 6.5 - WTP distribution: 584 (before vs after)
 . **********************************************************************
 . 
-. * correlation
-. corr diff_584 sensory_584_overall
-{txt}(obs=70)
-
-             {c |} diff_584 sensor..
-{hline 13}{c +}{hline 18}
-    diff_584 {c |}{res}   1.0000
-{txt}sensory_58~l {c |}{res}  -0.0003   1.0000
-
-{txt}
-{com}. 
-. * scatterplot with line of best fit
-. twoway (scatter diff_584 sensory_584_overall) ///
->        (lfit diff_584 sensory_584_overall), ///
->        title("WTP Change vs Liking (584)") ///
->        xtitle("Overall Liking (584)") ///
->        ytitle("WTP Change (584)")
+. twoway ///
+> (kdensity before_584, lpattern(solid)) ///
+> (kdensity after_584, lpattern(dash)), ///
+> title("WTP Distribution: 584 (Effect of Magnesium Information)") ///
+> legend(label(1 "Before Info") label(2 "After Info")) ///
+> xtitle("Willingness to Pay ($)") ///
+> ytitle("Density")
 {res}{txt}
 {com}. 
-. graph export "$logs/scatter_584.png", replace
+. graph export "$logs/density_584.png", replace
 {txt}{p 0 4 2}
 file {bf}
-C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/scatter_584.png{rm}
+C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/density_584.png{rm}
 saved as
 PNG
 format
@@ -990,32 +980,22 @@ format
 {com}. 
 . 
 . **********************************************************************
-. **# 6.6 - Bivariate analysis: 793 (liking vs WTP change)
+. **# 6.6 - WTP distribution: 793 (before vs after)
 . **********************************************************************
 . 
-. * correlation
-. corr diff_793 sensory_793_overall
-{txt}(obs=70)
-
-             {c |} diff_793 sensor..
-{hline 13}{c +}{hline 18}
-    diff_793 {c |}{res}   1.0000
-{txt}sensory_79~l {c |}{res}  -0.0575   1.0000
-
-{txt}
-{com}. 
-. * scatterplot with line of best fit
-. twoway (scatter diff_793 sensory_793_overall) ///
->        (lfit diff_793 sensory_793_overall), ///
->        title("WTP Change vs Liking (793)") ///
->        xtitle("Overall Liking (793)") ///
->        ytitle("WTP Change (793)")
+. twoway ///
+> (kdensity before_793, lpattern(solid)) ///
+> (kdensity after_793, lpattern(dash)), ///
+> title("WTP Distribution: 793 (Effect of Magnesium Information)") ///
+> legend(label(1 "Before Info") label(2 "After Info")) ///
+> xtitle("Willingness to Pay ($)") ///
+> ytitle("Density")
 {res}{txt}
 {com}. 
-. graph export "$logs/scatter_793.png", replace
+. graph export "$logs/density_793.png", replace
 {txt}{p 0 4 2}
 file {bf}
-C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/scatter_793.png{rm}
+C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/density_793.png{rm}
 saved as
 PNG
 format

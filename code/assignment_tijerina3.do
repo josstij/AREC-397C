@@ -376,37 +376,33 @@ save "$logs/day1_regression_ready.dta", replace
 
 
 **********************************************************************
-**# 6.5 - Bivariate analysis: 584 (liking vs WTP change)
+**# 6.5 - WTP distribution: 584 (before vs after)
 **********************************************************************
 
-* correlation
-corr diff_584 sensory_584_overall
+twoway ///
+(kdensity before_584, lpattern(solid)) ///
+(kdensity after_584, lpattern(dash)), ///
+title("WTP Distribution: 584 (Effect of Magnesium Information)") ///
+legend(label(1 "Before Info") label(2 "After Info")) ///
+xtitle("Willingness to Pay ($)") ///
+ytitle("Density")
 
-* scatterplot with line of best fit
-twoway (scatter diff_584 sensory_584_overall) ///
-       (lfit diff_584 sensory_584_overall), ///
-       title("WTP Change vs Liking (584)") ///
-       xtitle("Overall Liking (584)") ///
-       ytitle("WTP Change (584)")
-
-graph export "$logs/scatter_584.png", replace
+graph export "$logs/density_584.png", replace
 
 
 **********************************************************************
-**# 6.6 - Bivariate analysis: 793 (liking vs WTP change)
+**# 6.6 - WTP distribution: 793 (before vs after)
 **********************************************************************
 
-* correlation
-corr diff_793 sensory_793_overall
+twoway ///
+(kdensity before_793, lpattern(solid)) ///
+(kdensity after_793, lpattern(dash)), ///
+title("WTP Distribution: 793 (Effect of Magnesium Information)") ///
+legend(label(1 "Before Info") label(2 "After Info")) ///
+xtitle("Willingness to Pay ($)") ///
+ytitle("Density")
 
-* scatterplot with line of best fit
-twoway (scatter diff_793 sensory_793_overall) ///
-       (lfit diff_793 sensory_793_overall), ///
-       title("WTP Change vs Liking (793)") ///
-       xtitle("Overall Liking (793)") ///
-       ytitle("WTP Change (793)")
-
-graph export "$logs/scatter_793.png", replace
+graph export "$logs/density_793.png", replace
 
 
 **********************************************************************
