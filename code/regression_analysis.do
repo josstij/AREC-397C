@@ -150,7 +150,7 @@ the following will be the strategic plan
 						3 "Often" ///
 						4 "Very often", replace
 						
-						********************************************************************************
+********************************************************************************
 **## Randomizer / Demo Data
 *******************************************************************************
 
@@ -777,8 +777,8 @@ the following will be the strategic plan
 	label values		mag_intake_2a_d2_multivit intake5_lbl
 	tab					mag_intake_2a_d2_multivit, missing
 	
-	
-	*** participants who exercise more
+
+*** participants who exercise more
 * exercise
 *** 30 minutes / days
 *** it's a string, need to destring it
