@@ -1500,4 +1500,260 @@ not found)
 . 
 {txt}end of do-file
 
+{com}. do "C:\Users\tijer\AppData\Local\Temp\STD1160_000006.tmp"
+{txt}
+{com}. use "$logs/clean_data_day1_drivers.dta", clear
+{txt}
+{com}. 
+. * Pathway dummy based on random assignment
+. * randomizer 1 or 2 = Path B (taste first)
+. * randomizer 3 or 4 = Path A (info first)
+. gen pathA = inlist(randomizer, 3, 4)
+{txt}
+{com}. label variable pathA "Path A dummy: info first"
+{txt}
+{com}. 
+. eststo clear
+{txt}
+{com}. 
+. * Model 1: 584 benefits only
+. eststo m1: reg diff_584 mag_sleep mag_cramps mag_muscle mag_sugar mag_bone info_useful
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}        65
+{txt}{hline 13}{c +}{hline 34}   F(6, 58)        = {res}     2.44
+{txt}       Model {c |} {res} 3.73352539         6  .622254232   {txt}Prob > F        ={res}    0.0360
+{txt}    Residual {c |} {res}   14.80109        58  .255191207   {txt}R-squared       ={res}    0.2014
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.1188
+{txt}       Total {c |} {res} 18.5346154        64  .289603365   {txt}Root MSE        =   {res} .50516
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}    diff_584{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}mag_sleep {c |}{col 14}{res}{space 2}  .004476{col 26}{space 2} .0028804{col 37}{space 1}    1.55{col 46}{space 3}0.126{col 54}{space 4}-.0012898{col 67}{space 3} .0102418
+{txt}{space 2}mag_cramps {c |}{col 14}{res}{space 2}  .006689{col 26}{space 2} .0039499{col 37}{space 1}    1.69{col 46}{space 3}0.096{col 54}{space 4}-.0012176{col 67}{space 3} .0145955
+{txt}{space 2}mag_muscle {c |}{col 14}{res}{space 2} .0006946{col 26}{space 2} .0038111{col 37}{space 1}    0.18{col 46}{space 3}0.856{col 54}{space 4}-.0069341{col 67}{space 3} .0083233
+{txt}{space 3}mag_sugar {c |}{col 14}{res}{space 2}-.0064276{col 26}{space 2} .0034292{col 37}{space 1}   -1.87{col 46}{space 3}0.066{col 54}{space 4}-.0132919{col 67}{space 3} .0004368
+{txt}{space 4}mag_bone {c |}{col 14}{res}{space 2}-.0016492{col 26}{space 2} .0034786{col 37}{space 1}   -0.47{col 46}{space 3}0.637{col 54}{space 4}-.0086124{col 67}{space 3}  .005314
+{txt}{space 1}info_useful {c |}{col 14}{res}{space 2} .0497048{col 26}{space 2} .0595731{col 37}{space 1}    0.83{col 46}{space 3}0.408{col 54}{space 4}-.0695437{col 67}{space 3} .1689532
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}-.4356006{col 26}{space 2}  .335663{col 37}{space 1}   -1.30{col 46}{space 3}0.200{col 54}{space 4}-1.107503{col 67}{space 3}  .236302
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+. * Model 2: 793 benefits only
+. eststo m2: reg diff_793 mag_sleep mag_cramps mag_muscle mag_sugar mag_bone info_useful
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}        65
+{txt}{hline 13}{c +}{hline 34}   F(6, 58)        = {res}     0.94
+{txt}       Model {c |} {res} 3.12159494         6  .520265823   {txt}Prob > F        ={res}    0.4739
+{txt}    Residual {c |} {res} 32.1130204        58  .553672766   {txt}R-squared       ={res}    0.0886
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}   -0.0057
+{txt}       Total {c |} {res} 35.2346154        64  .550540865   {txt}Root MSE        =   {res} .74409
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}    diff_793{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}mag_sleep {c |}{col 14}{res}{space 2}-.0008624{col 26}{space 2} .0042428{col 37}{space 1}   -0.20{col 46}{space 3}0.840{col 54}{space 4}-.0093552{col 67}{space 3} .0076305
+{txt}{space 2}mag_cramps {c |}{col 14}{res}{space 2} .0022443{col 26}{space 2} .0058181{col 37}{space 1}    0.39{col 46}{space 3}0.701{col 54}{space 4}-.0094018{col 67}{space 3} .0138904
+{txt}{space 2}mag_muscle {c |}{col 14}{res}{space 2}-.0108548{col 26}{space 2} .0056136{col 37}{space 1}   -1.93{col 46}{space 3}0.058{col 54}{space 4}-.0220917{col 67}{space 3} .0003821
+{txt}{space 3}mag_sugar {c |}{col 14}{res}{space 2} .0005729{col 26}{space 2} .0050512{col 37}{space 1}    0.11{col 46}{space 3}0.910{col 54}{space 4}-.0095381{col 67}{space 3} .0106839
+{txt}{space 4}mag_bone {c |}{col 14}{res}{space 2} .0023507{col 26}{space 2} .0051239{col 37}{space 1}    0.46{col 46}{space 3}0.648{col 54}{space 4}-.0079058{col 67}{space 3} .0126073
+{txt}{space 1}info_useful {c |}{col 14}{res}{space 2}-.0531561{col 26}{space 2} .0877493{col 37}{space 1}   -0.61{col 46}{space 3}0.547{col 54}{space 4}-.2288054{col 67}{space 3} .1224931
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}  .177693{col 26}{space 2} .4944214{col 37}{space 1}    0.36{col 46}{space 3}0.721{col 54}{space 4}-.8119989{col 67}{space 3} 1.167385
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+. * Model 3: 584 with path control
+. eststo m3: reg diff_584 mag_sleep mag_cramps mag_muscle mag_sugar mag_bone info_useful pathA
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}        65
+{txt}{hline 13}{c +}{hline 34}   F(7, 57)        = {res}     2.43
+{txt}       Model {c |} {res} 4.25852322         7  .608360459   {txt}Prob > F        ={res}    0.0300
+{txt}    Residual {c |} {res} 14.2760922        57  .250457757   {txt}R-squared       ={res}    0.2298
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.1352
+{txt}       Total {c |} {res} 18.5346154        64  .289603365   {txt}Root MSE        =   {res} .50046
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}    diff_584{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}mag_sleep {c |}{col 14}{res}{space 2} .0044864{col 26}{space 2} .0028536{col 37}{space 1}    1.57{col 46}{space 3}0.121{col 54}{space 4}-.0012278{col 67}{space 3} .0102006
+{txt}{space 2}mag_cramps {c |}{col 14}{res}{space 2} .0056818{col 26}{space 2} .0039744{col 37}{space 1}    1.43{col 46}{space 3}0.158{col 54}{space 4}-.0022768{col 67}{space 3} .0136405
+{txt}{space 2}mag_muscle {c |}{col 14}{res}{space 2} .0006321{col 26}{space 2} .0037758{col 37}{space 1}    0.17{col 46}{space 3}0.868{col 54}{space 4}-.0069289{col 67}{space 3} .0081931
+{txt}{space 3}mag_sugar {c |}{col 14}{res}{space 2} -.005744{col 26}{space 2} .0034299{col 37}{space 1}   -1.67{col 46}{space 3}0.099{col 54}{space 4}-.0126123{col 67}{space 3} .0011243
+{txt}{space 4}mag_bone {c |}{col 14}{res}{space 2}-.0012748{col 26}{space 2} .0034559{col 37}{space 1}   -0.37{col 46}{space 3}0.714{col 54}{space 4}-.0081951{col 67}{space 3} .0056454
+{txt}{space 1}info_useful {c |}{col 14}{res}{space 2} .0552051{col 26}{space 2} .0591401{col 37}{space 1}    0.93{col 46}{space 3}0.355{col 54}{space 4} -.063221{col 67}{space 3} .1736311
+{txt}{space 7}pathA {c |}{col 14}{res}{space 2}-.1870631{col 26}{space 2} .1292042{col 37}{space 1}   -1.45{col 46}{space 3}0.153{col 54}{space 4}-.4457901{col 67}{space 3} .0716638
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}-.3602504{col 26}{space 2} .3365834{col 37}{space 1}   -1.07{col 46}{space 3}0.289{col 54}{space 4}-1.034247{col 67}{space 3} .3137462
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+. * Model 4: 793 with path control
+. eststo m4: reg diff_793 mag_sleep mag_cramps mag_muscle mag_sugar mag_bone info_useful pathA
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}        65
+{txt}{hline 13}{c +}{hline 34}   F(7, 57)        = {res}     2.47
+{txt}       Model {c |} {res} 8.19672444         7  1.17096063   {txt}Prob > F        ={res}    0.0277
+{txt}    Residual {c |} {res} 27.0378909        57  .474348964   {txt}R-squared       ={res}    0.2326
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.1384
+{txt}       Total {c |} {res} 35.2346154        64  .550540865   {txt}Root MSE        =   {res} .68873
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}    diff_793{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}mag_sleep {c |}{col 14}{res}{space 2}-.0008299{col 26}{space 2} .0039271{col 37}{space 1}   -0.21{col 46}{space 3}0.833{col 54}{space 4}-.0086939{col 67}{space 3}  .007034
+{txt}{space 2}mag_cramps {c |}{col 14}{res}{space 2}-.0008871{col 26}{space 2} .0054696{col 37}{space 1}   -0.16{col 46}{space 3}0.872{col 54}{space 4}-.0118399{col 67}{space 3} .0100656
+{txt}{space 2}mag_muscle {c |}{col 14}{res}{space 2}-.0110491{col 26}{space 2} .0051963{col 37}{space 1}   -2.13{col 46}{space 3}0.038{col 54}{space 4}-.0214545{col 67}{space 3}-.0006436
+{txt}{space 3}mag_sugar {c |}{col 14}{res}{space 2} .0026982{col 26}{space 2} .0047203{col 37}{space 1}    0.57{col 46}{space 3}0.570{col 54}{space 4} -.006754{col 67}{space 3} .0121504
+{txt}{space 4}mag_bone {c |}{col 14}{res}{space 2} .0035147{col 26}{space 2}  .004756{col 37}{space 1}    0.74{col 46}{space 3}0.463{col 54}{space 4} -.006009{col 67}{space 3} .0130384
+{txt}{space 1}info_useful {c |}{col 14}{res}{space 2}-.0360548{col 26}{space 2} .0813887{col 37}{space 1}   -0.44{col 46}{space 3}0.659{col 54}{space 4}-.1990328{col 67}{space 3} .1269232
+{txt}{space 7}pathA {c |}{col 14}{res}{space 2}-.5816115{col 26}{space 2} .1778109{col 37}{space 1}   -3.27{col 46}{space 3}0.002{col 54}{space 4}-.9376717{col 67}{space 3}-.2255513
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .4119695{col 26}{space 2} .4632063{col 37}{space 1}    0.89{col 46}{space 3}0.378{col 54}{space 4}-.5155851{col 67}{space 3} 1.339524
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+. esttab m1 m2 m3 m4 using "$logs/table4_regression_updated.rtf", ///
+>     replace se b(3) se(3) ///
+>     star(* 0.10 ** 0.05 *** 0.01) ///
+>     title("Table 4. Regression Results: Functional Benefit Drivers and Pathway Effects") ///
+>     mtitles("584: Benefits Only" "793: Benefits Only" ///
+>             "584: Benefits + Path A" "793: Benefits + Path A") ///
+>     label ///
+>     addnotes("Path A dummy = 1 if information occurred before tasting; 0 if tasting occurred before information.", ///
+>              "Dependent variables are WTP change: Product 584 and Product 793.", ///
+>              "Positive coefficients indicate higher WTP change; negative coefficients indicate lower WTP change.")
+{res}{err}{p 0 4 2}
+file {bf:{err}C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/table4_regression_updated.rtf}
+is read-only; cannot be modified or erased
+{p_end}
+{txt}{search r(608), local:r(608);}
+
+end of do-file
+
+{search r(608), local:r(608);}
+
+{com}. do "C:\Users\tijer\AppData\Local\Temp\STD1160_000007.tmp"
+{txt}
+{com}. use "$logs/clean_data_day1_drivers.dta", clear
+{txt}
+{com}. 
+. * Pathway dummy based on random assignment
+. * randomizer 1 or 2 = Path B (taste first)
+. * randomizer 3 or 4 = Path A (info first)
+. gen pathA = inlist(randomizer, 3, 4)
+{txt}
+{com}. label variable pathA "Path A dummy: info first"
+{txt}
+{com}. 
+. eststo clear
+{txt}
+{com}. 
+. * Model 1: 584 benefits only
+. eststo m1: reg diff_584 mag_sleep mag_cramps mag_muscle mag_sugar mag_bone info_useful
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}        65
+{txt}{hline 13}{c +}{hline 34}   F(6, 58)        = {res}     2.44
+{txt}       Model {c |} {res} 3.73352539         6  .622254232   {txt}Prob > F        ={res}    0.0360
+{txt}    Residual {c |} {res}   14.80109        58  .255191207   {txt}R-squared       ={res}    0.2014
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.1188
+{txt}       Total {c |} {res} 18.5346154        64  .289603365   {txt}Root MSE        =   {res} .50516
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}    diff_584{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}mag_sleep {c |}{col 14}{res}{space 2}  .004476{col 26}{space 2} .0028804{col 37}{space 1}    1.55{col 46}{space 3}0.126{col 54}{space 4}-.0012898{col 67}{space 3} .0102418
+{txt}{space 2}mag_cramps {c |}{col 14}{res}{space 2}  .006689{col 26}{space 2} .0039499{col 37}{space 1}    1.69{col 46}{space 3}0.096{col 54}{space 4}-.0012176{col 67}{space 3} .0145955
+{txt}{space 2}mag_muscle {c |}{col 14}{res}{space 2} .0006946{col 26}{space 2} .0038111{col 37}{space 1}    0.18{col 46}{space 3}0.856{col 54}{space 4}-.0069341{col 67}{space 3} .0083233
+{txt}{space 3}mag_sugar {c |}{col 14}{res}{space 2}-.0064276{col 26}{space 2} .0034292{col 37}{space 1}   -1.87{col 46}{space 3}0.066{col 54}{space 4}-.0132919{col 67}{space 3} .0004368
+{txt}{space 4}mag_bone {c |}{col 14}{res}{space 2}-.0016492{col 26}{space 2} .0034786{col 37}{space 1}   -0.47{col 46}{space 3}0.637{col 54}{space 4}-.0086124{col 67}{space 3}  .005314
+{txt}{space 1}info_useful {c |}{col 14}{res}{space 2} .0497048{col 26}{space 2} .0595731{col 37}{space 1}    0.83{col 46}{space 3}0.408{col 54}{space 4}-.0695437{col 67}{space 3} .1689532
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}-.4356006{col 26}{space 2}  .335663{col 37}{space 1}   -1.30{col 46}{space 3}0.200{col 54}{space 4}-1.107503{col 67}{space 3}  .236302
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+. * Model 2: 793 benefits only
+. eststo m2: reg diff_793 mag_sleep mag_cramps mag_muscle mag_sugar mag_bone info_useful
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}        65
+{txt}{hline 13}{c +}{hline 34}   F(6, 58)        = {res}     0.94
+{txt}       Model {c |} {res} 3.12159494         6  .520265823   {txt}Prob > F        ={res}    0.4739
+{txt}    Residual {c |} {res} 32.1130204        58  .553672766   {txt}R-squared       ={res}    0.0886
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}   -0.0057
+{txt}       Total {c |} {res} 35.2346154        64  .550540865   {txt}Root MSE        =   {res} .74409
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}    diff_793{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}mag_sleep {c |}{col 14}{res}{space 2}-.0008624{col 26}{space 2} .0042428{col 37}{space 1}   -0.20{col 46}{space 3}0.840{col 54}{space 4}-.0093552{col 67}{space 3} .0076305
+{txt}{space 2}mag_cramps {c |}{col 14}{res}{space 2} .0022443{col 26}{space 2} .0058181{col 37}{space 1}    0.39{col 46}{space 3}0.701{col 54}{space 4}-.0094018{col 67}{space 3} .0138904
+{txt}{space 2}mag_muscle {c |}{col 14}{res}{space 2}-.0108548{col 26}{space 2} .0056136{col 37}{space 1}   -1.93{col 46}{space 3}0.058{col 54}{space 4}-.0220917{col 67}{space 3} .0003821
+{txt}{space 3}mag_sugar {c |}{col 14}{res}{space 2} .0005729{col 26}{space 2} .0050512{col 37}{space 1}    0.11{col 46}{space 3}0.910{col 54}{space 4}-.0095381{col 67}{space 3} .0106839
+{txt}{space 4}mag_bone {c |}{col 14}{res}{space 2} .0023507{col 26}{space 2} .0051239{col 37}{space 1}    0.46{col 46}{space 3}0.648{col 54}{space 4}-.0079058{col 67}{space 3} .0126073
+{txt}{space 1}info_useful {c |}{col 14}{res}{space 2}-.0531561{col 26}{space 2} .0877493{col 37}{space 1}   -0.61{col 46}{space 3}0.547{col 54}{space 4}-.2288054{col 67}{space 3} .1224931
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}  .177693{col 26}{space 2} .4944214{col 37}{space 1}    0.36{col 46}{space 3}0.721{col 54}{space 4}-.8119989{col 67}{space 3} 1.167385
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+. * Model 3: 584 with path control
+. eststo m3: reg diff_584 mag_sleep mag_cramps mag_muscle mag_sugar mag_bone info_useful pathA
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}        65
+{txt}{hline 13}{c +}{hline 34}   F(7, 57)        = {res}     2.43
+{txt}       Model {c |} {res} 4.25852322         7  .608360459   {txt}Prob > F        ={res}    0.0300
+{txt}    Residual {c |} {res} 14.2760922        57  .250457757   {txt}R-squared       ={res}    0.2298
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.1352
+{txt}       Total {c |} {res} 18.5346154        64  .289603365   {txt}Root MSE        =   {res} .50046
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}    diff_584{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}mag_sleep {c |}{col 14}{res}{space 2} .0044864{col 26}{space 2} .0028536{col 37}{space 1}    1.57{col 46}{space 3}0.121{col 54}{space 4}-.0012278{col 67}{space 3} .0102006
+{txt}{space 2}mag_cramps {c |}{col 14}{res}{space 2} .0056818{col 26}{space 2} .0039744{col 37}{space 1}    1.43{col 46}{space 3}0.158{col 54}{space 4}-.0022768{col 67}{space 3} .0136405
+{txt}{space 2}mag_muscle {c |}{col 14}{res}{space 2} .0006321{col 26}{space 2} .0037758{col 37}{space 1}    0.17{col 46}{space 3}0.868{col 54}{space 4}-.0069289{col 67}{space 3} .0081931
+{txt}{space 3}mag_sugar {c |}{col 14}{res}{space 2} -.005744{col 26}{space 2} .0034299{col 37}{space 1}   -1.67{col 46}{space 3}0.099{col 54}{space 4}-.0126123{col 67}{space 3} .0011243
+{txt}{space 4}mag_bone {c |}{col 14}{res}{space 2}-.0012748{col 26}{space 2} .0034559{col 37}{space 1}   -0.37{col 46}{space 3}0.714{col 54}{space 4}-.0081951{col 67}{space 3} .0056454
+{txt}{space 1}info_useful {c |}{col 14}{res}{space 2} .0552051{col 26}{space 2} .0591401{col 37}{space 1}    0.93{col 46}{space 3}0.355{col 54}{space 4} -.063221{col 67}{space 3} .1736311
+{txt}{space 7}pathA {c |}{col 14}{res}{space 2}-.1870631{col 26}{space 2} .1292042{col 37}{space 1}   -1.45{col 46}{space 3}0.153{col 54}{space 4}-.4457901{col 67}{space 3} .0716638
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}-.3602504{col 26}{space 2} .3365834{col 37}{space 1}   -1.07{col 46}{space 3}0.289{col 54}{space 4}-1.034247{col 67}{space 3} .3137462
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+. * Model 4: 793 with path control
+. eststo m4: reg diff_793 mag_sleep mag_cramps mag_muscle mag_sugar mag_bone info_useful pathA
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}        65
+{txt}{hline 13}{c +}{hline 34}   F(7, 57)        = {res}     2.47
+{txt}       Model {c |} {res} 8.19672444         7  1.17096063   {txt}Prob > F        ={res}    0.0277
+{txt}    Residual {c |} {res} 27.0378909        57  .474348964   {txt}R-squared       ={res}    0.2326
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.1384
+{txt}       Total {c |} {res} 35.2346154        64  .550540865   {txt}Root MSE        =   {res} .68873
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}    diff_793{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}mag_sleep {c |}{col 14}{res}{space 2}-.0008299{col 26}{space 2} .0039271{col 37}{space 1}   -0.21{col 46}{space 3}0.833{col 54}{space 4}-.0086939{col 67}{space 3}  .007034
+{txt}{space 2}mag_cramps {c |}{col 14}{res}{space 2}-.0008871{col 26}{space 2} .0054696{col 37}{space 1}   -0.16{col 46}{space 3}0.872{col 54}{space 4}-.0118399{col 67}{space 3} .0100656
+{txt}{space 2}mag_muscle {c |}{col 14}{res}{space 2}-.0110491{col 26}{space 2} .0051963{col 37}{space 1}   -2.13{col 46}{space 3}0.038{col 54}{space 4}-.0214545{col 67}{space 3}-.0006436
+{txt}{space 3}mag_sugar {c |}{col 14}{res}{space 2} .0026982{col 26}{space 2} .0047203{col 37}{space 1}    0.57{col 46}{space 3}0.570{col 54}{space 4} -.006754{col 67}{space 3} .0121504
+{txt}{space 4}mag_bone {c |}{col 14}{res}{space 2} .0035147{col 26}{space 2}  .004756{col 37}{space 1}    0.74{col 46}{space 3}0.463{col 54}{space 4} -.006009{col 67}{space 3} .0130384
+{txt}{space 1}info_useful {c |}{col 14}{res}{space 2}-.0360548{col 26}{space 2} .0813887{col 37}{space 1}   -0.44{col 46}{space 3}0.659{col 54}{space 4}-.1990328{col 67}{space 3} .1269232
+{txt}{space 7}pathA {c |}{col 14}{res}{space 2}-.5816115{col 26}{space 2} .1778109{col 37}{space 1}   -3.27{col 46}{space 3}0.002{col 54}{space 4}-.9376717{col 67}{space 3}-.2255513
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .4119695{col 26}{space 2} .4632063{col 37}{space 1}    0.89{col 46}{space 3}0.378{col 54}{space 4}-.5155851{col 67}{space 3} 1.339524
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+. esttab m1 m2 m3 m4 using "$logs/table4_regression_updated.rtf", ///
+>     replace se b(3) se(3) ///
+>     star(* 0.10 ** 0.05 *** 0.01) ///
+>     title("Table 4. Regression Results: Functional Benefit Drivers and Pathway Effects") ///
+>     mtitles("584: Benefits Only" "793: Benefits Only" ///
+>             "584: Benefits + Path A" "793: Benefits + Path A") ///
+>     label ///
+>     addnotes("Path A dummy = 1 if information occurred before tasting; 0 if tasting occurred before information.", ///
+>              "Dependent variables are WTP change: Product 584 and Product 793.", ///
+>              "Positive coefficients indicate higher WTP change; negative coefficients indicate lower WTP change.")
+{res}{txt}(output written to {browse  `"C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/table4_regression_updated.rtf"'})
+
+{com}.         
+. 
+{txt}end of do-file
+
 {com}. 

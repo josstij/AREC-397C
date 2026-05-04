@@ -513,38 +513,38 @@ save "$logs/clean_data_day1_drivers.dta", replace
 **********************************************************************
 **# 14 - Table 4: Functional magnesium benefit drivers (Day 1)
 **********************************************************************
-
 use "$logs/clean_data_day1_drivers.dta", clear
 
+* Pathway dummy based on random assignment
+* randomizer 1 or 2 = Path B (taste first)
+* randomizer 3 or 4 = Path A (info first)
 gen pathA = inlist(randomizer, 3, 4)
-label variable pathA "1 = Path A (info first), 0 = Path B (taste first)"
-
+label variable pathA "Path A dummy: info first"
 
 eststo clear
 
-* Model 1: 584 baseline
+* Model 1: 584 benefits only
 eststo m1: reg diff_584 mag_sleep mag_cramps mag_muscle mag_sugar mag_bone info_useful
 
-* Model 2: 793 baseline
+* Model 2: 793 benefits only
 eststo m2: reg diff_793 mag_sleep mag_cramps mag_muscle mag_sugar mag_bone info_useful
 
 * Model 3: 584 with path control
-eststo m3: reg diff_584 mag_sleep mag_cramps mag_muscle mag_sugar mag_bone info_useful pathB
+eststo m3: reg diff_584 mag_sleep mag_cramps mag_muscle mag_sugar mag_bone info_useful pathA
 
 * Model 4: 793 with path control
-eststo m4: reg diff_793 mag_sleep mag_cramps mag_muscle mag_sugar mag_bone info_useful pathB
+eststo m4: reg diff_793 mag_sleep mag_cramps mag_muscle mag_sugar mag_bone info_useful pathA
 
 esttab m1 m2 m3 m4 using "$logs/table4_regression_updated.rtf", ///
     replace se b(3) se(3) ///
     star(* 0.10 ** 0.05 *** 0.01) ///
     title("Table 4. Regression Results: Functional Benefit Drivers and Pathway Effects") ///
     mtitles("584: Benefits Only" "793: Benefits Only" ///
-            "584: Benefits + Path B Dummy" "793: Benefits + Path B Dummy") ///
+            "584: Benefits + Path A" "793: Benefits + Path A") ///
     label ///
-    addnotes("Path B dummy = 1 if tasting occurred before magnesium information; 0 if information occurred before tasting.", ///
+    addnotes("Path A dummy = 1 if information occurred before tasting; 0 if tasting occurred before information.", ///
              "Dependent variables are WTP change: Product 584 and Product 793.", ///
              "Positive coefficients indicate higher WTP change; negative coefficients indicate lower WTP change.")
-	
 	
 kjkjkjkjkjk
 **********************************************************************
