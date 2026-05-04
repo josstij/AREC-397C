@@ -487,11 +487,13 @@
 
 	sum					`wtpvars', detail
 	
+
+	
 ********************************************************************************
 **# Tasting and information effects
 ********************************************************************************
 
-**## initialize effect variables
+**## effect variables
 	capture drop		taste_eff_584 taste_eff_793 taste_eff_356 taste_eff_831
 	capture drop		info_eff_584 info_eff_793 info_eff_356 info_eff_831
 
@@ -1281,6 +1283,8 @@ restore
 							i.health_high ///
 							i.magn_know_high ///
 							if day == 2, robust
+							
+							tab 		flavor_pref1_5
 
 ********************************************************************************
 **## Tasting effects
@@ -1315,6 +1319,8 @@ restore
 							i.health_high ///
 							i.magn_know_high ///
 							if day == 2, robust
+							
+						
 
 * Product 831: pineapple beverage, Day 2.
 	reg					taste_eff_831 ///
@@ -1331,44 +1337,11 @@ restore
 ********************************************************************************
 
 ********************************************************************************
-**## Gender and information effect
+**## Product 584: magnesium/lab beverage
 ********************************************************************************
 
-* Test whether the Product 584 information effect differs by gender,
-* controlling for preference variables.
-	reg					info_eff_584 ///
-							i.gender ///
-							i.sweet_high ///
-							i.sugar_lowmod_high ///
-							i.flavor_pref1_5 ///
-							i.ingred_high ///
-							i.health_high ///
-							i.magn_know_high ///
-							if day == 1, robust
-
-
-********************************************************************************
-**## Physical activity and information effect
-********************************************************************************
-
-* Test whether the Product 584 information effect differs by physical activity,
-* controlling for preference variables.
-	reg					info_eff_584 ///
-							i.active_3plus ///
-							i.sweet_high ///
-							i.sugar_lowmod_high ///
-							i.flavor_pref1_5 ///
-							i.ingred_high ///
-							i.health_high ///
-							i.magn_know_high ///
-							if day == 1, robust
-
-
-********************************************************************************
-**## Combined H2 model
-********************************************************************************
-
-* Test gender and physical activity together.
+* Main H2 model: gender and physical activity differences in the
+* Product 584 information effect.
 	reg					info_eff_584 ///
 							i.gender ///
 							i.active_3plus ///
@@ -1379,13 +1352,165 @@ restore
 							i.health_high ///
 							i.magn_know_high ///
 							if day == 1, robust
-							
-	
+
+
+********************************************************************************
+**## Product 793: competitor beverage
+********************************************************************************
+
+* Supporting model: gender and physical activity differences in the
+* Product 793 information effect.
+	reg					info_eff_793 ///
+							i.gender ///
+							i.active_3plus ///
+							i.sweet_high ///
+							i.sugar_lowmod_high ///
+							i.flavor_pref1_5 ///
+							i.ingred_high ///
+							i.health_high ///
+							i.magn_know_high ///
+							if day == 1, robust
+
+
+********************************************************************************
+**## Product 356: blueberry beverage
+********************************************************************************
+
+* Supporting model: gender and physical activity differences in the
+* Product 356 information effect.
+	reg					info_eff_356 ///
+							i.gender ///
+							i.active_3plus ///
+							i.sweet_high ///
+							i.sugar_lowmod_high ///
+							i.flavor_pref1_1 ///
+							i.ingred_high ///
+							i.health_high ///
+							i.magn_know_high ///
+							if day == 2, robust
+
+
+********************************************************************************
+**## Product 831: pineapple beverage
+********************************************************************************
+
+* Supporting model: gender and physical activity differences in the
+* Product 831 information effect.
+	reg					info_eff_831 ///
+							i.gender ///
+							i.active_3plus ///
+							i.sweet_high ///
+							i.sugar_lowmod_high ///
+							i.flavor_pref1_7 ///
+							i.ingred_high ///
+							i.health_high ///
+							i.magn_know_high ///
+							if day == 2, robust
 
 
 
 
+********************************************************************************
+**# H2 regressions with consumption situation and gender-exercise interaction
+********************************************************************************
+
+eststo clear
 
 
+********************************************************************************
+**## Product 584: magnesium/lab beverage
+********************************************************************************
+
+* Main H2 model: information effect for the magnesium/lab beverage.
+* Gender is interacted with exercise frequency.
+* Consumption situation controls indicate whether respondents usually drink
+* sports beverages before, during, or after exercise.
+
+eststo h2_info_584: ///
+	reg					info_eff_584 ///
+							i.gender##c.exercise ///
+							i.con_situation_1 ///
+							i.con_situation_2 ///
+							i.con_situation_3 ///
+							i.sweet_high ///
+							i.sugar_lowmod_high ///
+							i.flavor_pref1_5 ///
+							i.ingred_high ///
+							i.health_high ///
+							i.magn_know_high ///
+							if day == 1, robust
 
 
+********************************************************************************
+**## Product 793: competitor beverage
+********************************************************************************
+
+* Supporting comparison model: information effect for the Day 1 competitor.
+
+eststo h2_info_793: ///
+	reg					info_eff_793 ///
+							i.gender##c.exercise ///
+							i.con_situation_1 ///
+							i.con_situation_2 ///
+							i.con_situation_3 ///
+							i.sweet_high ///
+							i.sugar_lowmod_high ///
+							i.flavor_pref1_5 ///
+							i.ingred_high ///
+							i.health_high ///
+							i.magn_know_high ///
+							if day == 1, robust
+
+
+********************************************************************************
+**## Product 356: blueberry beverage
+********************************************************************************
+
+* Supporting comparison model: information effect for the Day 2 blueberry beverage.
+
+eststo h2_info_356: ///
+	reg					info_eff_356 ///
+							i.gender##c.exercise ///
+							i.con_situation_1 ///
+							i.con_situation_2 ///
+							i.con_situation_3 ///
+							i.sweet_high ///
+							i.sugar_lowmod_high ///
+							i.flavor_pref1_1 ///
+							i.ingred_high ///
+							i.health_high ///
+							i.magn_know_high ///
+							if day == 2, robust
+
+
+********************************************************************************
+**## Product 831: pineapple beverage
+********************************************************************************
+
+* Supporting comparison model: information effect for the Day 2 pineapple beverage.
+
+eststo h2_info_831: ///
+	reg					info_eff_831 ///
+							i.gender##c.exercise ///
+							i.con_situation_1 ///
+							i.con_situation_2 ///
+							i.con_situation_3 ///
+							i.sweet_high ///
+							i.sugar_lowmod_high ///
+							i.flavor_pref1_7 ///
+							i.ingred_high ///
+							i.health_high ///
+							i.magn_know_high ///
+							if day == 2, robust
+
+
+esttab h2_info_584 h2_info_793 h2_info_356 h2_info_831 ///
+	using "$final_output/h2_info_regressions_consumption_gender_exercise.csv", ///
+	replace ///
+	csv ///
+	b(%9.4f) ///
+	se(%9.4f) ///
+	r2 ///
+	ar2 ///
+	label ///
+	title("H2 Information-Effect Regressions with Consumption Situation and Gender-Exercise Interaction")
