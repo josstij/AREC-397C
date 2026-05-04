@@ -516,51 +516,37 @@ save "$logs/clean_data_day1_drivers.dta", replace
 
 use "$logs/clean_data_day1_drivers.dta", clear
 
-tempname memhold
-postfile `memhold' str45 driver ///
-    corr_584 p_584 ///
-    corr_793 p_793 ///
-    using "$logs/table4_functional_drivers_day1.dta", replace
-
-foreach var in info_useful mag_muscle mag_cramps mag_sugar mag_bone mag_sleep {
-
-    local lab : variable label `var'
-
-    * Correlation with magnesium product (584)
-    quietly pwcorr diff_584 `var', sig
-    matrix C = r(C)
-    matrix P = r(sig)
-    local c584 = C[1,2]
-    local p584 = P[1,2]
-
-    * Correlation with non-magnesium product (793)
-    quietly pwcorr diff_793 `var', sig
-    matrix C = r(C)
-    matrix P = r(sig)
-    local c793 = C[1,2]
-    local p793 = P[1,2]
-
-    post `memhold' ///
-        ("`lab'") ///
-        (`c584') (`p584') ///
-        (`c793') (`p793')
-}
-
-postclose `memhold'
-
-use "$logs/table4_functional_drivers_day1.dta", clear
-
-label variable driver "Functional magnesium benefit"
-label variable corr_584 "Correlation with WTP change (584)"
-label variable p_584 "p-value (584)"
-label variable corr_793 "Correlation with WTP change (793)"
-label variable p_793 "p-value (793)"
-
-list, clean noobs
-
-export delimited using "$logs/table4_functional_drivers_day1.csv", replace
+gen pathA = inlist(randomizer, 3, 4)
+label variable pathA "1 = Path A (info first), 0 = Path B (taste first)"
 
 
+eststo clear
+
+* Model 1: 584 baseline
+eststo m1: reg diff_584 mag_sleep mag_cramps mag_muscle mag_sugar mag_bone info_useful
+
+* Model 2: 793 baseline
+eststo m2: reg diff_793 mag_sleep mag_cramps mag_muscle mag_sugar mag_bone info_useful
+
+* Model 3: 584 with path control
+eststo m3: reg diff_584 mag_sleep mag_cramps mag_muscle mag_sugar mag_bone info_useful pathB
+
+* Model 4: 793 with path control
+eststo m4: reg diff_793 mag_sleep mag_cramps mag_muscle mag_sugar mag_bone info_useful pathB
+
+esttab m1 m2 m3 m4 using "$logs/table4_regression_updated.rtf", ///
+    replace se b(3) se(3) ///
+    star(* 0.10 ** 0.05 *** 0.01) ///
+    title("Table 4. Regression Results: Functional Benefit Drivers and Pathway Effects") ///
+    mtitles("584: Benefits Only" "793: Benefits Only" ///
+            "584: Benefits + Path B Dummy" "793: Benefits + Path B Dummy") ///
+    label ///
+    addnotes("Path B dummy = 1 if tasting occurred before magnesium information; 0 if information occurred before tasting.", ///
+             "Dependent variables are WTP change: Product 584 and Product 793.", ///
+             "Positive coefficients indicate higher WTP change; negative coefficients indicate lower WTP change.")
+	
+	
+kjkjkjkjkjk
 **********************************************************************
 **# 15 - Table 5: Demographic drivers of WTP change (Day 1)
 **********************************************************************

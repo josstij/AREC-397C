@@ -16781,4 +16781,62 @@ all files already exist and are up to date.
 . * close any open logs
 . cap log close
 {smcl}
+{com}{sf}{ul off}{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/assignment_tijerina1.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res} 4 May 2026, 11:32:06
+{txt}
+{com}.         set                     scheme s2color
+{txt}
+{com}.         graph set               window fontface "Arial"
+{txt}
+{com}.         ssc                     install estout, replace
+{txt}checking {hilite:estout} consistency and verifying not already installed...
+all files already exist and are up to date.
+
+{com}.         
+. **********************************************************************
+. **# 0 - hypothesis testing without regression - TO DO
+. **********************************************************************
+. /*
+> * Clean the dataset with clear variable names 
+> 
+> * Submit your code file along with your input data for this assignment.
+> 
+> * Define the main hypothesis: 
+>         * Ho: mean WTP after magnesium info = mean WTP before magnesium info
+>         * H1: mean WTP after magnesium info does not equal mean WTP before magnesium info
+>         
+> * Conduct summary stats for the key WTP variables: 
+>         * report mean, standard deviation, min, max, and N
+>         * include coefficient of variation
+>         
+> * Conduct one-sample t-tests
+>         * test whether WTP is different from the benchmark price of $2.50
+>         
+> * Conduct paired t-tests        
+>         * test whether WTP changes after magnesium information
+>         
+> * Report 95% confidence intervals with the test results
+> 
+> * Create clearly labeled tables for the word doc
+>         * Table 1: Summary Statistics
+>         * Table 2: benchmark tests against $2.50
+>         Table 3: Paired t-tests before vs after magnesium information
+> */
+. 
+. 
+. **********************************************************************
+. **# 1 - Load data and basic cleaning
+. **********************************************************************
+. 
+. * clear memory
+. clear all
+{res}{txt}
+{com}. 
+. * close any open logs
+. cap log close
+{smcl}
 {com}{sf}{ul off}

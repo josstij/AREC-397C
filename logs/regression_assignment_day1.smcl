@@ -3,7 +3,7 @@
       name:  {res}<unnamed>
        {txt}log:  {res}C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/regression_assignment_day1.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res}27 Apr 2026, 20:52:20
+ {txt}opened on:  {res} 4 May 2026, 11:32:10
 {txt}
 {com}. 
 . * import data from CSV
@@ -993,12 +993,7 @@ diff_584 {c |}{res}{col 12}     70{col 22} .0428571{col 34} .0659324{col 46} .55
 {com}. postfile `memhold' str15 pathway str10 product str40 comparison ///
 >     mean_before mean_after diff pvalue ci_low ci_high ///
 >     using "$logs/table3_day1_paired.dta", replace
-{txt}{p 0 4 2}
-(file {bf}
-C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/table3_day1_paired.dta{rm}
-not found)
-{p_end}
-
+{txt}
 {com}. 
 . *--------------------------------------------------------------------
 . * Path B: Taste → Info
@@ -1071,19 +1066,14 @@ not found)
 
 {com}. 
 . export delimited using "$logs/table3_day1_paired.csv", replace
-{res}{txt}{p 0 4 2}
-(file {bf}
-C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/table3_day1_paired.csv{rm}
-not found)
-{p_end}
-{txt}file {bf:C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/table3_day1_paired.csv} saved
+{res}{txt}file {bf:C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/table3_day1_paired.csv} saved
 
 {com}. 
-{txt}end of do-file
-
-{com}. do "C:\Users\tijer\AppData\Local\Temp\STD41dc_00000m.tmp"
-{txt}
-{com}. 
+. 
+. **********************************************************************
+. **# 13 - Create combined driver variables (Path A + Path B)
+. **********************************************************************
+. 
 . use "$logs/clean_data_day1_584_793.dta", clear
 {txt}
 {com}. 
@@ -1147,435 +1137,367 @@ not found)
 {com}. 
 . save "$logs/clean_data_day1_drivers.dta", replace
 {txt}{p 0 4 2}
-(file {bf}
-C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/clean_data_day1_drivers.dta{rm}
-not found)
-{p_end}
-{p 0 4 2}
 file {bf}
 C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/clean_data_day1_drivers.dta{rm}
 saved
 {p_end}
 
 {com}. 
-{txt}end of do-file
+. 
+. **********************************************************************
+. **# 14 - Table 4: Functional magnesium benefit drivers (Day 1)
+. **********************************************************************
+. 
+. use "$logs/clean_data_day1_drivers.dta", clear
+{txt}
+{com}. 
+. gen pathB = (path == "B")
+{err}path not found
+{txt}{search r(111), local:r(111);}
 
-{com}. do "C:\Users\tijer\AppData\Local\Temp\STD41dc_00000n.tmp"
+end of do-file
+
+{search r(111), local:r(111);}
+
+{com}. describe
+
+{txt}Contains data from {res}C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/clean_data_day1_drivers.dta
+{txt} Observations:{res}            70                  
+{txt}    Variables:{res}            46                  4 May 2026 11:32
+{txt}{hline}
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+{hline}
+{p 0 48}{res}{bind:con_freq       }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}Sports drink consumption frequency{p_end}
+{p 0 48}{bind:exercise       }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}Exercise frequency{p_end}
+{p 0 48}{bind:preknow_5_magn }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}Prior knowledge of magnesium{p_end}
+{p 0 48}{bind:wtp_1          }{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}Baseline WTP before product info{p_end}
+{p 0 48}{bind:wtp_2b_584     }{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}Path B: WTP 584 after tasting{p_end}
+{p 0 48}{bind:wtp_2b_793     }{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}Path B: WTP 793 after tasting{p_end}
+{p 0 48}{bind:wtp_3b_info_584}{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}Path B: WTP 584 after magnesium info{p_end}
+{p 0 48}{bind:wtp_3b_info_793}{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}Path B: WTP 793 after magnesium info{p_end}
+{p 0 48}{bind:after_info_3b~l}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:mag_benefit~sle}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:mag_benefit_3~s}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:mag_benefit_3~r}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:mag_b~b_d1_bone}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:mag_benefit_3~p}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:wtp_2a_info_584}{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}Path A: WTP 584 after magnesium info{p_end}
+{p 0 48}{bind:wtp_2a_info_793}{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}Path A: WTP 793 after magnesium info{p_end}
+{p 0 48}{bind:after_info_2a~l}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:mag_benefit~cle}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:mag_benefit_2~s}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:mag_benefit_2~r}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:mag_b~a_d1_bone}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:mag_benefit_2~p}{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:gender         }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:age            }{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:income         }{txt}{bind: int     }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:randomizer     }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}Randomization pathway{p_end}
+{p 0 48}{bind:day            }{txt}{bind: byte    }{bind:%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}Day{p_end}
+{p 0 48}{bind:diffB_584      }{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:diffB_793      }{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:diffA_584      }{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:diffA_793      }{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:diff_584       }{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}Change in WTP for 584 due to magnesium info (A & B){p_end}
+{p 0 48}{bind:diff_793       }{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}Change in WTP for 793 due to magnesium info (A & B){p_end}
+{p 0 48}{bind:devB_584_taste }{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:devB_584_info  }{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:devB_793_taste }{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:devB_793_info  }{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:devA_584_info  }{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:devA_793_info  }{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:dev_baseline   }{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:info_useful    }{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}Info usefulness (combined A & B){p_end}
+{p 0 48}{bind:mag_muscle     }{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}Magnesium: muscle recovery importance{p_end}
+{p 0 48}{bind:mag_cramps     }{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}Magnesium: cramp reduction importance{p_end}
+{p 0 48}{bind:mag_sugar      }{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}Magnesium: blood sugar importance{p_end}
+{p 0 48}{bind:mag_bone       }{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}Magnesium: bone health importance{p_end}
+{p 0 48}{bind:mag_sleep      }{txt}{bind: float   }{bind:%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}Magnesium: sleep/relaxation importance{p_end}
+{txt}{hline}
+Sorted by: 
+     Note: {res}Dataset has changed since last saved.
+
+{com}. do "C:\Users\tijer\AppData\Local\Temp\STD1160_000002.tmp"
 {txt}
 {com}. 
 . use "$logs/clean_data_day1_drivers.dta", clear
 {txt}
 {com}. 
-. tempname memhold
+. gen pathB = inlist(randomizer, 1, 2)
 {txt}
-{com}. postfile `memhold' str45 driver ///
->     corr_584 p_584 ///
->     corr_793 p_793 ///
->     using "$logs/table4_functional_drivers_day1.dta", replace
-{txt}{p 0 4 2}
-(file {bf}
-C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/table4_functional_drivers_day1.dta{rm}
-not found)
-{p_end}
-
-{com}. 
-. foreach var in info_useful mag_muscle mag_cramps mag_sugar mag_bone mag_sleep {c -(}
-{txt}  2{com}. 
-.     local lab : variable label `var'
-{txt}  3{com}. 
-.     * Correlation with magnesium product (584)
-.     quietly pwcorr diff_584 `var', sig
-{txt}  4{com}.     matrix C = r(C)
-{txt}  5{com}.     matrix P = r(sig)
-{txt}  6{com}.     local c584 = C[1,2]
-{txt}  7{com}.     local p584 = P[1,2]
-{txt}  8{com}. 
-.     * Correlation with non-magnesium product (793)
-.     quietly pwcorr diff_793 `var', sig
-{txt}  9{com}.     matrix C = r(C)
-{txt} 10{com}.     matrix P = r(sig)
-{txt} 11{com}.     local c793 = C[1,2]
-{txt} 12{com}.     local p793 = P[1,2]
-{txt} 13{com}. 
-.     post `memhold' ///
->         ("`lab'") ///
->         (`c584') (`p584') ///
->         (`c793') (`p793')
-{txt} 14{com}. {c )-}
+{com}. label variable pathB "1 = Path B (taste first), 0 = Path A"
 {txt}
-{com}. 
-. postclose `memhold'
-{txt}
-{com}. 
-. use "$logs/table4_functional_drivers_day1.dta", clear
-{txt}
-{com}. 
-. label variable driver "Functional magnesium benefit"
-{txt}
-{com}. label variable corr_584 "Correlation with WTP change (584)"
-{txt}
-{com}. label variable p_584 "p-value (584)"
-{txt}
-{com}. label variable corr_793 "Correlation with WTP change (793)"
-{txt}
-{com}. label variable p_793 "p-value (793)"
-{txt}
-{com}. 
-. list, clean noobs
-{txt}
-    {res}                                driver    corr_584      p_584    corr_793      p_793 {txt} 
-    {res}      Info usefulness (combined A & B)    .0598894   .6223722   -.0225674   .8528872 {txt} 
-    {res} Magnesium: muscle recovery importance    .1959255   .1093215    -.250493   .0393704 {txt} 
-    {res} Magnesium: cramp reduction importance     .267812   .0272447   -.1693239   .1674685 {txt} 
-    {res}     Magnesium: blood sugar importance   -.0894718   .4680953   -.1097477   .3729722 {txt} 
-    {res}     Magnesium: bone health importance    .1255435   .3113988   -.1016289   .4131658 {txt} 
-    {res}Magnesium: sleep/relaxation importance    .2750338   .0254182   -.0846989   .4989352 {txt} 
-
-{com}. 
-. export delimited using "$logs/table4_functional_drivers_day1.csv", replace
-{res}{txt}{p 0 4 2}
-(file {bf}
-C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/table4_functional_drivers_day1.csv{rm}
-not found)
-{p_end}
-{txt}file {bf:C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/table4_functional_drivers_day1.csv} saved
-
 {com}. 
 {txt}end of do-file
 
-{com}. do "C:\Users\tijer\AppData\Local\Temp\STD41dc_00000o.tmp"
-{txt}
-{com}. 
-. use "$logs/clean_data_day1_drivers.dta", clear
-{txt}
-{com}. 
-. tempname memhold
-{txt}
-{com}. postfile `memhold' str45 driver ///
->     corr_584 p_584 ///
->     corr_793 p_793 ///
->     using "$logs/table5_demographic_drivers_day1.dta", replace
-{txt}{p 0 4 2}
-(file {bf}
-C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/table5_demographic_drivers_day1.dta{rm}
-not found)
-{p_end}
+{com}. dis pathB
+{res}0
 
-{com}. 
-. foreach var in preknow_5_magn exercise con_freq age income {c -(}
-{txt}  2{com}. 
-.     local lab : variable label `var'
-{txt}  3{com}.     if "`lab'" == "" local lab "`var'"
-{txt}  4{com}. 
-.     * Correlation with magnesium product (584)
-.     quietly pwcorr diff_584 `var', sig
-{txt}  5{com}.     matrix C = r(C)
-{txt}  6{com}.     matrix P = r(sig)
-{txt}  7{com}.     local c584 = C[1,2]
-{txt}  8{com}.     local p584 = P[1,2]
-{txt}  9{com}. 
-.     * Correlation with non-magnesium product (793)
-.     quietly pwcorr diff_793 `var', sig
-{txt} 10{com}.     matrix C = r(C)
-{txt} 11{com}.     matrix P = r(sig)
-{txt} 12{com}.     local c793 = C[1,2]
-{txt} 13{com}.     local p793 = P[1,2]
-{txt} 14{com}. 
-.     post `memhold' ///
->         ("`lab'") ///
->         (`c584') (`p584') ///
->         (`c793') (`p793')
-{txt} 15{com}. {c )-}
-{txt}
-{com}. 
-. postclose `memhold'
-{txt}
-{com}. 
-. use "$logs/table5_demographic_drivers_day1.dta", clear
-{txt}
-{com}. 
-. label variable driver "Demographic / behavioral driver"
-{txt}
-{com}. label variable corr_584 "Correlation with WTP change (584)"
-{txt}
-{com}. label variable p_584 "p-value (584)"
-{txt}
-{com}. label variable corr_793 "Correlation with WTP change (793)"
-{txt}
-{com}. label variable p_793 "p-value (793)"
-{txt}
-{com}. 
-. list, clean noobs
-{txt}
-    {res}                            driver    corr_584      p_584    corr_793      p_793 {txt} 
-    {res}      Prior knowledge of magnesium   -.0273641   .8220846   -.0779074   .5214842 {txt} 
-    {res}                Exercise frequency   -.1238505   .3070226   -.0117666   .9229826 {txt} 
-    {res}Sports drink consumption frequency    .0176258   .8848501   -.3574437   .0023833 {txt} 
-    {res}                               age    -.166526   .1682614    .0594599   .6248754 {txt} 
-    {res}                            income    .0858595   .5179011    .0691415   .6028224 {txt} 
+{com}. summarize pathB
 
-{com}. 
-. export delimited using "$logs/table5_demographic_drivers_day1.csv", replace
-{res}{txt}{p 0 4 2}
-(file {bf}
-C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/table5_demographic_drivers_day1.csv{rm}
-not found)
-{p_end}
-{txt}file {bf:C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/table5_demographic_drivers_day1.csv} saved
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+{space 7}pathB {c |}{res}         70    .4857143    .5034046          0          1
 
-{com}. 
-{txt}end of do-file
+{com}. count pathB
+{err}varlist not allowed
+{txt}{search r(101), local:r(101);}
 
-{com}. do "C:\Users\tijer\AppData\Local\Temp\STD41dc_00000p.tmp"
-{txt}
-{com}. 
-. use "$logs/clean_data_day1_drivers.dta", clear
-{txt}
-{com}. 
-. tempname memhold
-{txt}
-{com}. postfile `memhold' str45 driver ///
->     low_584 high_584 p_584 ///
->     low_793 high_793 p_793 ///
->     using "$logs/table6_high_low_functional_day1.dta", replace
-{txt}{p 0 4 2}
-(file {bf}
-C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/table6_high_low_functional_day1.dta{rm}
-not found)
-{p_end}
+{com}. tab pathB
 
-{com}. 
-. foreach var in info_useful mag_muscle mag_cramps mag_sugar mag_bone mag_sleep {c -(}
-{txt}  2{com}. 
-.     local lab : variable label `var'
-{txt}  3{com}. 
-.     * Create high vs low groups (median split)
-.     quietly summarize `var', detail
-{txt}  4{com}.     gen high = `var' > r(p50) if !missing(`var')
-{txt}  5{com}. 
-.     * Means for 584
-.     quietly summarize diff_584 if high == 0
-{txt}  6{com}.     local low584 = r(mean)
-{txt}  7{com}. 
-.     quietly summarize diff_584 if high == 1
-{txt}  8{com}.     local high584 = r(mean)
-{txt}  9{com}. 
-.     quietly ttest diff_584, by(high)
-{txt} 10{com}.     local p584 = r(p)
-{txt} 11{com}. 
-.     * Means for 793
-.     quietly summarize diff_793 if high == 0
-{txt} 12{com}.     local low793 = r(mean)
-{txt} 13{com}. 
-.     quietly summarize diff_793 if high == 1
-{txt} 14{com}.     local high793 = r(mean)
-{txt} 15{com}. 
-.     quietly ttest diff_793, by(high)
-{txt} 16{com}.     local p793 = r(p)
-{txt} 17{com}. 
-.     post `memhold' ///
->         ("`lab'") ///
->         (`low584') (`high584') (`p584') ///
->         (`low793') (`high793') (`p793')
-{txt} 18{com}. 
-.     drop high
-{txt} 19{com}. {c )-}
-{txt}(2 missing values generated)
-(2 missing values generated)
-(2 missing values generated)
-(3 missing values generated)
-(4 missing values generated)
-
-{com}. 
-. postclose `memhold'
-{txt}
-{com}. 
-. use "$logs/table6_high_low_functional_day1.dta", clear
-{txt}
-{com}. 
-. label variable driver "Functional benefit driver"
-{txt}
-{com}. label variable low_584 "Low importance mean change (584)"
-{txt}
-{com}. label variable high_584 "High importance mean change (584)"
-{txt}
-{com}. label variable p_584 "p-value (584)"
-{txt}
-{com}. label variable low_793 "Low importance mean change (793)"
-{txt}
-{com}. label variable high_793 "High importance mean change (793)"
-{txt}
-{com}. label variable p_793 "p-value (793)"
-{txt}
-{com}. 
-. list, clean noobs
-{txt}
-    {res}                                driver     low_584   high_584      p_584     low_793    high_793      p_793 {txt} 
-    {res}      Info usefulness (combined A & B)   -.0046296    .203125   .1877921   -.4444444     -.78125   .1064363 {txt} 
-    {res} Magnesium: muscle recovery importance   -.0328947   .1416667   .2039716   -.4342105   -.6333333   .2723249 {txt} 
-    {res} Magnesium: cramp reduction importance   -.0743243   .1854839   .0559782   -.3986486   -.6693549   .1328551 {txt} 
-    {res}     Magnesium: blood sugar importance    .1029412   .0294118   .5686898   -.4485294   -.5514706   .5651268 {txt} 
-    {res}     Magnesium: bone health importance    .0294118   .1060606   .5583357   -.3897059   -.6287879   .1842104 {txt} 
-    {res}Magnesium: sleep/relaxation importance   -.0220588     .15625   .1771711   -.3529412    -.671875   .0795996 {txt} 
-
-{com}. 
-. export delimited using "$logs/table6_high_low_functional_day1.csv", replace
-{res}{txt}{p 0 4 2}
-(file {bf}
-C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/table6_high_low_functional_day1.csv{rm}
-not found)
-{p_end}
-{txt}file {bf:C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/table6_high_low_functional_day1.csv} saved
-
-{com}. 
-{txt}end of do-file
-
-{com}. do "C:\Users\tijer\AppData\Local\Temp\STD41dc_00000q.tmp"
-{txt}
-{com}. 
-. use "$logs/clean_data_day1_drivers.dta", clear
-{txt}
-{com}. 
-. * Create high indicators for each driver
-. foreach var in info_useful mag_muscle mag_cramps mag_sugar mag_bone mag_sleep {c -(}
-{txt}  2{com}.     quietly summarize `var', detail
-{txt}  3{com}.     gen high_`var' = `var' > r(p50) if !missing(`var')
-{txt}  4{com}. {c )-}
-{txt}(2 missing values generated)
-(2 missing values generated)
-(2 missing values generated)
-(3 missing values generated)
-(4 missing values generated)
-
-{com}. 
-. * Count how many "high" drivers each person has
-. egen high_driver_count = rowtotal(high_info_useful high_mag_muscle high_mag_cramps high_mag_sugar high_mag_bone high_mag_sleep)
-{txt}
-{com}. 
-. label variable high_driver_count "Number of high functional benefit ratings"
-{txt}
-{com}. 
-. * Distribution
-. tab high_driver_count
-
-  {txt}Number of {c |}
-       high {c |}
- functional {c |}
-    benefit {c |}
-    ratings {c |}      Freq.     Percent        Cum.
+ {txt}1 = Path B {c |}
+     (taste {c |}
+first), 0 = {c |}
+     Path A {c |}      Freq.     Percent        Cum.
 {hline 12}{c +}{hline 35}
-          0 {c |}{res}         18       25.71       25.71
-{txt}          1 {c |}{res}          8       11.43       37.14
-{txt}          2 {c |}{res}         10       14.29       51.43
-{txt}          3 {c |}{res}          8       11.43       62.86
-{txt}          4 {c |}{res}          9       12.86       75.71
-{txt}          5 {c |}{res}         14       20.00       95.71
-{txt}          6 {c |}{res}          3        4.29      100.00
+          0 {c |}{res}         36       51.43       51.43
+{txt}          1 {c |}{res}         34       48.57      100.00
 {txt}{hline 12}{c +}{hline 35}
       Total {c |}{res}         70      100.00
+
+{com}. do "C:\Users\tijer\AppData\Local\Temp\STD1160_000003.tmp"
+{txt}
+{com}. eststo clear
 {txt}
 {com}. 
-. * Effect on WTP change
-. tabstat diff_584 diff_793, by(high_driver_count) stats(mean sd n)
+{txt}end of do-file
 
-{txt}Summary statistics: Mean, SD, N
-Group variable: high_driver_count (Number of high functional benefit ratings)
-
-{ralign 17:high_driver_count} {...}
-{c |}{...}
-  diff_584  diff_793
-{hline 18}{c +}{hline 20}
-{ralign 17:0} {...}
-{c |}{...}
- {res}-.0416667 -.2916667
-{txt}{space 17} {...}
-{c |}{...}
- {res} .3952847  .5018349
-{txt}{space 17} {...}
-{c |}{...}
- {res}       18        18
-{txt}{hline 18}{c +}{hline 20}
-{ralign 17:1} {...}
-{c |}{...}
- {res}   -.1875   -.53125
-{txt}{space 17} {...}
-{c |}{...}
- {res}  .703943  .6329847
-{txt}{space 17} {...}
-{c |}{...}
- {res}        8         8
-{txt}{hline 18}{c +}{hline 20}
-{ralign 17:2} {...}
-{c |}{...}
- {res}     .025     -.325
-{txt}{space 17} {...}
-{c |}{...}
- {res} .3425801  .4866267
-{txt}{space 17} {...}
-{c |}{...}
- {res}       10        10
-{txt}{hline 18}{c +}{hline 20}
-{ralign 17:3} {...}
-{c |}{...}
- {res}    .0625   -.65625
-{txt}{space 17} {...}
-{c |}{...}
- {res} .8100926  .8756375
-{txt}{space 17} {...}
-{c |}{...}
- {res}        8         8
-{txt}{hline 18}{c +}{hline 20}
-{ralign 17:4} {...}
-{c |}{...}
- {res} .1111111 -.7222222
-{txt}{space 17} {...}
-{c |}{...}
- {res} .3560002  .5921946
-{txt}{space 17} {...}
-{c |}{...}
- {res}        9         9
-{txt}{hline 18}{c +}{hline 20}
-{ralign 17:5} {...}
-{c |}{...}
- {res} .1964286 -.8035714
-{txt}{space 17} {...}
-{c |}{...}
- {res} .7217671  1.029276
-{txt}{space 17} {...}
-{c |}{...}
- {res}       14        14
-{txt}{hline 18}{c +}{hline 20}
-{ralign 17:6} {...}
-{c |}{...}
- {res}      .25      -.25
-{txt}{space 17} {...}
-{c |}{...}
- {res} .4330127  1.145644
-{txt}{space 17} {...}
-{c |}{...}
- {res}        3         3
-{txt}{hline 18}{c +}{hline 20}
-{ralign 17:Total} {...}
-{c |}{...}
- {res} .0428571 -.5214286
-{txt}{space 17} {...}
-{c |}{...}
- {res} .5516304  .7319604
-{txt}{space 17} {...}
-{c |}{...}
- {res}       70        70
-{txt}{hline 18}{c BT}{hline 20}
-
+{com}. do "C:\Users\tijer\AppData\Local\Temp\STD1160_000004.tmp"
+{txt}
 {com}. 
-. export delimited using "$logs/table7_overlap_day1.csv", replace
+. * Model 1: 584 baseline
+. eststo m1: reg diff_584 mag_sleep mag_cramps mag_muscle mag_sugar mag_bone info_useful
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}        65
+{txt}{hline 13}{c +}{hline 34}   F(6, 58)        = {res}     2.44
+{txt}       Model {c |} {res} 3.73352539         6  .622254232   {txt}Prob > F        ={res}    0.0360
+{txt}    Residual {c |} {res}   14.80109        58  .255191207   {txt}R-squared       ={res}    0.2014
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.1188
+{txt}       Total {c |} {res} 18.5346154        64  .289603365   {txt}Root MSE        =   {res} .50516
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}    diff_584{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}mag_sleep {c |}{col 14}{res}{space 2}  .004476{col 26}{space 2} .0028804{col 37}{space 1}    1.55{col 46}{space 3}0.126{col 54}{space 4}-.0012898{col 67}{space 3} .0102418
+{txt}{space 2}mag_cramps {c |}{col 14}{res}{space 2}  .006689{col 26}{space 2} .0039499{col 37}{space 1}    1.69{col 46}{space 3}0.096{col 54}{space 4}-.0012176{col 67}{space 3} .0145955
+{txt}{space 2}mag_muscle {c |}{col 14}{res}{space 2} .0006946{col 26}{space 2} .0038111{col 37}{space 1}    0.18{col 46}{space 3}0.856{col 54}{space 4}-.0069341{col 67}{space 3} .0083233
+{txt}{space 3}mag_sugar {c |}{col 14}{res}{space 2}-.0064276{col 26}{space 2} .0034292{col 37}{space 1}   -1.87{col 46}{space 3}0.066{col 54}{space 4}-.0132919{col 67}{space 3} .0004368
+{txt}{space 4}mag_bone {c |}{col 14}{res}{space 2}-.0016492{col 26}{space 2} .0034786{col 37}{space 1}   -0.47{col 46}{space 3}0.637{col 54}{space 4}-.0086124{col 67}{space 3}  .005314
+{txt}{space 1}info_useful {c |}{col 14}{res}{space 2} .0497048{col 26}{space 2} .0595731{col 37}{space 1}    0.83{col 46}{space 3}0.408{col 54}{space 4}-.0695437{col 67}{space 3} .1689532
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}-.4356006{col 26}{space 2}  .335663{col 37}{space 1}   -1.30{col 46}{space 3}0.200{col 54}{space 4}-1.107503{col 67}{space 3}  .236302
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+. * Model 2: 793 baseline
+. eststo m2: reg diff_793 mag_sleep mag_cramps mag_muscle mag_sugar mag_bone info_useful
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}        65
+{txt}{hline 13}{c +}{hline 34}   F(6, 58)        = {res}     0.94
+{txt}       Model {c |} {res} 3.12159494         6  .520265823   {txt}Prob > F        ={res}    0.4739
+{txt}    Residual {c |} {res} 32.1130204        58  .553672766   {txt}R-squared       ={res}    0.0886
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}   -0.0057
+{txt}       Total {c |} {res} 35.2346154        64  .550540865   {txt}Root MSE        =   {res} .74409
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}    diff_793{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}mag_sleep {c |}{col 14}{res}{space 2}-.0008624{col 26}{space 2} .0042428{col 37}{space 1}   -0.20{col 46}{space 3}0.840{col 54}{space 4}-.0093552{col 67}{space 3} .0076305
+{txt}{space 2}mag_cramps {c |}{col 14}{res}{space 2} .0022443{col 26}{space 2} .0058181{col 37}{space 1}    0.39{col 46}{space 3}0.701{col 54}{space 4}-.0094018{col 67}{space 3} .0138904
+{txt}{space 2}mag_muscle {c |}{col 14}{res}{space 2}-.0108548{col 26}{space 2} .0056136{col 37}{space 1}   -1.93{col 46}{space 3}0.058{col 54}{space 4}-.0220917{col 67}{space 3} .0003821
+{txt}{space 3}mag_sugar {c |}{col 14}{res}{space 2} .0005729{col 26}{space 2} .0050512{col 37}{space 1}    0.11{col 46}{space 3}0.910{col 54}{space 4}-.0095381{col 67}{space 3} .0106839
+{txt}{space 4}mag_bone {c |}{col 14}{res}{space 2} .0023507{col 26}{space 2} .0051239{col 37}{space 1}    0.46{col 46}{space 3}0.648{col 54}{space 4}-.0079058{col 67}{space 3} .0126073
+{txt}{space 1}info_useful {c |}{col 14}{res}{space 2}-.0531561{col 26}{space 2} .0877493{col 37}{space 1}   -0.61{col 46}{space 3}0.547{col 54}{space 4}-.2288054{col 67}{space 3} .1224931
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}  .177693{col 26}{space 2} .4944214{col 37}{space 1}    0.36{col 46}{space 3}0.721{col 54}{space 4}-.8119989{col 67}{space 3} 1.167385
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+. * Model 3: 584 with path control
+. eststo m3: reg diff_584 mag_sleep mag_cramps mag_muscle mag_sugar mag_bone info_useful pathB
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}        65
+{txt}{hline 13}{c +}{hline 34}   F(7, 57)        = {res}     2.43
+{txt}       Model {c |} {res} 4.25852322         7  .608360459   {txt}Prob > F        ={res}    0.0300
+{txt}    Residual {c |} {res} 14.2760922        57  .250457757   {txt}R-squared       ={res}    0.2298
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.1352
+{txt}       Total {c |} {res} 18.5346154        64  .289603365   {txt}Root MSE        =   {res} .50046
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}    diff_584{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}mag_sleep {c |}{col 14}{res}{space 2} .0044864{col 26}{space 2} .0028536{col 37}{space 1}    1.57{col 46}{space 3}0.121{col 54}{space 4}-.0012278{col 67}{space 3} .0102006
+{txt}{space 2}mag_cramps {c |}{col 14}{res}{space 2} .0056818{col 26}{space 2} .0039744{col 37}{space 1}    1.43{col 46}{space 3}0.158{col 54}{space 4}-.0022768{col 67}{space 3} .0136405
+{txt}{space 2}mag_muscle {c |}{col 14}{res}{space 2} .0006321{col 26}{space 2} .0037758{col 37}{space 1}    0.17{col 46}{space 3}0.868{col 54}{space 4}-.0069289{col 67}{space 3} .0081931
+{txt}{space 3}mag_sugar {c |}{col 14}{res}{space 2} -.005744{col 26}{space 2} .0034299{col 37}{space 1}   -1.67{col 46}{space 3}0.099{col 54}{space 4}-.0126123{col 67}{space 3} .0011243
+{txt}{space 4}mag_bone {c |}{col 14}{res}{space 2}-.0012748{col 26}{space 2} .0034559{col 37}{space 1}   -0.37{col 46}{space 3}0.714{col 54}{space 4}-.0081951{col 67}{space 3} .0056454
+{txt}{space 1}info_useful {c |}{col 14}{res}{space 2} .0552051{col 26}{space 2} .0591401{col 37}{space 1}    0.93{col 46}{space 3}0.355{col 54}{space 4} -.063221{col 67}{space 3} .1736311
+{txt}{space 7}pathB {c |}{col 14}{res}{space 2} .1870631{col 26}{space 2} .1292042{col 37}{space 1}    1.45{col 46}{space 3}0.153{col 54}{space 4}-.0716638{col 67}{space 3} .4457901
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}-.5473136{col 26}{space 2}   .34137{col 37}{space 1}   -1.60{col 46}{space 3}0.114{col 54}{space 4}-1.230895{col 67}{space 3}  .136268
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+. * Model 4: 793 with path control
+. eststo m4: reg diff_793 mag_sleep mag_cramps mag_muscle mag_sugar mag_bone info_useful pathB
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}        65
+{txt}{hline 13}{c +}{hline 34}   F(7, 57)        = {res}     2.47
+{txt}       Model {c |} {res} 8.19672444         7  1.17096063   {txt}Prob > F        ={res}    0.0277
+{txt}    Residual {c |} {res} 27.0378909        57  .474348964   {txt}R-squared       ={res}    0.2326
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.1384
+{txt}       Total {c |} {res} 35.2346154        64  .550540865   {txt}Root MSE        =   {res} .68873
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}    diff_793{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}mag_sleep {c |}{col 14}{res}{space 2}-.0008299{col 26}{space 2} .0039271{col 37}{space 1}   -0.21{col 46}{space 3}0.833{col 54}{space 4}-.0086939{col 67}{space 3}  .007034
+{txt}{space 2}mag_cramps {c |}{col 14}{res}{space 2}-.0008871{col 26}{space 2} .0054696{col 37}{space 1}   -0.16{col 46}{space 3}0.872{col 54}{space 4}-.0118399{col 67}{space 3} .0100656
+{txt}{space 2}mag_muscle {c |}{col 14}{res}{space 2}-.0110491{col 26}{space 2} .0051963{col 37}{space 1}   -2.13{col 46}{space 3}0.038{col 54}{space 4}-.0214545{col 67}{space 3}-.0006436
+{txt}{space 3}mag_sugar {c |}{col 14}{res}{space 2} .0026982{col 26}{space 2} .0047203{col 37}{space 1}    0.57{col 46}{space 3}0.570{col 54}{space 4} -.006754{col 67}{space 3} .0121504
+{txt}{space 4}mag_bone {c |}{col 14}{res}{space 2} .0035147{col 26}{space 2}  .004756{col 37}{space 1}    0.74{col 46}{space 3}0.463{col 54}{space 4} -.006009{col 67}{space 3} .0130384
+{txt}{space 1}info_useful {c |}{col 14}{res}{space 2}-.0360548{col 26}{space 2} .0813887{col 37}{space 1}   -0.44{col 46}{space 3}0.659{col 54}{space 4}-.1990328{col 67}{space 3} .1269232
+{txt}{space 7}pathB {c |}{col 14}{res}{space 2} .5816115{col 26}{space 2} .1778109{col 37}{space 1}    3.27{col 46}{space 3}0.002{col 54}{space 4} .2255513{col 67}{space 3} .9376717
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} -.169642{col 26}{space 2} .4697936{col 37}{space 1}   -0.36{col 46}{space 3}0.719{col 54}{space 4}-1.110387{col 67}{space 3} .7711034
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+. esttab m1 m2 m3 m4 using "$logs/table4_regression_updated.rtf", ///
+>     replace se b(3) se(3) ///
+>     star(* 0.10 ** 0.05 *** 0.01) ///
+>     title("Regression Results: Drivers of WTP Change with Path Control") ///
+>     mtitles("584" "793" "584 + Path" "793 + Path") ///
+>     label
 {res}{txt}{p 0 4 2}
 (file {bf}
-C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/table7_overlap_day1.csv{rm}
+C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/table4_regression_updated.rtf{rm}
 not found)
 {p_end}
-{txt}file {bf:C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/table7_overlap_day1.csv} saved
+{res}{txt}(output written to {browse  `"C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/table4_regression_updated.rtf"'})
 
 {com}. 
 {txt}end of do-file
 
-{com}. exit, clear
+{com}. do "C:\Users\tijer\AppData\Local\Temp\STD1160_000005.tmp"
+{txt}
+{com}. 
+. use "$logs/clean_data_day1_drivers.dta", clear
+{txt}
+{com}. 
+. gen pathB = inlist(randomizer, 1, 2)
+{txt}
+{com}. label variable pathB "1 = Path B (taste first), 0 = Path A"
+{txt}
+{com}. 
+. eststo clear
+{txt}
+{com}. 
+. * Model 1: 584 baseline
+. eststo m1: reg diff_584 mag_sleep mag_cramps mag_muscle mag_sugar mag_bone info_useful
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}        65
+{txt}{hline 13}{c +}{hline 34}   F(6, 58)        = {res}     2.44
+{txt}       Model {c |} {res} 3.73352539         6  .622254232   {txt}Prob > F        ={res}    0.0360
+{txt}    Residual {c |} {res}   14.80109        58  .255191207   {txt}R-squared       ={res}    0.2014
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.1188
+{txt}       Total {c |} {res} 18.5346154        64  .289603365   {txt}Root MSE        =   {res} .50516
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}    diff_584{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}mag_sleep {c |}{col 14}{res}{space 2}  .004476{col 26}{space 2} .0028804{col 37}{space 1}    1.55{col 46}{space 3}0.126{col 54}{space 4}-.0012898{col 67}{space 3} .0102418
+{txt}{space 2}mag_cramps {c |}{col 14}{res}{space 2}  .006689{col 26}{space 2} .0039499{col 37}{space 1}    1.69{col 46}{space 3}0.096{col 54}{space 4}-.0012176{col 67}{space 3} .0145955
+{txt}{space 2}mag_muscle {c |}{col 14}{res}{space 2} .0006946{col 26}{space 2} .0038111{col 37}{space 1}    0.18{col 46}{space 3}0.856{col 54}{space 4}-.0069341{col 67}{space 3} .0083233
+{txt}{space 3}mag_sugar {c |}{col 14}{res}{space 2}-.0064276{col 26}{space 2} .0034292{col 37}{space 1}   -1.87{col 46}{space 3}0.066{col 54}{space 4}-.0132919{col 67}{space 3} .0004368
+{txt}{space 4}mag_bone {c |}{col 14}{res}{space 2}-.0016492{col 26}{space 2} .0034786{col 37}{space 1}   -0.47{col 46}{space 3}0.637{col 54}{space 4}-.0086124{col 67}{space 3}  .005314
+{txt}{space 1}info_useful {c |}{col 14}{res}{space 2} .0497048{col 26}{space 2} .0595731{col 37}{space 1}    0.83{col 46}{space 3}0.408{col 54}{space 4}-.0695437{col 67}{space 3} .1689532
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}-.4356006{col 26}{space 2}  .335663{col 37}{space 1}   -1.30{col 46}{space 3}0.200{col 54}{space 4}-1.107503{col 67}{space 3}  .236302
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+. * Model 2: 793 baseline
+. eststo m2: reg diff_793 mag_sleep mag_cramps mag_muscle mag_sugar mag_bone info_useful
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}        65
+{txt}{hline 13}{c +}{hline 34}   F(6, 58)        = {res}     0.94
+{txt}       Model {c |} {res} 3.12159494         6  .520265823   {txt}Prob > F        ={res}    0.4739
+{txt}    Residual {c |} {res} 32.1130204        58  .553672766   {txt}R-squared       ={res}    0.0886
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}   -0.0057
+{txt}       Total {c |} {res} 35.2346154        64  .550540865   {txt}Root MSE        =   {res} .74409
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}    diff_793{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}mag_sleep {c |}{col 14}{res}{space 2}-.0008624{col 26}{space 2} .0042428{col 37}{space 1}   -0.20{col 46}{space 3}0.840{col 54}{space 4}-.0093552{col 67}{space 3} .0076305
+{txt}{space 2}mag_cramps {c |}{col 14}{res}{space 2} .0022443{col 26}{space 2} .0058181{col 37}{space 1}    0.39{col 46}{space 3}0.701{col 54}{space 4}-.0094018{col 67}{space 3} .0138904
+{txt}{space 2}mag_muscle {c |}{col 14}{res}{space 2}-.0108548{col 26}{space 2} .0056136{col 37}{space 1}   -1.93{col 46}{space 3}0.058{col 54}{space 4}-.0220917{col 67}{space 3} .0003821
+{txt}{space 3}mag_sugar {c |}{col 14}{res}{space 2} .0005729{col 26}{space 2} .0050512{col 37}{space 1}    0.11{col 46}{space 3}0.910{col 54}{space 4}-.0095381{col 67}{space 3} .0106839
+{txt}{space 4}mag_bone {c |}{col 14}{res}{space 2} .0023507{col 26}{space 2} .0051239{col 37}{space 1}    0.46{col 46}{space 3}0.648{col 54}{space 4}-.0079058{col 67}{space 3} .0126073
+{txt}{space 1}info_useful {c |}{col 14}{res}{space 2}-.0531561{col 26}{space 2} .0877493{col 37}{space 1}   -0.61{col 46}{space 3}0.547{col 54}{space 4}-.2288054{col 67}{space 3} .1224931
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}  .177693{col 26}{space 2} .4944214{col 37}{space 1}    0.36{col 46}{space 3}0.721{col 54}{space 4}-.8119989{col 67}{space 3} 1.167385
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+. * Model 3: 584 with path control
+. eststo m3: reg diff_584 mag_sleep mag_cramps mag_muscle mag_sugar mag_bone info_useful pathB
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}        65
+{txt}{hline 13}{c +}{hline 34}   F(7, 57)        = {res}     2.43
+{txt}       Model {c |} {res} 4.25852322         7  .608360459   {txt}Prob > F        ={res}    0.0300
+{txt}    Residual {c |} {res} 14.2760922        57  .250457757   {txt}R-squared       ={res}    0.2298
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.1352
+{txt}       Total {c |} {res} 18.5346154        64  .289603365   {txt}Root MSE        =   {res} .50046
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}    diff_584{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}mag_sleep {c |}{col 14}{res}{space 2} .0044864{col 26}{space 2} .0028536{col 37}{space 1}    1.57{col 46}{space 3}0.121{col 54}{space 4}-.0012278{col 67}{space 3} .0102006
+{txt}{space 2}mag_cramps {c |}{col 14}{res}{space 2} .0056818{col 26}{space 2} .0039744{col 37}{space 1}    1.43{col 46}{space 3}0.158{col 54}{space 4}-.0022768{col 67}{space 3} .0136405
+{txt}{space 2}mag_muscle {c |}{col 14}{res}{space 2} .0006321{col 26}{space 2} .0037758{col 37}{space 1}    0.17{col 46}{space 3}0.868{col 54}{space 4}-.0069289{col 67}{space 3} .0081931
+{txt}{space 3}mag_sugar {c |}{col 14}{res}{space 2} -.005744{col 26}{space 2} .0034299{col 37}{space 1}   -1.67{col 46}{space 3}0.099{col 54}{space 4}-.0126123{col 67}{space 3} .0011243
+{txt}{space 4}mag_bone {c |}{col 14}{res}{space 2}-.0012748{col 26}{space 2} .0034559{col 37}{space 1}   -0.37{col 46}{space 3}0.714{col 54}{space 4}-.0081951{col 67}{space 3} .0056454
+{txt}{space 1}info_useful {c |}{col 14}{res}{space 2} .0552051{col 26}{space 2} .0591401{col 37}{space 1}    0.93{col 46}{space 3}0.355{col 54}{space 4} -.063221{col 67}{space 3} .1736311
+{txt}{space 7}pathB {c |}{col 14}{res}{space 2} .1870631{col 26}{space 2} .1292042{col 37}{space 1}    1.45{col 46}{space 3}0.153{col 54}{space 4}-.0716638{col 67}{space 3} .4457901
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}-.5473136{col 26}{space 2}   .34137{col 37}{space 1}   -1.60{col 46}{space 3}0.114{col 54}{space 4}-1.230895{col 67}{space 3}  .136268
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+. * Model 4: 793 with path control
+. eststo m4: reg diff_793 mag_sleep mag_cramps mag_muscle mag_sugar mag_bone info_useful pathB
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}        65
+{txt}{hline 13}{c +}{hline 34}   F(7, 57)        = {res}     2.47
+{txt}       Model {c |} {res} 8.19672444         7  1.17096063   {txt}Prob > F        ={res}    0.0277
+{txt}    Residual {c |} {res} 27.0378909        57  .474348964   {txt}R-squared       ={res}    0.2326
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.1384
+{txt}       Total {c |} {res} 35.2346154        64  .550540865   {txt}Root MSE        =   {res} .68873
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}    diff_793{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 3}mag_sleep {c |}{col 14}{res}{space 2}-.0008299{col 26}{space 2} .0039271{col 37}{space 1}   -0.21{col 46}{space 3}0.833{col 54}{space 4}-.0086939{col 67}{space 3}  .007034
+{txt}{space 2}mag_cramps {c |}{col 14}{res}{space 2}-.0008871{col 26}{space 2} .0054696{col 37}{space 1}   -0.16{col 46}{space 3}0.872{col 54}{space 4}-.0118399{col 67}{space 3} .0100656
+{txt}{space 2}mag_muscle {c |}{col 14}{res}{space 2}-.0110491{col 26}{space 2} .0051963{col 37}{space 1}   -2.13{col 46}{space 3}0.038{col 54}{space 4}-.0214545{col 67}{space 3}-.0006436
+{txt}{space 3}mag_sugar {c |}{col 14}{res}{space 2} .0026982{col 26}{space 2} .0047203{col 37}{space 1}    0.57{col 46}{space 3}0.570{col 54}{space 4} -.006754{col 67}{space 3} .0121504
+{txt}{space 4}mag_bone {c |}{col 14}{res}{space 2} .0035147{col 26}{space 2}  .004756{col 37}{space 1}    0.74{col 46}{space 3}0.463{col 54}{space 4} -.006009{col 67}{space 3} .0130384
+{txt}{space 1}info_useful {c |}{col 14}{res}{space 2}-.0360548{col 26}{space 2} .0813887{col 37}{space 1}   -0.44{col 46}{space 3}0.659{col 54}{space 4}-.1990328{col 67}{space 3} .1269232
+{txt}{space 7}pathB {c |}{col 14}{res}{space 2} .5816115{col 26}{space 2} .1778109{col 37}{space 1}    3.27{col 46}{space 3}0.002{col 54}{space 4} .2255513{col 67}{space 3} .9376717
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} -.169642{col 26}{space 2} .4697936{col 37}{space 1}   -0.36{col 46}{space 3}0.719{col 54}{space 4}-1.110387{col 67}{space 3} .7711034
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+. esttab m1 m2 m3 m4 using "$logs/table4_regression_updated.rtf", ///
+>     replace se b(3) se(3) ///
+>     star(* 0.10 ** 0.05 *** 0.01) ///
+>     title("Table 4. Regression Results: Functional Benefit Drivers and Pathway Effects") ///
+>     mtitles("584: Benefits Only" "793: Benefits Only" ///
+>             "584: Benefits + Path B Dummy" "793: Benefits + Path B Dummy") ///
+>     label ///
+>     addnotes("Path B dummy = 1 if tasting occurred before magnesium information; 0 if information occurred before tasting.", ///
+>              "Dependent variables are WTP change: Product 584 and Product 793.", ///
+>              "Positive coefficients indicate higher WTP change; negative coefficients indicate lower WTP change.")
+{res}{txt}(output written to {browse  `"C:/Users/tijer/OneDrive - University of Arizona/AREC 397C/AREC-397C/logs/table4_regression_updated.rtf"'})
+
+{com}.         
+. 
+{txt}end of do-file
+
+{com}. 
