@@ -2,7 +2,7 @@
 * assignment: 1
 * created on: 7 april 2026
 * created by: jmt
-* edited on: 27 april 2026
+* edited on: 4 may 2026
 * edited by: jmt
 * Stata v.19.5
 
@@ -515,38 +515,75 @@ save "$logs/clean_data_day1_drivers.dta", replace
 **********************************************************************
 use "$logs/clean_data_day1_drivers.dta", clear
 
-* Pathway dummy based on random assignment
-* randomizer 1 or 2 = Path B (taste first)
-* randomizer 3 or 4 = Path A (info first)
-gen pathA = inlist(randomizer, 3, 4)
-label variable pathA "Path A dummy: info first"
+gen pathway = .
+replace pathway = 0 if inlist(randomizer, 1, 2)   // Path B: taste first
+replace pathway = 1 if inlist(randomizer, 3, 4)   // Path A: info first
+
+label define pathway_lbl 0 "Path B: taste first" 1 "Path A: info first"
+label values pathway pathway_lbl
+label variable pathway "Randomized information pathway"
 
 eststo clear
 
-* Model 1: 584 benefits only
 eststo m1: reg diff_584 mag_sleep mag_cramps mag_muscle mag_sugar mag_bone info_useful
 
-* Model 2: 793 benefits only
 eststo m2: reg diff_793 mag_sleep mag_cramps mag_muscle mag_sugar mag_bone info_useful
 
-* Model 3: 584 with path control
-eststo m3: reg diff_584 mag_sleep mag_cramps mag_muscle mag_sugar mag_bone info_useful pathA
+eststo m3: reg diff_584 mag_sleep mag_cramps mag_muscle mag_sugar mag_bone info_useful i.pathway
 
-* Model 4: 793 with path control
-eststo m4: reg diff_793 mag_sleep mag_cramps mag_muscle mag_sugar mag_bone info_useful pathA
+eststo m4: reg diff_793 mag_sleep mag_cramps mag_muscle mag_sugar mag_bone info_useful i.pathway
+
 
 esttab m1 m2 m3 m4 using "$logs/table4_regression_updated.rtf", ///
     replace se b(3) se(3) ///
     star(* 0.10 ** 0.05 *** 0.01) ///
-    title("Table 4. Regression Results: Functional Benefit Drivers and Pathway Effects") ///
+    title("Table 4. Regression Results: Functional Benefit Drivers and Pathway Controls") ///
     mtitles("584: Benefits Only" "793: Benefits Only" ///
-            "584: Benefits + Path A" "793: Benefits + Path A") ///
+            "584: + Pathway Control" "793: + Pathway Control") ///
     label ///
-    addnotes("Path A dummy = 1 if information occurred before tasting; 0 if tasting occurred before information.", ///
-             "Dependent variables are WTP change: Product 584 and Product 793.", ///
-             "Positive coefficients indicate higher WTP change; negative coefficients indicate lower WTP change.")
-	
-kjkjkjkjkjk
+    addnotes("Pathway is the randomized survey sequence: Path B = tasting first; Path A = information first.", ///
+             "Models 3 and 4 include i.pathway to control for randomized pathway assignment.", ///
+             "Dependent variables are WTP change for Product 584 and Product 793.")
+			 
+
+**********************************************************************
+**# 15 - Information Effect on WTP (Day 1)
+**********************************************************************
+****************************************************************************
+use "$logs/clean_data_day1_584_793.dta", clear
+
+* create pathway variable
+gen pathway = .
+replace pathway = 0 if inlist(randomizer, 1, 2)   // Path B
+replace pathway = 1 if inlist(randomizer, 3, 4)   // Path A
+
+label define pathway_lbl 0 "Path B: taste first" 1 "Path A: info first"
+label values pathway pathway_lbl
+
+eststo clear
+
+* Model 1: 584 info effect
+eststo m1: reg diff_584
+
+* Model 2: 793 info effect
+eststo m2: reg diff_793
+
+* Model 3: 584 info effect + pathway control
+eststo m3: reg diff_584 i.pathway
+
+* Model 4: 793 info effect + pathway control
+eststo m4: reg diff_793 i.pathway
+
+esttab m1 m2 m3 m4 using "$logs/table_info_effect.rtf", ///
+    replace se b(3) se(3) ///
+    star(* 0.10 ** 0.05 *** 0.01) ///
+    title("Regression Results: Information Effect on WTP") ///
+    mtitles("584" "793" "584 + Pathway" "793 + Pathway") ///
+    label ///
+    addnotes("Dependent variable is WTP change (info effect).", ///
+             "Pathway is randomly assigned: Path A = info first, Path B = taste first.")
+			 
+			 
 **********************************************************************
 **# 15 - Table 5: Demographic drivers of WTP change (Day 1)
 **********************************************************************
