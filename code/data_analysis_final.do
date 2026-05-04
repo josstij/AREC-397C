@@ -833,301 +833,637 @@
 * wtp_1 compared to the baseline of 2.5: both days
 	ttest			wtp_1 == 2.50
 	
+	
 * wtp_1 compared to the baseline of 2.5 for day 1
 	ttest			wtp_1 == 2.50 if day == 1
 	
 * wtp_1 compared to the baseline of 2.5 for day 2
 	ttest			wtp_1 == 2.50 if day == 2
 
-	
-********************************************************************************
-**### Info Effect
-********************************************************************************
+**### export wtp_1 ttests
 
-* Testing whether the difference is different from zero
-	
-* Info eff 584
-	ttest			info_eff_584 == 0 if day == 1
-	
-*Info eff  793
-	ttest 			info_eff_793 == 0 if day == 1
-	
-* Info eff 356
-	ttest			info_eff_356 == 0 if day == 2
-		
-* Info eff 831
-	ttest			info_eff_831 == 0 if day == 2
-	
-	
 ********************************************************************************
-**### Tasting Effect
+**## wtp_1 ttests
 ********************************************************************************
 
-* Testing whether the differnce is differnt from zero
+	tempfile wtp1_ttests
+	postutil clear
 
-* Tasting eff 584 
-	ttest				taste_eff_584 == 0 if day == 1
+	postfile			wtp1_post ///
+							str20 sample ///
+							double N ///
+							double mean ///
+							double diff_from_250 ///
+							double se ///
+							double t_stat ///
+							double df ///
+							double p_value ///
+							double ci_low ///
+							double ci_high ///
+							using "`wtp1_ttests'", replace
 
-* Tasting eff 793
-* Test whether the tasting effect differs from zero.
-	ttest				taste_eff_793 == 0 if day == 1
 
-* Tasting eff  356
-* Test whether the tasting effect differs from zero.
-	ttest				taste_eff_356 == 0 if day == 2
-
-* Tasting eff 831
-* Test whether the tasting effect differs from zero.
-	ttest				taste_eff_831 == 0 if day == 2
+* wtp_1 compared to the baseline of 2.5: both days
+	ttest			wtp_1 == 2.50
 	
-	
-********************************************************************************
-**# Export one-sample t-tests to CSV
-********************************************************************************
+	local N			= r(N_1)
+	local mean		= r(mu_1)
+	local diff		= r(mu_1) - 2.50
+	local se		= r(se)
+	local t_stat	= r(t)
+	local df		= r(df_t)
+	local p_value	= r(p)
+	local tcrit		= invttail(`df', .025)
+	local ci_low	= `diff' - `tcrit' * `se'
+	local ci_high	= `diff' + `tcrit' * `se'
 
-capture program drop post_one_sample_ttest
-
-program define post_one_sample_ttest
-	syntax varname [if], Null(real) Test(string) Group(string) Handle(name)
-
-	quietly ttest		`varlist' == `null' `if'
-
-	local N				= r(N_1)
-	local mean			= r(mu_1)
-	local sd			= r(sd_1)
-	local se			= r(se)
-	local diff			= r(mu_1) - `null'
-	local tstat			= r(t)
-	local df			= r(df_t)
-	local pval			= r(p)
-
-* confidence interval for the difference from the null value
-	local tcrit			= invttail(`df', .025)
-	local ci_low		= `diff' - `tcrit' * `se'
-	local ci_high		= `diff' + `tcrit' * `se'
-
-	post `handle'		("`group'") ///
-						("`test'") ///
-						("`varlist'") ///
-						(`null') ///
+	post wtp1_post	("Both days") ///
 						(`N') ///
 						(`mean') ///
 						(`diff') ///
-						(`sd') ///
 						(`se') ///
-						(`tstat') ///
+						(`t_stat') ///
 						(`df') ///
-						(`pval') ///
+						(`p_value') ///
 						(`ci_low') ///
 						(`ci_high')
-end
+	
+	
+* wtp_1 compared to the baseline of 2.5 for day 1
+	ttest			wtp_1 == 2.50 if day == 1
+	
+	local N			= r(N_1)
+	local mean		= r(mu_1)
+	local diff		= r(mu_1) - 2.50
+	local se		= r(se)
+	local t_stat	= r(t)
+	local df		= r(df_t)
+	local p_value	= r(p)
+	local tcrit		= invttail(`df', .025)
+	local ci_low	= `diff' - `tcrit' * `se'
+	local ci_high	= `diff' + `tcrit' * `se'
+
+	post wtp1_post	("Day 1") ///
+						(`N') ///
+						(`mean') ///
+						(`diff') ///
+						(`se') ///
+						(`t_stat') ///
+						(`df') ///
+						(`p_value') ///
+						(`ci_low') ///
+						(`ci_high')
+	
+	
+* wtp_1 compared to the baseline of 2.5 for day 2
+	ttest			wtp_1 == 2.50 if day == 2
+	
+	local N			= r(N_1)
+	local mean		= r(mu_1)
+	local diff		= r(mu_1) - 2.50
+	local se		= r(se)
+	local t_stat	= r(t)
+	local df		= r(df_t)
+	local p_value	= r(p)
+	local tcrit		= invttail(`df', .025)
+	local ci_low	= `diff' - `tcrit' * `se'
+	local ci_high	= `diff' + `tcrit' * `se'
+
+	post wtp1_post	("Day 2") ///
+						(`N') ///
+						(`mean') ///
+						(`diff') ///
+						(`se') ///
+						(`t_stat') ///
+						(`df') ///
+						(`p_value') ///
+						(`ci_low') ///
+						(`ci_high')
+
+	postclose			wtp1_post
 
 
 ********************************************************************************
-**## Run t-tests and export results
+**## Export wtp_1 ttests
 ********************************************************************************
 
 preserve
 
-	tempfile ttest_results
+	use				"`wtp1_ttests'", clear
+
+	format			mean diff_from_250 se t_stat p_value ci_low ci_high %9.4f
+	format			N df %9.0f
+
+	export delimited using "$final_output/wtp_1_ttests.csv", replace
+
+restore
+	
+	
+********************************************************************************
+**## Info Effect
+********************************************************************************
+
+	tempfile info_eff_ttests
 	postutil clear
 
-	postfile ttest_post ///
-		str30 group ///
-		str60 test ///
-		str25 variable ///
-		double null_value ///
-		double N ///
-		double mean ///
-		double diff_from_null ///
-		double sd ///
-		double se ///
-		double t_stat ///
-		double df ///
-		double p_value ///
-		double ci_low_diff ///
-		double ci_high_diff ///
-		using "`ttest_results'", replace
+	postfile			info_post ///
+							str20 product ///
+							str20 sample ///
+							double N ///
+							double mean ///
+							double diff_from_zero ///
+							double se ///
+							double t_stat ///
+							double df ///
+							double p_value ///
+							double ci_low ///
+							double ci_high ///
+							using "`info_eff_ttests'", replace
+
+
+* Testing whether the difference is different from zero
+
+* Info eff 584
+	ttest			info_eff_584 == 0 if day == 1
+	
+	local N			= r(N_1)
+	local mean		= r(mu_1)
+	local diff		= r(mu_1)
+	local se		= r(se)
+	local t_stat	= r(t)
+	local df		= r(df_t)
+	local p_value	= r(p)
+	local tcrit		= invttail(`df', .025)
+	local ci_low	= `diff' - `tcrit' * `se'
+	local ci_high	= `diff' + `tcrit' * `se'
+
+	post info_post	("584") ///
+						("Day 1") ///
+						(`N') ///
+						(`mean') ///
+						(`diff') ///
+						(`se') ///
+						(`t_stat') ///
+						(`df') ///
+						(`p_value') ///
+						(`ci_low') ///
+						(`ci_high')
+	
+	
+* Info eff 793
+	ttest			info_eff_793 == 0 if day == 1
+	
+	local N			= r(N_1)
+	local mean		= r(mu_1)
+	local diff		= r(mu_1)
+	local se		= r(se)
+	local t_stat	= r(t)
+	local df		= r(df_t)
+	local p_value	= r(p)
+	local tcrit		= invttail(`df', .025)
+	local ci_low	= `diff' - `tcrit' * `se'
+	local ci_high	= `diff' + `tcrit' * `se'
+
+	post info_post	("793") ///
+						("Day 1") ///
+						(`N') ///
+						(`mean') ///
+						(`diff') ///
+						(`se') ///
+						(`t_stat') ///
+						(`df') ///
+						(`p_value') ///
+						(`ci_low') ///
+						(`ci_high')
+	
+	
+* Info eff 356
+	ttest			info_eff_356 == 0 if day == 2
+	
+	local N			= r(N_1)
+	local mean		= r(mu_1)
+	local diff		= r(mu_1)
+	local se		= r(se)
+	local t_stat	= r(t)
+	local df		= r(df_t)
+	local p_value	= r(p)
+	local tcrit		= invttail(`df', .025)
+	local ci_low	= `diff' - `tcrit' * `se'
+	local ci_high	= `diff' + `tcrit' * `se'
+
+	post info_post	("356") ///
+						("Day 2") ///
+						(`N') ///
+						(`mean') ///
+						(`diff') ///
+						(`se') ///
+						(`t_stat') ///
+						(`df') ///
+						(`p_value') ///
+						(`ci_low') ///
+						(`ci_high')
+	
+	
+* Info eff 831
+	ttest			info_eff_831 == 0 if day == 2
+	
+	local N			= r(N_1)
+	local mean		= r(mu_1)
+	local diff		= r(mu_1)
+	local se		= r(se)
+	local t_stat	= r(t)
+	local df		= r(df_t)
+	local p_value	= r(p)
+	local tcrit		= invttail(`df', .025)
+	local ci_low	= `diff' - `tcrit' * `se'
+	local ci_high	= `diff' + `tcrit' * `se'
+
+	post info_post	("831") ///
+						("Day 2") ///
+						(`N') ///
+						(`mean') ///
+						(`diff') ///
+						(`se') ///
+						(`t_stat') ///
+						(`df') ///
+						(`p_value') ///
+						(`ci_low') ///
+						(`ci_high')
+
+postclose			info_post
 
 
 ********************************************************************************
-**## Baseline WTP
+**## Export info-effect ttests
 ********************************************************************************
 
-	post_one_sample_ttest	wtp_1, ///
-								null(2.50) ///
-								test("Baseline WTP: full sample") ///
-								group("Baseline WTP") ///
-								handle(ttest_post)
+	preserve
 
-	post_one_sample_ttest	wtp_1 if day == 1, ///
-								null(2.50) ///
-								test("Baseline WTP: Day 1") ///
-								group("Baseline WTP") ///
-								handle(ttest_post)
+	use				"`info_eff_ttests'", clear
 
-	post_one_sample_ttest	wtp_1 if day == 2, ///
-								null(2.50) ///
-								test("Baseline WTP: Day 2") ///
-								group("Baseline WTP") ///
-								handle(ttest_post)
+	format			mean diff_from_zero se t_stat p_value ci_low ci_high %9.4f
+	format			N df %9.0f
+
+	export delimited using "$final_output/info_effect_ttests.csv", replace
+
+restore
+	
+
+	
+********************************************************************************
+**## Tasting Effect
+********************************************************************************
+
+	tempfile taste_eff_ttests
+	postutil clear
+
+	postfile			taste_post ///
+							str20 product ///
+							str20 sample ///
+							double N ///
+							double mean ///
+							double diff_from_zero ///
+							double se ///
+							double t_stat ///
+							double df ///
+							double p_value ///
+							double ci_low ///
+							double ci_high ///
+							using "`taste_eff_ttests'", replace
+
+
+* Testing whether the difference is different from zero
+
+* Tasting eff 584
+		ttest				taste_eff_584 == 0 if day == 1
+			
+		local N			= r(N_1)
+		local mean		= r(mu_1)
+		local diff		= r(mu_1)
+		local se		= r(se)
+		local t_stat	= r(t)
+		local df		= r(df_t)
+		local p_value	= r(p)
+		local tcrit		= invttail(`df', .025)
+		local ci_low	= `diff' - `tcrit' * `se'
+		local ci_high	= `diff' + `tcrit' * `se'
+	
+		post 			taste_post	("584") ///
+							("Day 1") ///
+							(`N') ///
+							(`mean') ///
+							(`diff') ///
+							(`se') ///
+							(`t_stat') ///
+							(`df') ///
+							(`p_value') ///
+							(`ci_low') ///
+							(`ci_high')
+
+
+* Tasting eff 793
+	ttest			taste_eff_793 == 0 if day == 1
+	
+	local N			= r(N_1)
+	local mean		= r(mu_1)
+	local diff		= r(mu_1)
+	local se		= r(se)
+	local t_stat	= r(t)
+	local df		= r(df_t)
+	local p_value	= r(p)
+	local tcrit		= invttail(`df', .025)
+	local ci_low	= `diff' - `tcrit' * `se'
+	local ci_high	= `diff' + `tcrit' * `se'
+
+	post taste_post	("793") ///
+						("Day 1") ///
+						(`N') ///
+						(`mean') ///
+						(`diff') ///
+						(`se') ///
+						(`t_stat') ///
+						(`df') ///
+						(`p_value') ///
+						(`ci_low') ///
+						(`ci_high')
+
+
+* Tasting eff 356
+	ttest			taste_eff_356 == 0 if day == 2
+	
+	local N			= r(N_1)
+	local mean		= r(mu_1)
+	local diff		= r(mu_1)
+	local se		= r(se)
+	local t_stat	= r(t)
+	local df		= r(df_t)
+	local p_value	= r(p)
+	local tcrit		= invttail(`df', .025)
+	local ci_low	= `diff' - `tcrit' * `se'
+	local ci_high	= `diff' + `tcrit' * `se'
+
+	post taste_post	("356") ///
+						("Day 2") ///
+						(`N') ///
+						(`mean') ///
+						(`diff') ///
+						(`se') ///
+						(`t_stat') ///
+						(`df') ///
+						(`p_value') ///
+						(`ci_low') ///
+						(`ci_high')
+
+
+* Tasting eff 831
+	ttest			taste_eff_831 == 0 if day == 2
+	
+	local N			= r(N_1)
+	local mean		= r(mu_1)
+	local diff		= r(mu_1)
+	local se		= r(se)
+	local t_stat	= r(t)
+	local df		= r(df_t)
+	local p_value	= r(p)
+	local tcrit		= invttail(`df', .025)
+	local ci_low	= `diff' - `tcrit' * `se'
+	local ci_high	= `diff' + `tcrit' * `se'
+
+	post taste_post	("831") ///
+						("Day 2") ///
+						(`N') ///
+						(`mean') ///
+						(`diff') ///
+						(`se') ///
+						(`t_stat') ///
+						(`df') ///
+						(`p_value') ///
+						(`ci_low') ///
+						(`ci_high')
+
+postclose			taste_post
 
 
 ********************************************************************************
-**## Information effects
+**### Export tasting-effect ttests
 ********************************************************************************
 
-	post_one_sample_ttest	info_eff_584 if day == 1, ///
-								null(0) ///
-								test("Information effect: Day 1 Product 584") ///
-								group("Information Effects") ///
-								handle(ttest_post)
+preserve
 
-	post_one_sample_ttest	info_eff_793 if day == 1, ///
-								null(0) ///
-								test("Information effect: Day 1 Product 793") ///
-								group("Information Effects") ///
-								handle(ttest_post)
+	use				"`taste_eff_ttests'", clear
 
-	post_one_sample_ttest	info_eff_356 if day == 2, ///
-								null(0) ///
-								test("Information effect: Day 2 Product 356") ///
-								group("Information Effects") ///
-								handle(ttest_post)
+	format			mean diff_from_zero se t_stat p_value ci_low ci_high %9.4f
+	format			N df %9.0f
 
-	post_one_sample_ttest	info_eff_831 if day == 2, ///
-								null(0) ///
-								test("Information effect: Day 2 Product 831") ///
-								group("Information Effects") ///
-								handle(ttest_post)
+	export delimited using "$final_output/tasting_effect_ttests.csv", replace
 
-
-********************************************************************************
-**## Tasting effects
-********************************************************************************
-
-	post_one_sample_ttest	taste_eff_584 if day == 1, ///
-								null(0) ///
-								test("Tasting effect: Day 1 Product 584") ///
-								group("Tasting Effects") ///
-								handle(ttest_post)
-
-	post_one_sample_ttest	taste_eff_793 if day == 1, ///
-								null(0) ///
-								test("Tasting effect: Day 1 Product 793") ///
-								group("Tasting Effects") ///
-								handle(ttest_post)
-
-	post_one_sample_ttest	taste_eff_356 if day == 2, ///
-								null(0) ///
-								test("Tasting effect: Day 2 Product 356") ///
-								group("Tasting Effects") ///
-								handle(ttest_post)
-
-	post_one_sample_ttest	taste_eff_831 if day == 2, ///
-								null(0) ///
-								test("Tasting effect: Day 2 Product 831") ///
-								group("Tasting Effects") ///
-								handle(ttest_post)
-
-
-********************************************************************************
-**## Export t-test results
-********************************************************************************
-
-	postclose			ttest_post
-
-	use					"`ttest_results'", clear
-
-	format				mean diff_from_null sd se t_stat p_value ///
-							ci_low_diff ci_high_diff %9.4f
-
-	export delimited	using "$final_output/ttest_results.csv", replace
-
-restore	
+restore
 	
 	
 ********************************************************************************
-**# gender / exercise ttests
+**# Information Effect by Gender
 ********************************************************************************
 
-**### info eff 584
-ttest				info_eff_584 if day == 1, by(gender) unequal
-ttest				info_eff_584 if day == 1, by(active_3plus) unequal
+	capture program drop post_twosample_ttest
 
-**### info eff 793
-ttest 				info_eff_793 if day == 1, by(gender) unequal
-ttest 				info_eff_793 if day == 1, by(active_3plus) unequal
+	program			define post_twosample_ttest
+	syntax 			varname [if], Product(string) Sample(string) Groupvar(string) ///
+		Group1(string) Group2(string) Handle(name)
 
-**### info eff 356
-ttest 				info_eff_356 if day == 2, by(gender) unequal
-ttest 				info_eff_356 if day == 2, by(active_3plus) unequal
-
-**### info eff 831
-ttest 				info_eff_831 if day == 2, by(gender) unequal
-ttest 				info_eff_831 if day == 2, by(active_3plus) unequal
-
-
-********************************************************************************
-**# Export H2 information-effect t-tests to CSV
-********************************************************************************
-
-capture program drop post_twosample_ttest
-
-program define post_twosample_ttest
-	syntax varname [if], By(varname) Test(string) Group1(string) Group2(string) Handle(name)
-
-	quietly ttest		`varlist' `if', by(`by') unequal
+	ttest				`varlist' `if', by(`groupvar') unequal
 
 	local N1			= r(N_1)
 	local N2			= r(N_2)
 	local mean1			= r(mu_1)
 	local mean2			= r(mu_2)
+	local diff			= r(mu_1) - r(mu_2)
 	local sd1			= r(sd_1)
 	local sd2			= r(sd_2)
-	local diff			= r(mu_1) - r(mu_2)
 	local se			= r(se)
-	local tstat			= r(t)
+	local t_stat		= r(t)
 	local df			= r(df_t)
-	local p_two			= r(p)
+	local p_value		= r(p)
 
 * confidence interval for group 1 minus group 2
 	local tcrit			= invttail(`df', .025)
 	local ci_low		= `diff' - `tcrit' * `se'
 	local ci_high		= `diff' + `tcrit' * `se'
 
-	post `handle'		("`test'") ///
-						("`varlist'") ///
-						("`by'") ///
-						("`group1'") ///
-						("`group2'") ///
-						(`N1') ///
-						(`N2') ///
-						(`mean1') ///
-						(`mean2') ///
-						(`diff') ///
-						(`sd1') ///
-						(`sd2') ///
-						(`se') ///
-						(`tstat') ///
-						(`df') ///
-						(`p_two') ///
-						(`ci_low') ///
-						(`ci_high')
+	post `handle'		("`product'") ///
+							("`sample'") ///
+							("`varlist'") ///
+							("`groupvar'") ///
+							("`group1'") ///
+							("`group2'") ///
+							(`N1') ///
+							(`N2') ///
+							(`mean1') ///
+							(`mean2') ///
+							(`diff') ///
+							(`sd1') ///
+							(`sd2') ///
+							(`se') ///
+							(`t_stat') ///
+							(`df') ///
+							(`p_value') ///
+							(`ci_low') ///
+							(`ci_high')
 end
 
 
-********************************************************************************
-**## Run H2 information-effect t-tests and export results
-********************************************************************************
-
-preserve
-
-	tempfile h2_info_ttest_results
+	tempfile info_eff_gender_ttests
 	postutil clear
 
-	postfile h2_info_ttest_post ///
-		str80 test ///
+	postfile 			info_gender_post ///
+							str20 product ///
+							str20 sample ///
+							str25 outcome ///
+							str25 group_variable ///
+							str35 group_1 ///
+							str35 group_2 ///
+							double N_1 ///
+							double N_2 ///
+							double mean_1 ///
+							double mean_2 ///
+							double diff_1_minus_2 ///
+							double sd_1 ///
+							double sd_2 ///
+							double se_diff ///
+							double t_stat ///
+							double df ///
+							double p_value ///
+							double ci_low ///
+							double ci_high ///
+							using "`info_eff_gender_ttests'", replace
+
+
+********************************************************************************
+**### info eff 584
+********************************************************************************
+
+	post_twosample_ttest	info_eff_584 if day == 1, ///
+									product("584") ///
+									sample("Day 1") ///
+									groupvar(gender) ///
+									group1("Male") ///
+									group2("Female") ///
+									handle(info_gender_post)
+
+
+********************************************************************************
+**### info eff 793
+********************************************************************************
+
+	post_twosample_ttest	info_eff_793 if day == 1, ///
+								product("793") ///
+								sample("Day 1") ///
+								groupvar(gender) ///
+								group1("Male") ///
+								group2("Female") ///
+								handle(info_gender_post)
+
+
+********************************************************************************
+**### info eff 356
+********************************************************************************
+
+	post_twosample_ttest	info_eff_356 if day == 2, ///
+								product("356") ///
+								sample("Day 2") ///
+								groupvar(gender) ///
+								group1("Male") ///
+								group2("Female") ///
+								handle(info_gender_post)
+
+
+********************************************************************************
+**### info eff 831
+********************************************************************************
+
+	post_twosample_ttest	info_eff_831 if day == 2, ///
+								product("831") ///
+								sample("Day 2") ///
+								groupvar(gender) ///
+								group1("Male") ///
+								group2("Female") ///
+								handle(info_gender_post)
+
+postclose				info_gender_post
+
+
+********************************************************************************
+**### Export information-effect gender ttests
+********************************************************************************
+
+	preserve
+
+	use					"`info_eff_gender_ttests'", clear
+
+	format				mean_1 mean_2 diff_1_minus_2 sd_1 sd_2 ///
+							se_diff t_stat p_value ci_low ci_high %9.4f
+	format				N_1 N_2 %9.0f
+	format				df %9.2f
+
+	export delimited using "$final_output/info_effect_gender_ttests.csv", replace
+
+	restore
+
+********************************************************************************
+**# Information Effect by Exercise Group
+********************************************************************************
+
+capture program drop post_twosample_ttest
+
+	program define post_twosample_ttest
+	syntax varname [if], Product(string) Sample(string) Handle(name)
+
+	ttest				`varlist' `if', by(active_3plus) unequal
+
+	local N1			= r(N_1)
+	local N2			= r(N_2)
+	local mean1			= r(mu_1)
+	local mean2			= r(mu_2)
+	local diff			= r(mu_1) - r(mu_2)
+	local sd1			= r(sd_1)
+	local sd2			= r(sd_2)
+	local se			= r(se)
+	local t_stat		= r(t)
+	local df			= r(df_t)
+	local p_value		= r(p)
+
+* confidence interval for group 1 minus group 2
+	local tcrit			= invttail(`df', .025)
+	local ci_low		= `diff' - `tcrit' * `se'
+	local ci_high		= `diff' + `tcrit' * `se'
+
+	post `handle'		("`product'") ///
+							("`sample'") ///
+							("`varlist'") ///
+							("active_3plus") ///
+							("Fewer than 3 days") ///
+							("3 or more days") ///
+							(`N1') ///
+							(`N2') ///
+							(`mean1') ///
+							(`mean2') ///
+							(`diff') ///
+							(`sd1') ///
+							(`sd2') ///
+							(`se') ///
+							(`t_stat') ///
+							(`df') ///
+							(`p_value') ///
+							(`ci_low') ///
+							(`ci_high')
+	end
+
+
+	tempfile info_eff_exercise_ttests
+	postutil clear
+
+	postfile info_exercise_post ///
+		str20 product ///
+		str20 sample ///
 		str25 outcome ///
 		str25 group_variable ///
 		str35 group_1 ///
@@ -1142,109 +1478,176 @@ preserve
 		double se_diff ///
 		double t_stat ///
 		double df ///
-		double p_value_two_tailed ///
+		double p_value ///
 		double ci_low ///
 		double ci_high ///
-		using "`h2_info_ttest_results'", replace
+		using "`info_eff_exercise_ttests'", replace
 
 
 ********************************************************************************
-**## H2: Information effects by gender
+**### Info eff 584
 ********************************************************************************
-
-* Difference is Male minus Female.
 
 	post_twosample_ttest	info_eff_584 if day == 1, ///
-								by(gender) ///
-								test("Information effect: Day 1 Product 584 by gender") ///
-								group1("Male") ///
-								group2("Female") ///
-								handle(h2_info_ttest_post)
+								product("584") ///
+								sample("Day 1") ///
+								handle(info_exercise_post)
+
+
+********************************************************************************
+**### Info eff 793
+********************************************************************************
 
 	post_twosample_ttest	info_eff_793 if day == 1, ///
-								by(gender) ///
-								test("Information effect: Day 1 Product 793 by gender") ///
-								group1("Male") ///
-								group2("Female") ///
-								handle(h2_info_ttest_post)
+								product("793") ///
+								sample("Day 1") ///
+								handle(info_exercise_post)
+
+
+********************************************************************************
+**### Info eff 356
+********************************************************************************
 
 	post_twosample_ttest	info_eff_356 if day == 2, ///
-								by(gender) ///
-								test("Information effect: Day 2 Product 356 by gender") ///
-								group1("Male") ///
-								group2("Female") ///
-								handle(h2_info_ttest_post)
+								product("356") ///
+								sample("Day 2") ///
+								handle(info_exercise_post)
+
+
+********************************************************************************
+**### Info eff 831
+********************************************************************************
 
 	post_twosample_ttest	info_eff_831 if day == 2, ///
-								by(gender) ///
-								test("Information effect: Day 2 Product 831 by gender") ///
-								group1("Male") ///
-								group2("Female") ///
-								handle(h2_info_ttest_post)
+								product("831") ///
+								sample("Day 2") ///
+								handle(info_exercise_post)
+
+	postclose				info_exercise_post
 
 
 ********************************************************************************
-**## H2: Information effects by physical activity
+**## Export information-effect exercise ttests
 ********************************************************************************
 
-* Difference is fewer than 3 days per week minus 3 or more days per week.
+preserve
 
-	post_twosample_ttest	info_eff_584 if day == 1, ///
-								by(active_3plus) ///
-								test("Information effect: Day 1 Product 584 by physical activity") ///
-								group1("Fewer than 3 days per week") ///
-								group2("3 or more days per week") ///
-								handle(h2_info_ttest_post)
-
-	post_twosample_ttest	info_eff_793 if day == 1, ///
-								by(active_3plus) ///
-								test("Information effect: Day 1 Product 793 by physical activity") ///
-								group1("Fewer than 3 days per week") ///
-								group2("3 or more days per week") ///
-								handle(h2_info_ttest_post)
-
-	post_twosample_ttest	info_eff_356 if day == 2, ///
-								by(active_3plus) ///
-								test("Information effect: Day 2 Product 356 by physical activity") ///
-								group1("Fewer than 3 days per week") ///
-								group2("3 or more days per week") ///
-								handle(h2_info_ttest_post)
-
-	post_twosample_ttest	info_eff_831 if day == 2, ///
-								by(active_3plus) ///
-								test("Information effect: Day 2 Product 831 by physical activity") ///
-								group1("Fewer than 3 days per week") ///
-								group2("3 or more days per week") ///
-								handle(h2_info_ttest_post)
-
-
-********************************************************************************
-**## Export H2 information-effect t-test results
-********************************************************************************
-
-	postclose			h2_info_ttest_post
-
-	use					"`h2_info_ttest_results'", clear
+	use					"`info_eff_exercise_ttests'", clear
 
 	format				mean_1 mean_2 diff_1_minus_2 sd_1 sd_2 ///
-							se_diff t_stat p_value_two_tailed ///
-							ci_low ci_high %9.4f
+							se_diff t_stat p_value ci_low ci_high %9.4f
+	format				N_1 N_2 %9.0f
+	format				df %9.2f
 
-	export delimited	using "$final_output/h2_info_ttest_results.csv", replace
+	export delimited using "$final_output/info_effect_exercise_ttests.csv", replace
 
 restore
 
-
-
 ********************************************************************************
-**## H1 regressions
+**# H1 regressions
 ********************************************************************************
 
 ********************************************************************************
-**### Information effects
+**## Information effects
 ********************************************************************************
 
-* Product 584: magnesium/lab beverage, Day 1.
+capture program drop post_reg_terms
+
+program define post_reg_terms
+	syntax, Product(string) Outcome(string) Sample(string) ///
+		Flavorcoef(string) Flavorlabel(string) Handle(name)
+
+	local N				= e(N)
+	local r2			= e(r2)
+	local df			= e(df_r)
+
+	local coefs			"1.sweet_high 1.sugar_lowmod_high `flavorcoef' 1.ingred_high 1.health_high 1.magn_know_high _cons"
+
+	foreach coef of local coefs {
+	
+		local term		"`coef'"
+		
+		if "`coef'" == "1.sweet_high" {
+			local term	"High sweetness importance"
+		}
+		
+		if "`coef'" == "1.sugar_lowmod_high" {
+			local term	"High low-to-moderate sugar importance"
+		}
+		
+		if "`coef'" == "`flavorcoef'" {
+			local term	"`flavorlabel'"
+		}
+		
+		if "`coef'" == "1.ingred_high" {
+			local term	"High functional ingredient importance"
+		}
+		
+		if "`coef'" == "1.health_high" {
+			local term	"High health-claim importance"
+		}
+		
+		if "`coef'" == "1.magn_know_high" {
+			local term	"High magnesium knowledge"
+		}
+		
+		if "`coef'" == "_cons" {
+			local term	"Constant"
+		}
+
+		capture local b	= _b[`coef']
+		
+		if _rc == 0 {
+		
+			local se		= _se[`coef']
+			local t_stat	= `b' / `se'
+			local p_value	= 2 * ttail(`df', abs(`t_stat'))
+			local tcrit		= invttail(`df', .025)
+			local ci_low	= `b' - `tcrit' * `se'
+			local ci_high	= `b' + `tcrit' * `se'
+
+			post `handle'	("`product'") ///
+							("`outcome'") ///
+							("`sample'") ///
+							("`term'") ///
+							("`coef'") ///
+							(`b') ///
+							(`se') ///
+							(`t_stat') ///
+							(`p_value') ///
+							(`ci_low') ///
+							(`ci_high') ///
+							(`N') ///
+							(`r2')
+		}
+	}
+end
+
+
+tempfile info_reg_results
+postutil clear
+
+postfile info_reg_post ///
+	str20 product ///
+	str25 outcome ///
+	str20 sample ///
+	str50 term ///
+	str30 coefficient ///
+	double beta ///
+	double se ///
+	double t_stat ///
+	double p_value ///
+	double ci_low ///
+	double ci_high ///
+	double N ///
+	double r2 ///
+	using "`info_reg_results'", replace
+
+
+********************************************************************************
+**### Product 584: magnesium/lab beverage, Day 1
+********************************************************************************
+
 	reg					info_eff_584 ///
 							i.sweet_high ///
 							i.sugar_lowmod_high ///
@@ -1254,7 +1657,18 @@ restore
 							i.magn_know_high ///
 							if day == 1, robust
 
-* Product 793: competitor beverage, Day 1.
+	post_reg_terms,		product("584") ///
+						outcome("info_eff_584") ///
+						sample("Day 1") ///
+						flavorcoef("1.flavor_pref1_5") ///
+						flavorlabel("Selected Lemon Lime flavor") ///
+						handle(info_reg_post)
+
+
+********************************************************************************
+**### Product 793: competitor beverage, Day 1
+********************************************************************************
+
 	reg					info_eff_793 ///
 							i.sweet_high ///
 							i.sugar_lowmod_high ///
@@ -1264,7 +1678,18 @@ restore
 							i.magn_know_high ///
 							if day == 1, robust
 
-* Product 356: blueberry beverage, Day 2.
+	post_reg_terms,		product("793") ///
+						outcome("info_eff_793") ///
+						sample("Day 1") ///
+						flavorcoef("1.flavor_pref1_5") ///
+						flavorlabel("Selected Lemon Lime flavor") ///
+						handle(info_reg_post)
+
+
+********************************************************************************
+**### Product 356: blueberry beverage, Day 2
+********************************************************************************
+
 	reg					info_eff_356 ///
 							i.sweet_high ///
 							i.sugar_lowmod_high ///
@@ -1274,7 +1699,18 @@ restore
 							i.magn_know_high ///
 							if day == 2, robust
 
-* Product 831: pineapple beverage, Day 2.
+	post_reg_terms,		product("356") ///
+						outcome("info_eff_356") ///
+						sample("Day 2") ///
+						flavorcoef("1.flavor_pref1_1") ///
+						flavorlabel("Selected Blueberry flavor") ///
+						handle(info_reg_post)
+
+
+********************************************************************************
+**### Product 831: pineapple beverage, Day 2
+********************************************************************************
+
 	reg					info_eff_831 ///
 							i.sweet_high ///
 							i.sugar_lowmod_high ///
@@ -1283,14 +1719,364 @@ restore
 							i.health_high ///
 							i.magn_know_high ///
 							if day == 2, robust
-							
-							tab 		flavor_pref1_5
+
+	post_reg_terms,		product("831") ///
+						outcome("info_eff_831") ///
+						sample("Day 2") ///
+						flavorcoef("1.flavor_pref1_7") ///
+						flavorlabel("Selected Pineapple flavor") ///
+						handle(info_reg_post)
+
+postclose				info_reg_post
+
+
+********************************************************************************
+**## Export information-effect regressions
+********************************************************************************
+
+preserve
+
+	use					"`info_reg_results'", clear
+
+	format				beta se t_stat p_value ci_low ci_high r2 ///
+	%9.4f
+	format				N %9.0f
+
+	export delimited	using "$final_output/info_effect_regressions.csv", replace
+
+restore
+
+
+
+********************************************************************************
+**# Path controls
+********************************************************************************
+* I think we need to control for paths because I think they're going to have a ///
+a considerable effect on these regressions after looking at the first round ///
+of results
+* info-first will go with info effects
+* taste first will go with taste effects
+
+	capture drop info_first
+	capture drop taste_first
+
+	gen					info_first = inlist(randomizer, 3, 4)
+	gen					taste_first = inlist(randomizer, 1, 2)
+
+	label var			info_first "Information-first path"
+	label var			taste_first "Taste-first path"
+
+	label values		info_first yesno_lbl
+	label values		taste_first yesno_lbl
+	
+	
+	
+********************************************************************************
+**# Information effects with information-first path control
+********************************************************************************
+
+capture program drop post_info_reg_terms
+
+program define post_info_reg_terms
+	syntax, Product(string) Depvar(string) Sampleday(string) ///
+		Flavorcoef(string) Flavorlabel(string) Handle(name)
+
+	local N				= e(N)
+	local r2			= e(r2)
+	local df			= e(df_r)
+
+	local coefs			"1.info_first 1.sweet_high 1.sugar_lowmod_high `flavorcoef' 1.ingred_high 1.health_high 1.magn_know_high _cons"
+
+	foreach coef of local coefs {
+	
+		local term		"`coef'"
+		
+		if "`coef'" == "1.info_first" {
+			local term	"Information-first path"
+		}
+		
+		if "`coef'" == "1.sweet_high" {
+			local term	"High sweetness importance"
+		}
+		
+		if "`coef'" == "1.sugar_lowmod_high" {
+			local term	"High low-to-moderate sugar importance"
+		}
+		
+		if "`coef'" == "`flavorcoef'" {
+			local term	"`flavorlabel'"
+		}
+		
+		if "`coef'" == "1.ingred_high" {
+			local term	"High functional ingredient importance"
+		}
+		
+		if "`coef'" == "1.health_high" {
+			local term	"High health-claim importance"
+		}
+		
+		if "`coef'" == "1.magn_know_high" {
+			local term	"High magnesium knowledge"
+		}
+		
+		if "`coef'" == "_cons" {
+			local term	"Constant"
+		}
+
+		capture local b	= _b[`coef']
+		
+		if _rc == 0 {
+		
+			local se		= _se[`coef']
+			local t_stat	= `b' / `se'
+			local p_value	= 2 * ttail(`df', abs(`t_stat'))
+			local tcrit		= invttail(`df', .025)
+			local ci_low	= `b' - `tcrit' * `se'
+			local ci_high	= `b' + `tcrit' * `se'
+
+			post `handle'	("`product'") ///
+							("`depvar'") ///
+							("`sampleday'") ///
+							("`term'") ///
+							("`coef'") ///
+							(`N') ///
+							(`b') ///
+							(`se') ///
+							(`t_stat') ///
+							(`p_value') ///
+							(`ci_low') ///
+							(`ci_high') ///
+							(`r2')
+		}
+	}
+end
+
+
+tempfile info_reg_results
+postutil clear
+
+postfile info_reg_post ///
+	str20 product ///
+	str25 dependent_var ///
+	str20 sample_day ///
+	str55 term ///
+	str30 coefficient ///
+	double N ///
+	double beta ///
+	double se ///
+	double t_stat ///
+	double p_value ///
+	double ci_low ///
+	double ci_high ///
+	double r2 ///
+	using "`info_reg_results'", replace
+
+
+********************************************************************************
+**### Product 584: magnesium/lab beverage, Day 1
+********************************************************************************
+
+	reg					info_eff_584 ///
+							i.info_first ///
+							i.sweet_high ///
+							i.sugar_lowmod_high ///
+							i.flavor_pref1_5 ///
+							i.ingred_high ///
+							i.health_high ///
+							i.magn_know_high ///
+							if day == 1, robust
+
+	post_info_reg_terms, product("584") ///
+							depvar("info_eff_584") ///
+							sampleday("Day 1") ///
+							flavorcoef("1.flavor_pref1_5") ///
+							flavorlabel("Selected Lemon Lime flavor") ///
+							handle(info_reg_post)
+
+
+********************************************************************************
+**### Product 793: competitor beverage, Day 1
+********************************************************************************
+
+	reg					info_eff_793 ///
+							i.info_first ///
+							i.sweet_high ///
+							i.sugar_lowmod_high ///
+							i.flavor_pref1_5 ///
+							i.ingred_high ///
+							i.health_high ///
+							i.magn_know_high ///
+							if day == 1, robust
+
+	post_info_reg_terms, product("793") ///
+							depvar("info_eff_793") ///
+							sampleday("Day 1") ///
+							flavorcoef("1.flavor_pref1_5") ///
+							flavorlabel("Selected Lemon Lime flavor") ///
+							handle(info_reg_post)
+
+
+********************************************************************************
+**### Product 356: blueberry beverage, Day 2
+********************************************************************************
+
+	reg					info_eff_356 ///
+							i.info_first ///
+							i.sweet_high ///
+							i.sugar_lowmod_high ///
+							i.flavor_pref1_1 ///
+							i.ingred_high ///
+							i.health_high ///
+							i.magn_know_high ///
+							if day == 2, robust
+
+	post_info_reg_terms, product("356") ///
+							depvar("info_eff_356") ///
+							sampleday("Day 2") ///
+							flavorcoef("1.flavor_pref1_1") ///
+							flavorlabel("Selected Blueberry flavor") ///
+							handle(info_reg_post)
+
+
+********************************************************************************
+**### Product 831: pineapple beverage, Day 2
+********************************************************************************
+
+	reg					info_eff_831 ///
+							i.info_first ///
+							i.sweet_high ///
+							i.sugar_lowmod_high ///
+							i.flavor_pref1_7 ///
+							i.ingred_high ///
+							i.health_high ///
+							i.magn_know_high ///
+							if day == 2, robust
+
+	post_info_reg_terms, product("831") ///
+							depvar("info_eff_831") ///
+							sampleday("Day 2") ///
+							flavorcoef("1.flavor_pref1_7") ///
+							flavorlabel("Selected Pineapple flavor") ///
+							handle(info_reg_post)
+
+postclose				info_reg_post
+
+
+********************************************************************************
+**## Export information-effect regressions
+********************************************************************************
+
+preserve
+
+	use					"`info_reg_results'", clear
+
+	format				beta se t_stat p_value ci_low ci_high r2 %9.4f
+	format				N %9.0f
+
+	export delimited	using "$final_output/info_effect_regressions_with_path.csv", replace
+
+restore
 
 ********************************************************************************
 **## Tasting effects
 ********************************************************************************
+capture program drop post_taste_reg_terms
 
-* Product 584: magnesium/lab beverage, Day 1.
+program define post_taste_reg_terms
+	syntax, Product(string) Depvar(string) Sampleday(string) ///
+		Flavorcoef(string) Flavorlabel(string) Handle(name)
+
+	local N				= e(N)
+	local r2			= e(r2)
+	local df			= e(df_r)
+
+	local coefs			"1.sweet_high 1.sugar_lowmod_high `flavorcoef' 1.ingred_high 1.health_high 1.magn_know_high _cons"
+
+	foreach coef of local coefs {
+	
+		local term		"`coef'"
+		
+		if "`coef'" == "1.sweet_high" {
+			local term	"High sweetness importance"
+		}
+		
+		if "`coef'" == "1.sugar_lowmod_high" {
+			local term	"High low-to-moderate sugar importance"
+		}
+		
+		if "`coef'" == "`flavorcoef'" {
+			local term	"`flavorlabel'"
+		}
+		
+		if "`coef'" == "1.ingred_high" {
+			local term	"High functional ingredient importance"
+		}
+		
+		if "`coef'" == "1.health_high" {
+			local term	"High health-claim importance"
+		}
+		
+		if "`coef'" == "1.magn_know_high" {
+			local term	"High magnesium knowledge"
+		}
+		
+		if "`coef'" == "_cons" {
+			local term	"Constant"
+		}
+
+		capture local b	= _b[`coef']
+		
+		if _rc == 0 {
+		
+			local se		= _se[`coef']
+			local t_stat	= `b' / `se'
+			local p_value	= 2 * ttail(`df', abs(`t_stat'))
+			local tcrit		= invttail(`df', .025)
+			local ci_low	= `b' - `tcrit' * `se'
+			local ci_high	= `b' + `tcrit' * `se'
+
+			post `handle'	("`product'") ///
+							("`depvar'") ///
+							("`sampleday'") ///
+							("`term'") ///
+							("`coef'") ///
+							(`N') ///
+							(`b') ///
+							(`se') ///
+							(`t_stat') ///
+							(`p_value') ///
+							(`ci_low') ///
+							(`ci_high') ///
+							(`r2')
+		}
+	}
+end
+
+
+	tempfile 			taste_reg_results
+	postutil clear
+
+	postfile 			taste_reg_post ///
+							str20 product ///
+							str25 dependent_var ///
+							str20 sample_day ///
+							str55 term ///
+							str30 coefficient ///
+							double N ///
+							double beta ///
+							double se ///
+							double t_stat ///
+							double p_value ///
+							double ci_low ///
+							double ci_high ///
+							double r2 ///
+							using "`taste_reg_results'", replace
+
+
+********************************************************************************
+**### Product 584: magnesium/lab beverage, Day 1
+********************************************************************************
+
 	reg					taste_eff_584 ///
 							i.sweet_high ///
 							i.sugar_lowmod_high ///
@@ -1300,7 +2086,18 @@ restore
 							i.magn_know_high ///
 							if day == 1, robust
 
-* Product 793: competitor beverage, Day 1.
+	post_taste_reg_terms, product("584") ///
+							depvar("taste_eff_584") ///
+							sampleday("Day 1") ///
+							flavorcoef("1.flavor_pref1_5") ///
+							flavorlabel("Selected Lemon Lime flavor") ///
+							handle(taste_reg_post)
+
+
+********************************************************************************
+**### Product 793: competitor beverage, Day 1
+********************************************************************************
+
 	reg					taste_eff_793 ///
 							i.sweet_high ///
 							i.sugar_lowmod_high ///
@@ -1310,7 +2107,18 @@ restore
 							i.magn_know_high ///
 							if day == 1, robust
 
-* Product 356: blueberry beverage, Day 2.
+	post_taste_reg_terms, product("793") ///
+							depvar("taste_eff_793") ///
+							sampleday("Day 1") ///
+							flavorcoef("1.flavor_pref1_5") ///
+							flavorlabel("Selected Lemon Lime flavor") ///
+							handle(taste_reg_post)
+
+
+********************************************************************************
+**### Product 356: blueberry beverage, Day 2
+********************************************************************************
+
 	reg					taste_eff_356 ///
 							i.sweet_high ///
 							i.sugar_lowmod_high ///
@@ -1319,10 +2127,19 @@ restore
 							i.health_high ///
 							i.magn_know_high ///
 							if day == 2, robust
-							
-						
 
-* Product 831: pineapple beverage, Day 2.
+	post_taste_reg_terms, product("356") ///
+							depvar("taste_eff_356") ///
+							sampleday("Day 2") ///
+							flavorcoef("1.flavor_pref1_1") ///
+							flavorlabel("Selected Blueberry flavor") ///
+							handle(taste_reg_post)
+
+
+********************************************************************************
+**### Product 831: pineapple beverage, Day 2
+********************************************************************************
+
 	reg					taste_eff_831 ///
 							i.sweet_high ///
 							i.sugar_lowmod_high ///
@@ -1332,9 +2149,355 @@ restore
 							i.magn_know_high ///
 							if day == 2, robust
 
+	post_taste_reg_terms, product("831") ///
+							depvar("taste_eff_831") ///
+							sampleday("Day 2") ///
+							flavorcoef("1.flavor_pref1_7") ///
+							flavorlabel("Selected Pineapple flavor") ///
+							handle(taste_reg_post)
+
+postclose				taste_reg_post
+
+
+********************************************************************************
+**## Export tasting-effect regressions
+********************************************************************************
+
+preserve
+
+	use					"`taste_reg_results'", clear
+
+	format				beta se t_stat p_value ci_low ci_high r2 %9.4f
+	format				N %9.0f
+
+	export delimited	using "$final_output/tasting_effect_regressions.csv", 		replace
+	
+	restore
+
+
+
+label var				taste_first "Taste-first path"
+
+capture label define	yesno_lbl 0 "No" 1 "Yes", replace
+label values			taste_first yesno_lbl
+
+
+********************************************************************************
+**## Tasting effects with taste-first path control
+********************************************************************************
+
+	capture program drop post_taste_reg_terms
+
+	program define post_taste_reg_terms
+	syntax, Product(string) Depvar(string) Sampleday(string) ///
+		Flavorcoef(string) Flavorlabel(string) Handle(name)
+
+	local N				= e(N)
+	local r2			= e(r2)
+	local df			= e(df_r)
+
+	local coefs			"1.taste_first 1.sweet_high 1.sugar_lowmod_high `flavorcoef' 1.ingred_high 1.health_high 1.magn_know_high _cons"
+
+	foreach coef of local coefs {
+	
+		local term		"`coef'"
+		
+		if "`coef'" == "1.taste_first" {
+			local term	"Taste-first path"
+		}
+		
+		if "`coef'" == "1.sweet_high" {
+			local term	"High sweetness importance"
+		}
+		
+		if "`coef'" == "1.sugar_lowmod_high" {
+			local term	"High low-to-moderate sugar importance"
+		}
+		
+		if "`coef'" == "`flavorcoef'" {
+			local term	"`flavorlabel'"
+		}
+		
+		if "`coef'" == "1.ingred_high" {
+			local term	"High functional ingredient importance"
+		}
+		
+		if "`coef'" == "1.health_high" {
+			local term	"High health-claim importance"
+		}
+		
+		if "`coef'" == "1.magn_know_high" {
+			local term	"High magnesium knowledge"
+		}
+		
+		if "`coef'" == "_cons" {
+			local term	"Constant"
+		}
+
+		capture local b	= _b[`coef']
+		
+		if _rc == 0 {
+		
+			local se		= _se[`coef']
+			local t_stat	= `b' / `se'
+			local p_value	= 2 * ttail(`df', abs(`t_stat'))
+			local tcrit		= invttail(`df', .025)
+			local ci_low	= `b' - `tcrit' * `se'
+			local ci_high	= `b' + `tcrit' * `se'
+
+			post `handle'	("`product'") ///
+							("`depvar'") ///
+							("`sampleday'") ///
+							("`term'") ///
+							("`coef'") ///
+							(`N') ///
+							(`b') ///
+							(`se') ///
+							(`t_stat') ///
+							(`p_value') ///
+							(`ci_low') ///
+							(`ci_high') ///
+							(`r2')
+		}
+	}
+end
+
+
+	tempfile 			taste_reg_results_path
+	postutil clear
+
+	postfile taste_reg_post ///
+				str20 product ///
+				str25 dependent_var ///
+				str20 sample_day ///
+				str55 term ///
+				str30 coefficient ///
+				double N ///
+				double beta ///
+				double se ///
+				double t_stat ///
+				double p_value ///
+				double ci_low ///
+				double ci_high ///
+				double r2 ///
+				using "`taste_reg_results_path'", replace
+
+
+********************************************************************************
+**### Product 584: magnesium/lab beverage, Day 1
+********************************************************************************
+
+	reg					taste_eff_584 ///
+							i.taste_first ///
+							i.sweet_high ///
+							i.sugar_lowmod_high ///
+							i.flavor_pref1_5 ///
+							i.ingred_high ///
+							i.health_high ///
+							i.magn_know_high ///
+							if day == 1, robust
+
+	post_taste_reg_terms, product("584") ///
+							depvar("taste_eff_584") ///
+							sampleday("Day 1") ///
+							flavorcoef("1.flavor_pref1_5") ///
+							flavorlabel("Selected Lemon Lime flavor") ///
+							handle(taste_reg_post)
+
+
+********************************************************************************
+**### Product 793: competitor beverage, Day 1
+********************************************************************************
+
+	reg					taste_eff_793 ///
+							i.taste_first ///
+							i.sweet_high ///
+							i.sugar_lowmod_high ///
+							i.flavor_pref1_5 ///
+							i.ingred_high ///
+							i.health_high ///
+							i.magn_know_high ///
+							if day == 1, robust
+
+	post_taste_reg_terms, product("793") ///
+							depvar("taste_eff_793") ///
+							sampleday("Day 1") ///
+							flavorcoef("1.flavor_pref1_5") ///
+							flavorlabel("Selected Lemon Lime flavor") ///
+							handle(taste_reg_post)
+
+
+********************************************************************************
+**### Product 356: blueberry beverage, Day 2
+********************************************************************************
+
+	reg					taste_eff_356 ///
+							i.taste_first ///
+							i.sweet_high ///
+							i.sugar_lowmod_high ///
+							i.flavor_pref1_1 ///
+							i.ingred_high ///
+							i.health_high ///
+							i.magn_know_high ///
+							if day == 2, robust
+
+	post_taste_reg_terms, product("356") ///
+							depvar("taste_eff_356") ///
+							sampleday("Day 2") ///
+							flavorcoef("1.flavor_pref1_1") ///
+							flavorlabel("Selected Blueberry flavor") ///
+							handle(taste_reg_post)
+
+
+********************************************************************************
+**### Product 831: pineapple beverage, Day 2
+********************************************************************************
+
+	reg					taste_eff_831 ///
+							i.taste_first ///
+							i.sweet_high ///
+							i.sugar_lowmod_high ///
+							i.flavor_pref1_7 ///
+							i.ingred_high ///
+							i.health_high ///
+							i.magn_know_high ///
+							if day == 2, robust
+
+	post_taste_reg_terms, product("831") ///
+							depvar("taste_eff_831") ///
+							sampleday("Day 2") ///
+							flavorcoef("1.flavor_pref1_7") ///
+							flavorlabel("Selected Pineapple flavor") ///
+							handle(taste_reg_post)
+
+postclose				taste_reg_post
+
+
+********************************************************************************
+**## Export tasting-effect regressions with path control
+********************************************************************************
+
+preserve
+
+	use					"`taste_reg_results_path'", clear
+
+	format				beta se t_stat p_value ci_low ci_high r2 %9.4f
+	format				N %9.0f
+
+	export delimited	using "$final_output/tasting_effect_regressions_with_path.csv", replace
+
+restore
+
 ********************************************************************************
 **# H2 regressions
 ********************************************************************************
+
+********************************************************************************
+**## H2 information-effect regressions
+********************************************************************************
+
+capture program drop post_h2_info_reg_terms
+
+program define post_h2_info_reg_terms
+	syntax, Product(string) Depvar(string) Sampleday(string) Modelrole(string) ///
+		Flavorcoef(string) Flavorlabel(string) Handle(name)
+
+	local N				= e(N)
+	local r2			= e(r2)
+	local df			= e(df_r)
+
+	local coefs			"2.gender 1.active_3plus 1.sweet_high 1.sugar_lowmod_high `flavorcoef' 1.ingred_high 1.health_high 1.magn_know_high _cons"
+
+	foreach coef of local coefs {
+	
+		local term		"`coef'"
+		
+		if "`coef'" == "2.gender" {
+			local term	"Female"
+		}
+		
+		if "`coef'" == "1.active_3plus" {
+			local term	"Three or more exercise days"
+		}
+		
+		if "`coef'" == "1.sweet_high" {
+			local term	"High sweetness importance"
+		}
+		
+		if "`coef'" == "1.sugar_lowmod_high" {
+			local term	"High low-to-moderate sugar importance"
+		}
+		
+		if "`coef'" == "`flavorcoef'" {
+			local term	"`flavorlabel'"
+		}
+		
+		if "`coef'" == "1.ingred_high" {
+			local term	"High functional ingredient importance"
+		}
+		
+		if "`coef'" == "1.health_high" {
+			local term	"High health-claim importance"
+		}
+		
+		if "`coef'" == "1.magn_know_high" {
+			local term	"High magnesium knowledge"
+		}
+		
+		if "`coef'" == "_cons" {
+			local term	"Constant"
+		}
+
+		capture local b	= _b[`coef']
+		
+		if _rc == 0 {
+		
+			local se		= _se[`coef']
+			local t_stat	= `b' / `se'
+			local p_value	= 2 * ttail(`df', abs(`t_stat'))
+			local tcrit		= invttail(`df', .025)
+			local ci_low	= `b' - `tcrit' * `se'
+			local ci_high	= `b' + `tcrit' * `se'
+
+			post `handle'	("`product'") ///
+							("`depvar'") ///
+							("`sampleday'") ///
+							("`modelrole'") ///
+							("`term'") ///
+							("`coef'") ///
+							(`N') ///
+							(`b') ///
+							(`se') ///
+							(`t_stat') ///
+							(`p_value') ///
+							(`ci_low') ///
+							(`ci_high') ///
+							(`r2')
+		}
+	}
+end
+
+
+tempfile h2_info_reg_results
+postutil clear
+
+postfile h2_info_reg_post ///
+	str20 product ///
+	str25 dependent_var ///
+	str20 sample_day ///
+	str25 model_role ///
+	str55 term ///
+	str30 coefficient ///
+	double N ///
+	double beta ///
+	double se ///
+	double t_stat ///
+	double p_value ///
+	double ci_low ///
+	double ci_high ///
+	double r2 ///
+	using "`h2_info_reg_results'", replace
+
 
 ********************************************************************************
 **## Product 584: magnesium/lab beverage
@@ -1352,6 +2515,14 @@ restore
 							i.health_high ///
 							i.magn_know_high ///
 							if day == 1, robust
+
+	post_h2_info_reg_terms, product("584") ///
+							depvar("info_eff_584") ///
+							sampleday("Day 1") ///
+							modelrole("Main H2 model") ///
+							flavorcoef("1.flavor_pref1_5") ///
+							flavorlabel("Selected Lemon Lime flavor") ///
+							handle(h2_info_reg_post)
 
 
 ********************************************************************************
@@ -1371,6 +2542,14 @@ restore
 							i.magn_know_high ///
 							if day == 1, robust
 
+	post_h2_info_reg_terms, product("793") ///
+							depvar("info_eff_793") ///
+							sampleday("Day 1") ///
+							modelrole("Supporting model") ///
+							flavorcoef("1.flavor_pref1_5") ///
+							flavorlabel("Selected Lemon Lime flavor") ///
+							handle(h2_info_reg_post)
+
 
 ********************************************************************************
 **## Product 356: blueberry beverage
@@ -1388,6 +2567,14 @@ restore
 							i.health_high ///
 							i.magn_know_high ///
 							if day == 2, robust
+
+	post_h2_info_reg_terms, product("356") ///
+							depvar("info_eff_356") ///
+							sampleday("Day 2") ///
+							modelrole("Supporting model") ///
+							flavorcoef("1.flavor_pref1_1") ///
+							flavorlabel("Selected Blueberry flavor") ///
+							handle(h2_info_reg_post)
 
 
 ********************************************************************************
@@ -1407,28 +2594,161 @@ restore
 							i.magn_know_high ///
 							if day == 2, robust
 
+	post_h2_info_reg_terms, product("831") ///
+							depvar("info_eff_831") ///
+							sampleday("Day 2") ///
+							modelrole("Supporting model") ///
+							flavorcoef("1.flavor_pref1_7") ///
+							flavorlabel("Selected Pineapple flavor") ///
+							handle(h2_info_reg_post)
 
+postclose				h2_info_reg_post
 
 
 ********************************************************************************
-**# H2 regressions with consumption situation and gender-exercise interaction
+**## Export H2 information-effect regressions
 ********************************************************************************
 
-eststo clear
+preserve
+
+	use					"`h2_info_reg_results'", clear
+
+	format				beta se t_stat p_value ci_low ci_high r2 %9.4f
+	format				N %9.0f
+
+	export delimited	using "$final_output/h2_info_effect_regressions.csv", replace
+
+restore
+
+
+********************************************************************************
+**## H2 information-effect regressions with consumption situation
+********************************************************************************
+
+capture program drop post_h2_info_reg_terms
+
+program define post_h2_info_reg_terms
+	syntax, Product(string) Depvar(string) Sampleday(string) Modelrole(string) ///
+		Flavorcoef(string) Flavorlabel(string) Handle(name)
+
+	local N				= e(N)
+	local r2			= e(r2)
+	local df			= e(df_r)
+
+	local coefs			"2.gender 1.active_3plus 1.con_situation_1 1.con_situation_2 1.con_situation_3 1.sweet_high 1.sugar_lowmod_high `flavorcoef' 1.ingred_high 1.health_high 1.magn_know_high _cons"
+
+	foreach coef of local coefs {
+	
+		local term		"`coef'"
+		
+		if "`coef'" == "2.gender" {
+			local term	"Female"
+		}
+		
+		if "`coef'" == "1.active_3plus" {
+			local term	"Three or more exercise days"
+		}
+		
+		if "`coef'" == "1.con_situation_1" {
+			local term	"Consumes before exercise"
+		}
+		
+		if "`coef'" == "1.con_situation_2" {
+			local term	"Consumes during exercise"
+		}
+		
+		if "`coef'" == "1.con_situation_3" {
+			local term	"Consumes after exercise"
+		}
+		
+		if "`coef'" == "1.sweet_high" {
+			local term	"High sweetness importance"
+		}
+		
+		if "`coef'" == "1.sugar_lowmod_high" {
+			local term	"High low-to-moderate sugar importance"
+		}
+		
+		if "`coef'" == "`flavorcoef'" {
+			local term	"`flavorlabel'"
+		}
+		
+		if "`coef'" == "1.ingred_high" {
+			local term	"High functional ingredient importance"
+		}
+		
+		if "`coef'" == "1.health_high" {
+			local term	"High health-claim importance"
+		}
+		
+		if "`coef'" == "1.magn_know_high" {
+			local term	"High magnesium knowledge"
+		}
+		
+		if "`coef'" == "_cons" {
+			local term	"Constant"
+		}
+
+		capture local b	= _b[`coef']
+		
+		if _rc == 0 {
+		
+			local se		= _se[`coef']
+			local t_stat	= `b' / `se'
+			local p_value	= 2 * ttail(`df', abs(`t_stat'))
+			local tcrit		= invttail(`df', .025)
+			local ci_low	= `b' - `tcrit' * `se'
+			local ci_high	= `b' + `tcrit' * `se'
+
+			post `handle'	("`product'") ///
+							("`depvar'") ///
+							("`sampleday'") ///
+							("`modelrole'") ///
+							("`term'") ///
+							("`coef'") ///
+							(`N') ///
+							(`b') ///
+							(`se') ///
+							(`t_stat') ///
+							(`p_value') ///
+							(`ci_low') ///
+							(`ci_high') ///
+							(`r2')
+		}
+	}
+end
+
+
+tempfile h2_info_reg_results_cons
+postutil clear
+
+postfile h2_info_reg_post ///
+	str20 product ///
+	str25 dependent_var ///
+	str20 sample_day ///
+	str25 model_role ///
+	str55 term ///
+	str30 coefficient ///
+	double N ///
+	double beta ///
+	double se ///
+	double t_stat ///
+	double p_value ///
+	double ci_low ///
+	double ci_high ///
+	double r2 ///
+	using "`h2_info_reg_results_cons'", replace
 
 
 ********************************************************************************
 **## Product 584: magnesium/lab beverage
 ********************************************************************************
 
-* Main H2 model: information effect for the magnesium/lab beverage.
-* Gender is interacted with exercise frequency.
-* Consumption situation controls indicate whether respondents usually drink
-* sports beverages before, during, or after exercise.
-
-eststo h2_info_584: ///
+* Main H2 model: gender, physical activity, and consumption-situation
+* differences in the Product 584 information effect.
 	reg					info_eff_584 ///
-							i.gender##c.exercise ///
+							i.gender ///
+							i.active_3plus ///
 							i.con_situation_1 ///
 							i.con_situation_2 ///
 							i.con_situation_3 ///
@@ -1439,17 +2759,25 @@ eststo h2_info_584: ///
 							i.health_high ///
 							i.magn_know_high ///
 							if day == 1, robust
+
+	post_h2_info_reg_terms, product("584") ///
+							depvar("info_eff_584") ///
+							sampleday("Day 1") ///
+							modelrole("Main H2 model") ///
+							flavorcoef("1.flavor_pref1_5") ///
+							flavorlabel("Selected Lemon Lime flavor") ///
+							handle(h2_info_reg_post)
 
 
 ********************************************************************************
 **## Product 793: competitor beverage
 ********************************************************************************
 
-* Supporting comparison model: information effect for the Day 1 competitor.
-
-eststo h2_info_793: ///
+* Supporting model: gender, physical activity, and consumption-situation
+* differences in the Product 793 information effect.
 	reg					info_eff_793 ///
-							i.gender##c.exercise ///
+							i.gender ///
+							i.active_3plus ///
 							i.con_situation_1 ///
 							i.con_situation_2 ///
 							i.con_situation_3 ///
@@ -1461,16 +2789,24 @@ eststo h2_info_793: ///
 							i.magn_know_high ///
 							if day == 1, robust
 
+	post_h2_info_reg_terms, product("793") ///
+							depvar("info_eff_793") ///
+							sampleday("Day 1") ///
+							modelrole("Supporting model") ///
+							flavorcoef("1.flavor_pref1_5") ///
+							flavorlabel("Selected Lemon Lime flavor") ///
+							handle(h2_info_reg_post)
+
 
 ********************************************************************************
 **## Product 356: blueberry beverage
 ********************************************************************************
 
-* Supporting comparison model: information effect for the Day 2 blueberry beverage.
-
-eststo h2_info_356: ///
+* Supporting model: gender, physical activity, and consumption-situation
+* differences in the Product 356 information effect.
 	reg					info_eff_356 ///
-							i.gender##c.exercise ///
+							i.gender ///
+							i.active_3plus ///
 							i.con_situation_1 ///
 							i.con_situation_2 ///
 							i.con_situation_3 ///
@@ -1482,16 +2818,24 @@ eststo h2_info_356: ///
 							i.magn_know_high ///
 							if day == 2, robust
 
+	post_h2_info_reg_terms, product("356") ///
+							depvar("info_eff_356") ///
+							sampleday("Day 2") ///
+							modelrole("Supporting model") ///
+							flavorcoef("1.flavor_pref1_1") ///
+							flavorlabel("Selected Blueberry flavor") ///
+							handle(h2_info_reg_post)
+
 
 ********************************************************************************
 **## Product 831: pineapple beverage
 ********************************************************************************
 
-* Supporting comparison model: information effect for the Day 2 pineapple beverage.
-
-eststo h2_info_831: ///
+* Supporting model: gender, physical activity, and consumption-situation
+* differences in the Product 831 information effect.
 	reg					info_eff_831 ///
-							i.gender##c.exercise ///
+							i.gender ///
+							i.active_3plus ///
 							i.con_situation_1 ///
 							i.con_situation_2 ///
 							i.con_situation_3 ///
@@ -1503,14 +2847,30 @@ eststo h2_info_831: ///
 							i.magn_know_high ///
 							if day == 2, robust
 
+	post_h2_info_reg_terms, product("831") ///
+							depvar("info_eff_831") ///
+							sampleday("Day 2") ///
+							modelrole("Supporting model") ///
+							flavorcoef("1.flavor_pref1_7") ///
+							flavorlabel("Selected Pineapple flavor") ///
+							handle(h2_info_reg_post)
 
-esttab h2_info_584 h2_info_793 h2_info_356 h2_info_831 ///
-	using "$final_output/h2_info_regressions_consumption_gender_exercise.csv", ///
-	replace ///
-	csv ///
-	b(%9.4f) ///
-	se(%9.4f) ///
-	r2 ///
-	ar2 ///
-	label ///
-	title("H2 Information-Effect Regressions with Consumption Situation and Gender-Exercise Interaction")
+postclose				h2_info_reg_post
+
+
+
+
+********************************************************************************
+**## Export H2 information-effect regressions with consumption situation
+********************************************************************************
+
+preserve
+
+	use					"`h2_info_reg_results_cons'", clear
+
+	format				beta se t_stat p_value ci_low ci_high r2 %9.4f
+	format				N %9.0f
+
+	export delimited	using "$final_output/h2_info_effect_regressions_consumption_situation.csv", replace
+
+restore
