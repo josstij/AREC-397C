@@ -822,8 +822,570 @@
 							
 							
 							
+********************************************************************************		
+**# T-Tests
+********************************************************************************
+
+**## wtp_1 ttests
+
+* wtp_1 compared to the baseline of 2.5: both days
+	ttest			wtp_1 == 2.50
+	
+* wtp_1 compared to the baseline of 2.5 for day 1
+	ttest			wtp_1 == 2.50 if day == 1
+	
+* wtp_1 compared to the baseline of 2.5 for day 2
+	ttest			wtp_1 == 2.50 if day == 2
+
+	
+********************************************************************************
+**### Info Effect
+********************************************************************************
+
+* Testing whether the difference is different from zero
+	
+* Info eff 584
+	ttest			info_eff_584 == 0 if day == 1
+	
+*Info eff  793
+	ttest 			info_eff_793 == 0 if day == 1
+	
+* Info eff 356
+	ttest			info_eff_356 == 0 if day == 2
+		
+* Info eff 831
+	ttest			info_eff_831 == 0 if day == 2
+	
+	
+********************************************************************************
+**### Tasting Effect
+********************************************************************************
+
+* Testing whether the differnce is differnt from zero
+
+* Tasting eff 584 
+	ttest				taste_eff_584 == 0 if day == 1
+
+* Tasting eff 793
+* Test whether the tasting effect differs from zero.
+	ttest				taste_eff_793 == 0 if day == 1
+
+* Tasting eff  356
+* Test whether the tasting effect differs from zero.
+	ttest				taste_eff_356 == 0 if day == 2
+
+* Tasting eff 831
+* Test whether the tasting effect differs from zero.
+	ttest				taste_eff_831 == 0 if day == 2
+	
+	
+********************************************************************************
+**# Export one-sample t-tests to CSV
+********************************************************************************
+
+capture program drop post_one_sample_ttest
+
+program define post_one_sample_ttest
+	syntax varname [if], Null(real) Test(string) Group(string) Handle(name)
+
+	quietly ttest		`varlist' == `null' `if'
+
+	local N				= r(N_1)
+	local mean			= r(mu_1)
+	local sd			= r(sd_1)
+	local se			= r(se)
+	local diff			= r(mu_1) - `null'
+	local tstat			= r(t)
+	local df			= r(df_t)
+	local pval			= r(p)
+
+* confidence interval for the difference from the null value
+	local tcrit			= invttail(`df', .025)
+	local ci_low		= `diff' - `tcrit' * `se'
+	local ci_high		= `diff' + `tcrit' * `se'
+
+	post `handle'		("`group'") ///
+						("`test'") ///
+						("`varlist'") ///
+						(`null') ///
+						(`N') ///
+						(`mean') ///
+						(`diff') ///
+						(`sd') ///
+						(`se') ///
+						(`tstat') ///
+						(`df') ///
+						(`pval') ///
+						(`ci_low') ///
+						(`ci_high')
+end
+
+
+********************************************************************************
+**## Run t-tests and export results
+********************************************************************************
+
+preserve
+
+	tempfile ttest_results
+	postutil clear
+
+	postfile ttest_post ///
+		str30 group ///
+		str60 test ///
+		str25 variable ///
+		double null_value ///
+		double N ///
+		double mean ///
+		double diff_from_null ///
+		double sd ///
+		double se ///
+		double t_stat ///
+		double df ///
+		double p_value ///
+		double ci_low_diff ///
+		double ci_high_diff ///
+		using "`ttest_results'", replace
+
+
+********************************************************************************
+**## Baseline WTP
+********************************************************************************
+
+	post_one_sample_ttest	wtp_1, ///
+								null(2.50) ///
+								test("Baseline WTP: full sample") ///
+								group("Baseline WTP") ///
+								handle(ttest_post)
+
+	post_one_sample_ttest	wtp_1 if day == 1, ///
+								null(2.50) ///
+								test("Baseline WTP: Day 1") ///
+								group("Baseline WTP") ///
+								handle(ttest_post)
+
+	post_one_sample_ttest	wtp_1 if day == 2, ///
+								null(2.50) ///
+								test("Baseline WTP: Day 2") ///
+								group("Baseline WTP") ///
+								handle(ttest_post)
+
+
+********************************************************************************
+**## Information effects
+********************************************************************************
+
+	post_one_sample_ttest	info_eff_584 if day == 1, ///
+								null(0) ///
+								test("Information effect: Day 1 Product 584") ///
+								group("Information Effects") ///
+								handle(ttest_post)
+
+	post_one_sample_ttest	info_eff_793 if day == 1, ///
+								null(0) ///
+								test("Information effect: Day 1 Product 793") ///
+								group("Information Effects") ///
+								handle(ttest_post)
+
+	post_one_sample_ttest	info_eff_356 if day == 2, ///
+								null(0) ///
+								test("Information effect: Day 2 Product 356") ///
+								group("Information Effects") ///
+								handle(ttest_post)
+
+	post_one_sample_ttest	info_eff_831 if day == 2, ///
+								null(0) ///
+								test("Information effect: Day 2 Product 831") ///
+								group("Information Effects") ///
+								handle(ttest_post)
+
+
+********************************************************************************
+**## Tasting effects
+********************************************************************************
+
+	post_one_sample_ttest	taste_eff_584 if day == 1, ///
+								null(0) ///
+								test("Tasting effect: Day 1 Product 584") ///
+								group("Tasting Effects") ///
+								handle(ttest_post)
+
+	post_one_sample_ttest	taste_eff_793 if day == 1, ///
+								null(0) ///
+								test("Tasting effect: Day 1 Product 793") ///
+								group("Tasting Effects") ///
+								handle(ttest_post)
+
+	post_one_sample_ttest	taste_eff_356 if day == 2, ///
+								null(0) ///
+								test("Tasting effect: Day 2 Product 356") ///
+								group("Tasting Effects") ///
+								handle(ttest_post)
+
+	post_one_sample_ttest	taste_eff_831 if day == 2, ///
+								null(0) ///
+								test("Tasting effect: Day 2 Product 831") ///
+								group("Tasting Effects") ///
+								handle(ttest_post)
+
+
+********************************************************************************
+**## Export t-test results
+********************************************************************************
+
+	postclose			ttest_post
+
+	use					"`ttest_results'", clear
+
+	format				mean diff_from_null sd se t_stat p_value ///
+							ci_low_diff ci_high_diff %9.4f
+
+	export delimited	using "$final_output/ttest_results.csv", replace
+
+restore	
+	
+	
+********************************************************************************
+**# gender / exercise ttests
+********************************************************************************
+
+**### info eff 584
+ttest				info_eff_584 if day == 1, by(gender) unequal
+ttest				info_eff_584 if day == 1, by(active_3plus) unequal
+
+**### info eff 793
+ttest 				info_eff_793 if day == 1, by(gender) unequal
+ttest 				info_eff_793 if day == 1, by(active_3plus) unequal
+
+**### info eff 356
+ttest 				info_eff_356 if day == 2, by(gender) unequal
+ttest 				info_eff_356 if day == 2, by(active_3plus) unequal
+
+**### info eff 831
+ttest 				info_eff_831 if day == 2, by(gender) unequal
+ttest 				info_eff_831 if day == 2, by(active_3plus) unequal
+
+
+********************************************************************************
+**# Export H2 information-effect t-tests to CSV
+********************************************************************************
+
+capture program drop post_twosample_ttest
+
+program define post_twosample_ttest
+	syntax varname [if], By(varname) Test(string) Group1(string) Group2(string) Handle(name)
+
+	quietly ttest		`varlist' `if', by(`by') unequal
+
+	local N1			= r(N_1)
+	local N2			= r(N_2)
+	local mean1			= r(mu_1)
+	local mean2			= r(mu_2)
+	local sd1			= r(sd_1)
+	local sd2			= r(sd_2)
+	local diff			= r(mu_1) - r(mu_2)
+	local se			= r(se)
+	local tstat			= r(t)
+	local df			= r(df_t)
+	local p_two			= r(p)
+
+* confidence interval for group 1 minus group 2
+	local tcrit			= invttail(`df', .025)
+	local ci_low		= `diff' - `tcrit' * `se'
+	local ci_high		= `diff' + `tcrit' * `se'
+
+	post `handle'		("`test'") ///
+						("`varlist'") ///
+						("`by'") ///
+						("`group1'") ///
+						("`group2'") ///
+						(`N1') ///
+						(`N2') ///
+						(`mean1') ///
+						(`mean2') ///
+						(`diff') ///
+						(`sd1') ///
+						(`sd2') ///
+						(`se') ///
+						(`tstat') ///
+						(`df') ///
+						(`p_two') ///
+						(`ci_low') ///
+						(`ci_high')
+end
+
+
+********************************************************************************
+**## Run H2 information-effect t-tests and export results
+********************************************************************************
+
+preserve
+
+	tempfile h2_info_ttest_results
+	postutil clear
+
+	postfile h2_info_ttest_post ///
+		str80 test ///
+		str25 outcome ///
+		str25 group_variable ///
+		str35 group_1 ///
+		str35 group_2 ///
+		double N_1 ///
+		double N_2 ///
+		double mean_1 ///
+		double mean_2 ///
+		double diff_1_minus_2 ///
+		double sd_1 ///
+		double sd_2 ///
+		double se_diff ///
+		double t_stat ///
+		double df ///
+		double p_value_two_tailed ///
+		double ci_low ///
+		double ci_high ///
+		using "`h2_info_ttest_results'", replace
+
+
+********************************************************************************
+**## H2: Information effects by gender
+********************************************************************************
+
+* Difference is Male minus Female.
+
+	post_twosample_ttest	info_eff_584 if day == 1, ///
+								by(gender) ///
+								test("Information effect: Day 1 Product 584 by gender") ///
+								group1("Male") ///
+								group2("Female") ///
+								handle(h2_info_ttest_post)
+
+	post_twosample_ttest	info_eff_793 if day == 1, ///
+								by(gender) ///
+								test("Information effect: Day 1 Product 793 by gender") ///
+								group1("Male") ///
+								group2("Female") ///
+								handle(h2_info_ttest_post)
+
+	post_twosample_ttest	info_eff_356 if day == 2, ///
+								by(gender) ///
+								test("Information effect: Day 2 Product 356 by gender") ///
+								group1("Male") ///
+								group2("Female") ///
+								handle(h2_info_ttest_post)
+
+	post_twosample_ttest	info_eff_831 if day == 2, ///
+								by(gender) ///
+								test("Information effect: Day 2 Product 831 by gender") ///
+								group1("Male") ///
+								group2("Female") ///
+								handle(h2_info_ttest_post)
+
+
+********************************************************************************
+**## H2: Information effects by physical activity
+********************************************************************************
+
+* Difference is fewer than 3 days per week minus 3 or more days per week.
+
+	post_twosample_ttest	info_eff_584 if day == 1, ///
+								by(active_3plus) ///
+								test("Information effect: Day 1 Product 584 by physical activity") ///
+								group1("Fewer than 3 days per week") ///
+								group2("3 or more days per week") ///
+								handle(h2_info_ttest_post)
+
+	post_twosample_ttest	info_eff_793 if day == 1, ///
+								by(active_3plus) ///
+								test("Information effect: Day 1 Product 793 by physical activity") ///
+								group1("Fewer than 3 days per week") ///
+								group2("3 or more days per week") ///
+								handle(h2_info_ttest_post)
+
+	post_twosample_ttest	info_eff_356 if day == 2, ///
+								by(active_3plus) ///
+								test("Information effect: Day 2 Product 356 by physical activity") ///
+								group1("Fewer than 3 days per week") ///
+								group2("3 or more days per week") ///
+								handle(h2_info_ttest_post)
+
+	post_twosample_ttest	info_eff_831 if day == 2, ///
+								by(active_3plus) ///
+								test("Information effect: Day 2 Product 831 by physical activity") ///
+								group1("Fewer than 3 days per week") ///
+								group2("3 or more days per week") ///
+								handle(h2_info_ttest_post)
+
+
+********************************************************************************
+**## Export H2 information-effect t-test results
+********************************************************************************
+
+	postclose			h2_info_ttest_post
+
+	use					"`h2_info_ttest_results'", clear
+
+	format				mean_1 mean_2 diff_1_minus_2 sd_1 sd_2 ///
+							se_diff t_stat p_value_two_tailed ///
+							ci_low ci_high %9.4f
+
+	export delimited	using "$final_output/h2_info_ttest_results.csv", replace
+
+restore
+
+
+
+********************************************************************************
+**## H1 regressions
+********************************************************************************
+
+********************************************************************************
+**### Information effects
+********************************************************************************
+
+* Product 584: magnesium/lab beverage, Day 1.
+	reg					info_eff_584 ///
+							i.sweet_high ///
+							i.sugar_lowmod_high ///
+							i.flavor_pref1_5 ///
+							i.ingred_high ///
+							i.health_high ///
+							i.magn_know_high ///
+							if day == 1, robust
+
+* Product 793: competitor beverage, Day 1.
+	reg					info_eff_793 ///
+							i.sweet_high ///
+							i.sugar_lowmod_high ///
+							i.flavor_pref1_5 ///
+							i.ingred_high ///
+							i.health_high ///
+							i.magn_know_high ///
+							if day == 1, robust
+
+* Product 356: blueberry beverage, Day 2.
+	reg					info_eff_356 ///
+							i.sweet_high ///
+							i.sugar_lowmod_high ///
+							i.flavor_pref1_1 ///
+							i.ingred_high ///
+							i.health_high ///
+							i.magn_know_high ///
+							if day == 2, robust
+
+* Product 831: pineapple beverage, Day 2.
+	reg					info_eff_831 ///
+							i.sweet_high ///
+							i.sugar_lowmod_high ///
+							i.flavor_pref1_7 ///
+							i.ingred_high ///
+							i.health_high ///
+							i.magn_know_high ///
+							if day == 2, robust
+
+********************************************************************************
+**## Tasting effects
+********************************************************************************
+
+* Product 584: magnesium/lab beverage, Day 1.
+	reg					taste_eff_584 ///
+							i.sweet_high ///
+							i.sugar_lowmod_high ///
+							i.flavor_pref1_5 ///
+							i.ingred_high ///
+							i.health_high ///
+							i.magn_know_high ///
+							if day == 1, robust
+
+* Product 793: competitor beverage, Day 1.
+	reg					taste_eff_793 ///
+							i.sweet_high ///
+							i.sugar_lowmod_high ///
+							i.flavor_pref1_5 ///
+							i.ingred_high ///
+							i.health_high ///
+							i.magn_know_high ///
+							if day == 1, robust
+
+* Product 356: blueberry beverage, Day 2.
+	reg					taste_eff_356 ///
+							i.sweet_high ///
+							i.sugar_lowmod_high ///
+							i.flavor_pref1_1 ///
+							i.ingred_high ///
+							i.health_high ///
+							i.magn_know_high ///
+							if day == 2, robust
+
+* Product 831: pineapple beverage, Day 2.
+	reg					taste_eff_831 ///
+							i.sweet_high ///
+							i.sugar_lowmod_high ///
+							i.flavor_pref1_7 ///
+							i.ingred_high ///
+							i.health_high ///
+							i.magn_know_high ///
+							if day == 2, robust
+
+********************************************************************************
+**# H2 regressions
+********************************************************************************
+
+********************************************************************************
+**## Gender and information effect
+********************************************************************************
+
+* Test whether the Product 584 information effect differs by gender,
+* controlling for preference variables.
+	reg					info_eff_584 ///
+							i.gender ///
+							i.sweet_high ///
+							i.sugar_lowmod_high ///
+							i.flavor_pref1_5 ///
+							i.ingred_high ///
+							i.health_high ///
+							i.magn_know_high ///
+							if day == 1, robust
+
+
+********************************************************************************
+**## Physical activity and information effect
+********************************************************************************
+
+* Test whether the Product 584 information effect differs by physical activity,
+* controlling for preference variables.
+	reg					info_eff_584 ///
+							i.active_3plus ///
+							i.sweet_high ///
+							i.sugar_lowmod_high ///
+							i.flavor_pref1_5 ///
+							i.ingred_high ///
+							i.health_high ///
+							i.magn_know_high ///
+							if day == 1, robust
+
+
+********************************************************************************
+**## Combined H2 model
+********************************************************************************
+
+* Test gender and physical activity together.
+	reg					info_eff_584 ///
+							i.gender ///
+							i.active_3plus ///
+							i.sweet_high ///
+							i.sugar_lowmod_high ///
+							i.flavor_pref1_5 ///
+							i.ingred_high ///
+							i.health_high ///
+							i.magn_know_high ///
+							if day == 1, robust
 							
-********************************************************************************
-**# Final Analysis Hypothesis 1
-********************************************************************************
+	
+
+
+
+
+
+
+
 
