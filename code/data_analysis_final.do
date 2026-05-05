@@ -2874,3 +2874,478 @@ preserve
 	export delimited	using "$final_output/h2_info_effect_regressions_consumption_situation.csv", replace
 
 restore
+
+
+********************************************************************************
+**# Final graphs
+********************************************************************************
+
+********************************************************************************
+**## Graph 1: Baseline WTP Compared with $2.50 Benchmark
+********************************************************************************
+
+preserve
+
+	clear
+
+	input str12 sample mean ci_low ci_high
+	"Both days"	3.039	2.927	3.152
+	"Day 1"		3.066	2.898	3.234
+	"Day 2"		3.014	2.859	3.169
+	end
+
+	gen				sample_order = _n
+
+	label define	sample_lbl ///
+						1 "Both days" ///
+						2 "Day 1" ///
+						3 "Day 2", replace
+
+	label values	sample_order sample_lbl
+
+	twoway ///
+		(rcap ci_low ci_high sample_order, ///
+			lcolor(navy) ///
+			lwidth(medthick)) ///
+		(scatter mean sample_order, ///
+			msymbol(circle) ///
+			msize(large) ///
+			mcolor(maroon)), ///
+		yline(2.50, ///
+			lcolor(forest_green) ///
+			lpattern(dash) ///
+			lwidth(medthick)) ///
+		xlabel(1 "Both days" 2 "Day 1" 3 "Day 2", labsize(medlarge)) ///
+		ylabel(2.4(.2)3.3, angle(horizontal) labsize(medlarge)) ///
+		xtitle("") ///
+		ytitle("Baseline willingness to pay ($)", size(medlarge)) ///
+		title("Baseline Willingness to Pay Exceeded the $2.50 Benchmark", size(medsmall)) ///
+		subtitle("Mean baseline WTP with 95% confidence intervals", size(small)) ///
+		note("Dashed line marks the $2.50 benchmark price.", size(small)) ///
+		legend(off) ///
+		graphregion(color(white)) ///
+		plotregion(color(white)) ///
+		name(g_baseline_wtp, replace)
+
+	graph export "$final_output/graph_1_baseline_wtp.png", replace width(2400)
+
+restore
+
+********************************************************************************
+**## Graph 2: Information Effects by Product
+********************************************************************************
+
+preserve
+
+	clear
+
+	input product_order str24 product mean ci_low ci_high
+	1	"584: Magnesium/Lab"		0.037	-0.098	 0.172
+	2	"793: Competitor"		   -0.544	-0.721	-0.368
+	3	"356: Blueberry"		   -0.139	-0.333	 0.055
+	4	"831: Pineapple"		   -0.007	-0.144	 0.130
+	end
+
+	label define	product_lbl ///
+						1 "584: Magnesium/Lab" ///
+						2 "793: Competitor" ///
+						3 "356: Blueberry" ///
+						4 "831: Pineapple", replace
+
+	label values	product_order product_lbl
+
+	twoway ///
+		(rcap ci_low ci_high product_order, ///
+			lcolor(navy) ///
+			lwidth(medthick)) ///
+		(scatter mean product_order, ///
+			msymbol(circle) ///
+			msize(large) ///
+			mcolor(maroon)), ///
+		yline(0, ///
+			lcolor(forest_green) ///
+			lpattern(dash) ///
+			lwidth(medthick)) ///
+		xlabel(1 "584: Magnesium/Lab" ///
+			   2 "793: Competitor" ///
+			   3 "356: Blueberry" ///
+			   4 "831: Pineapple", ///
+			   angle(30) labsize(medium)) ///
+		ylabel(-0.8(.2)0.2, angle(horizontal) labsize(medlarge)) ///
+		xtitle("") ///
+		ytitle("Change in WTP information ($)", size(medlarge)) ///
+		title("Product Information Did Not Increase WTP for Product 584", size(medsmall)) ///
+		subtitle("Mean information effects with 95% confidence intervals", size(small)) ///
+		note("Dashed line marks zero change in WTP.", size(small)) ///
+		legend(off) ///
+		graphregion(color(white)) ///
+		plotregion(color(white)) ///
+		name(g_info_effects, replace)
+
+	graph export "${final_output}/graph_2_information_effects.png", replace width(2400)
+
+restore
+
+
+********************************************************************************
+**# Graph 3: Tasting Effects by Product
+********************************************************************************
+
+preserve
+
+	clear
+
+	input product_order str24 product mean ci_low ci_high
+	1	"584: Magnesium/Lab"	   -0.335	-0.520	-0.149
+	2	"793: Competitor"		    0.188	 0.024	 0.351
+	3	"356: Blueberry"		   -0.188	-0.416	 0.041
+	4	"831: Pineapple"		   -0.302	-0.488	-0.116
+	end
+
+	label define	product_lbl ///
+						1 "584: Magnesium/Lab" ///
+						2 "793: Competitor" ///
+						3 "356: Blueberry" ///
+						4 "831: Pineapple", replace
+
+	label values	product_order product_lbl
+
+	twoway ///
+		(rcap ci_low ci_high product_order, ///
+			lcolor(navy) ///
+			lwidth(medthick)) ///
+		(scatter mean product_order, ///
+			msymbol(circle) ///
+			msize(large) ///
+			mcolor(maroon)), ///
+		yline(0, ///
+			lcolor(forest_green) ///
+			lpattern(dash) ///
+			lwidth(medthick)) ///
+		xlabel(1 "584: Magnesium/Lab" ///
+			   2 "793: Competitor" ///
+			   3 "356: Blueberry" ///
+			   4 "831: Pineapple", ///
+			   angle(30) labsize(medium)) ///
+		ylabel(-0.6(.2)0.4, angle(horizontal) labsize(medlarge)) ///
+		xtitle("") ///
+		ytitle("Change in WTP after tasting ($)", size(medlarge)) ///
+		title("Tasting Reduced WTP for Product 584 but Increased WTP for Product 793", size(medsmall)) ///
+		subtitle("Mean tasting effects with 95% confidence intervals", size(small)) ///
+		note("Dashed line marks zero change in WTP.", size(small)) ///
+		legend(off) ///
+		graphregion(color(white)) ///
+		plotregion(color(white)) ///
+		xsize(9) ///
+		ysize(5) ///
+		name(g_taste_effects, replace)
+
+	graph export "$final_output/graph_3_tasting_effects.png", replace width(2400)
+
+restore
+
+
+
+********************************************************************************
+**# Graph 4: Information-Driven WTP Change for Day 1 Products
+********************************************************************************
+
+preserve
+
+	keep if					day == 1
+
+	* identify survey path
+	capture drop				info_first
+	gen						info_first = inlist(randomizer, 3, 4)
+
+	gen						obs_id = _n
+
+	* Product 584 information effect
+	gen						info_change_584 = .
+	replace					info_change_584 = wtp_2a_info_584 - wtp_1 ///
+								if info_first == 1
+	replace					info_change_584 = wtp_3b_info_584 - wtp_2b_584 ///
+								if info_first == 0
+
+	* Product 793 information effect
+	gen						info_change_793 = .
+	replace					info_change_793 = wtp_2a_info_793 - wtp_1 ///
+								if info_first == 1
+	replace					info_change_793 = wtp_3b_info_793 - wtp_2b_793 ///
+								if info_first == 0
+
+	keep					obs_id info_first info_change_584 info_change_793
+
+	reshape long			info_change_, i(obs_id) j(product)
+
+	rename					info_change_ info_change
+
+	drop if					missing(info_change)
+
+	collapse				(count) N = info_change ///
+							(mean) mean = info_change ///
+							(sd) sd = info_change, ///
+							by(product info_first)
+
+	gen						se = sd / sqrt(N)
+	gen						ci_low = mean - invttail(N - 1, 0.025) * se
+	gen						ci_high = mean + invttail(N - 1, 0.025) * se
+
+	gen						product_order = .
+	replace					product_order = 1 if product == 584
+	replace					product_order = 2 if product == 793
+
+	gen						xpos = product_order
+	replace					xpos = product_order - 0.18 if info_first == 0
+	replace					xpos = product_order + 0.18 if info_first == 1
+
+	gen						mean_label = cond(mean >= 0, ///
+								"+$" + string(mean, "%4.2f"), ///
+								"-$" + string(abs(mean), "%4.2f"))
+
+	twoway ///
+		(bar mean xpos if info_first == 0, ///
+			base(0) ///
+			barwidth(0.32) ///
+			fcolor(navy%55) ///
+			lcolor(navy)) ///
+		(bar mean xpos if info_first == 1, ///
+			base(0) ///
+			barwidth(0.32) ///
+			fcolor(maroon%55) ///
+			lcolor(maroon)) ///
+		(scatter mean xpos if mean >= 0, ///
+			msymbol(none) ///
+			mlabel(mean_label) ///
+			mlabposition(12) ///
+			mlabsize(small) ///
+			mlabcolor(black)) ///
+		(scatter mean xpos if mean < 0, ///
+			msymbol(none) ///
+			mlabel(mean_label) ///
+			mlabposition(6) ///
+			mlabsize(small) ///
+			mlabcolor(black)), ///
+		yline(0, ///
+			lcolor(forest_green) ///
+			lpattern(dash) ///
+			lwidth(medthick)) ///
+		xlabel(1 "584: Magnesium/Lab" ///
+			   2 "793: Competitor", ///
+			   labsize(medlarge)) ///
+		ylabel(-1(.25).5, angle(horizontal) labsize(medlarge)) ///
+		yscale(range(-1.05 .55)) ///
+		xtitle("") ///
+		ytitle("Change in WTP after information ($)", size(medlarge)) ///
+		title("How Product Information Moved WTP for Day 1 Beverages", size(medsmall)) ///
+		subtitle("Mean information effects by survey order with 95% confidence intervals", size(small)) ///
+		note("Bars above zero mean information increased WTP. Bars below zero mean information reduced WTP.", size(small)) ///
+		legend(order(1 "Taste first, then information" ///
+					 2 "Information first, then tasting") ///
+			   rows(1) ///
+			   size(small) ///
+			   position(6)) ///
+		graphregion(color(white)) ///
+		plotregion(color(white)) ///
+		xsize(9) ///
+		ysize(5) ///
+		name(g_day1_info_change_bars, replace)
+
+	graph export "$final_output/graph_4_day1_information_change_bars.png", replace width(2400)
+
+restore
+********************************************************************************
+**# Graph 5: Gender Differences in Information Effects
+********************************************************************************
+
+preserve
+
+	clear
+
+	input product_order str24 product diff ci_low ci_high
+	4	"584: Magnesium/Lab"	   -0.013	-0.284	 0.259
+	3	"793: Competitor"		   -0.356	-0.705	-0.007
+	2	"356: Blueberry"		    0.361	-0.023	 0.745
+	1	"831: Pineapple"		    0.208	-0.063	 0.480
+	end
+
+	label define	product_lbl ///
+						4 "584: Magnesium/Lab" ///
+						3 "793: Competitor" ///
+						2 "356: Blueberry" ///
+						1 "831: Pineapple", replace
+
+	label values	product_order product_lbl
+
+	twoway ///
+		(rcap ci_low ci_high product_order, ///
+			horizontal ///
+			lcolor(navy) ///
+			lwidth(medthick)) ///
+		(scatter product_order diff, ///
+			msymbol(circle) ///
+			msize(large) ///
+			mcolor(maroon)), ///
+		xline(0, ///
+			lcolor(forest_green) ///
+			lpattern(dash) ///
+			lwidth(medthick)) ///
+		ylabel(1 "831 Pineapple" ///
+			   2 "356 Blueberry" ///
+			   3 "793 Competitor" ///
+			   4 "584 Magnesium/Lab", ///
+			   angle(horizontal) labsize(medlarge)) ///
+		xlabel(-0.8(.2)0.8, labsize(medlarge)) ///
+		ytitle("") ///
+		xtitle("Gender difference in information effect ($)", size(medlarge)) ///
+		title("Product 584 Showed No Gender Difference in Information Response", size(medsmall)) ///
+		subtitle("Male minus female mean information effects with 95% confidence intervals", size(small)) ///
+		legend(off) ///
+		graphregion(color(white)) ///
+		plotregion(color(white)) ///
+		xsize(9) ///
+		ysize(5) ///
+		name(g_gender_info_effects, replace)
+
+	graph export "$final_output/graph_5_gender_info_effects.png", replace width(2400)
+
+restore
+
+
+********************************************************************************
+**# Graph 6: Exercise Differences in Information Effects
+********************************************************************************
+
+preserve
+
+	clear
+
+	input product_order str24 product diff ci_low ci_high
+	4	"584: Magnesium/Lab"	   -0.084	-0.390	 0.221
+	3	"793: Competitor"		    0.025	-0.352	 0.402
+	2	"356: Blueberry"		    0.205	-0.216	 0.625
+	1	"831: Pineapple"		    0.202	-0.084	 0.489
+	end
+
+	label define	product_lbl ///
+						4 "584: Magnesium/Lab" ///
+						3 "793: Competitor" ///
+						2 "356: Blueberry" ///
+						1 "831: Pineapple", replace
+
+	label values	product_order product_lbl
+
+	twoway ///
+		(rcap ci_low ci_high product_order, ///
+			horizontal ///
+			lcolor(navy) ///
+			lwidth(medthick)) ///
+		(scatter product_order diff, ///
+			msymbol(circle) ///
+			msize(large) ///
+			mcolor(maroon)), ///
+		xline(0, ///
+			lcolor(forest_green) ///
+			lpattern(dash) ///
+			lwidth(medthick)) ///
+		ylabel(1 "831 Pineapple" ///
+			   2 "356 Blueberry" ///
+			   3 "793 Competitor" ///
+			   4 "584 Magnesium/Lab", ///
+			   angle(horizontal) labsize(medlarge)) ///
+		xlabel(-0.5(.25)0.75, labsize(medlarge)) ///
+		ytitle("") ///
+		xtitle("Exercise difference in information effect ($)", size(medlarge)) ///
+		title("More Active Respondents Did Not Have Stronger Information Effects for Product 584", size(medsmall)) ///
+		subtitle("Three or more exercise days minus fewer than three days, with 95% confidence intervals", size(small)) ///
+		legend(off) ///
+		graphregion(color(white)) ///
+		plotregion(color(white)) ///
+		xsize(9) ///
+		ysize(5) ///
+		name(g_exercise_info_effects, replace)
+
+	graph export "${final_output}/graph_6_exercise_info_effects.png", replace width(2400)
+
+restore
+
+
+********************************************************************************
+**# Graph 7: Product 584 H2 Regression Coefficients
+********************************************************************************
+
+preserve
+
+	clear
+
+	input coef_order str40 variable beta se p_value
+	11	"Female"								-0.024	0.146	0.869
+	10	"Three or more exercise days"			-0.093	0.181	0.611
+	9	"Consumes before exercise"				 0.095	0.293	0.747
+	8	"Consumes during exercise"				-0.002	0.196	0.992
+	7	"Consumes after exercise"				 0.033	0.140	0.818
+	6	"High sweetness importance"				 0.145	0.143	0.315
+	5	"High low-to-moderate sugar importance"	 0.130	0.144	0.370
+	4	"Selected Lemon Lime flavor"				-0.192	0.163	0.244
+	3	"High functional ingredient importance"	 0.072	0.170	0.674
+	2	"High health-claim importance"			-0.159	0.171	0.355
+	1	"High magnesium knowledge"				-0.094	0.156	0.550
+	end
+
+	gen				ci_low  = beta - 1.96 * se
+	gen				ci_high = beta + 1.96 * se
+
+	label define	coef_lbl ///
+						11 "Female" ///
+						10 "Three or more exercise days" ///
+						9  "Consumes before exercise" ///
+						8  "Consumes during exercise" ///
+						7  "Consumes after exercise" ///
+						6  "High sweetness importance" ///
+						5  "High low-to-moderate sugar importance" ///
+						4  "Selected Lemon Lime flavor" ///
+						3  "High functional ingredient importance" ///
+						2  "High health-claim importance" ///
+						1  "High magnesium knowledge", replace
+
+	label values	coef_order coef_lbl
+
+	twoway ///
+		(rcap ci_low ci_high coef_order, ///
+			horizontal ///
+			lcolor(navy) ///
+			lwidth(medthick)) ///
+		(scatter coef_order beta, ///
+			msymbol(circle) ///
+			msize(large) ///
+			mcolor(maroon)), ///
+		xline(0, ///
+			lcolor(forest_green) ///
+			lpattern(dash) ///
+			lwidth(medthick)) ///
+		ylabel(1 "High magnesium knowledge" ///
+			   2 "Health-claims are important" ///
+			   3 "Functional ingredient is important" ///
+			   4 "Selected Lemon Lime flavor" ///
+			   5 "Low-moderate sugar is important" ///
+			   6 "High sweetness importance" ///
+			   7 "Consumes after exercise" ///
+			   8 "Consumes during exercise" ///
+			   9 "Consumes before exercise" ///
+			   10 "Three or more exercise days" ///
+			   11 "Female", ///
+			   angle(horizontal) labsize(small)) ///
+		xlabel(-0.8(.2)0.8, labsize(medlarge)) ///
+		ytitle("") ///
+		xtitle("Coefficient on Product 584 information effect ($)", size(medlarge)) ///
+		title("No H2 Predictors Significantly Explained Product 584 Information Effects", size(medsmall)) ///
+		legend(off) ///
+		graphregion(color(white)) ///
+		plotregion(color(white)) ///
+		xsize(9) ///
+		ysize(5.5) ///
+		name(g_product584_h2_coefficients, replace)
+
+	graph export "${final_output}/graph_7_product584_h2_coefficients.png", replace width(2400)
+
+restore
